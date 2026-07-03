@@ -4,6 +4,8 @@ import { ProblemSolution } from "@/components/sections/ProblemSolution";
 import { BenefitsShowcase } from "@/components/sections/BenefitsShowcase";
 import { Differentiators } from "@/components/sections/Differentiators";
 import { ProductsGrid } from "@/components/sections/ProductsGrid";
+import { Allevamento } from "@/components/sections/Allevamento";
+import { ChiSiamo } from "@/components/sections/ChiSiamo";
 
 export default function Home() {
   return (
@@ -15,6 +17,8 @@ export default function Home() {
         <BenefitsShowcase />
         <Differentiators />
         <ProductsGrid />
+        <Allevamento />
+        <ChiSiamo />
       </main>
     </>
   );
