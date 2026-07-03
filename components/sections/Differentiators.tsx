@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { SplitTitle } from "@/components/ui/SplitTitle";
 
 const differentiators = [
   {
@@ -67,10 +68,12 @@ export function Differentiators() {
             <span className="h-px w-12 bg-white/40" />
           </div>
 
-          <h2 className="heading-display text-[2.25rem] leading-[1.2] text-white sm:text-[2.75rem] lg:text-[3.25rem]">
-            Cosa ci rende{" "}
-            <span className="italic text-[var(--red)]">diversi</span>
-          </h2>
+          <SplitTitle
+            as="h2"
+            className="heading-display text-[2.25rem] leading-[1.2] text-white sm:text-[2.75rem] lg:text-[3.25rem]"
+          >
+            Cosa ci rende <span className="italic">diversi</span>
+          </SplitTitle>
         </motion.div>
 
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3">
@@ -80,7 +83,7 @@ export function Differentiators() {
             return (
               <motion.div
                 key={item.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ delay: index * 0.08, duration: 0.6 }}
