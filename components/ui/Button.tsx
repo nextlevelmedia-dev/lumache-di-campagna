@@ -14,7 +14,7 @@ export function Button({
   className = "",
 }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold tracking-wide transition duration-300";
+    "inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold tracking-wide transition duration-300";
 
   const styles =
     variant === "primary"

@@ -10,32 +10,47 @@ import { whatsappLink } from "@/lib/whatsapp";
 const blocks = [
   {
     eyebrow: "Lumache vive",
-    title: "Pronte per la tua cucina, dal vivo alla pentola",
+    title: (
+      <>
+        <span className="italic text-[var(--red)]">Pronte per la tua cucina</span>,
+        dal vivo alla pentola
+      </>
+    ),
     text: "Lumache vive selezionate a mano, spurgate secondo il metodo tradizionale e pronte per essere cucinate come preferisci — alla bourguignonne, in umido, alla griglia. Nessuna lavorazione industriale, solo la materia prima come dovrebbe essere.",
     images: [
-      "https://images.unsplash.com/photo-1567161291513-d8d58620c5ca?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1600793575654-e56a1e8b3e3a?auto=format&fit=crop&w=800&q=80",
+      "/images/lumache-sfuse-1.png",
+      "/images/lumache-sfuse-2.png",
+      "/images/lumache-sfuse-3.png",
     ],
   },
   {
     eyebrow: "Prodotti gastronomici",
-    title: "Specialità già lavorate, pronte da gustare",
+    title: (
+      <>
+        <span className="italic text-[var(--red)]">Specialità già lavorate</span>,
+        pronte da gustare
+      </>
+    ),
     text: "Per chi vuole il gusto autentico senza il tempo della preparazione: lumache già pulite, cotte e condite secondo ricette della tradizione contadina, pronte da scaldare e servire in tavola in pochi minuti.",
     images: [
-      "https://images.unsplash.com/photo-1715018890921-30c621ced2a2?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80",
+      "/images/piatto-1.png",
+      "/images/piatto-2.png",
+      "/images/piatto-3.png",
     ],
   },
   {
     eyebrow: "Cosmetici alla bava",
-    title: "La cura della pelle, dalla natura al vasetto",
+    title: (
+      <>
+        <span className="italic text-[var(--red)]">La cura della pelle</span>,
+        dalla natura al vasetto
+      </>
+    ),
     text: "Bava di lumaca raccolta con metodo cruelty-free e trasformata in creme e trattamenti naturali per il viso e il corpo. Un unico ingrediente attivo, senza passaggi industriali che ne riducano le proprietà.",
     images: [
-      "https://images.unsplash.com/photo-1737100917895-eee7006cdbbb?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=800&q=80",
+      "/images/crema-1.png",
+      "/images/crema-2.png",
+      "/images/crema-3.png",
     ],
   },
 ];
@@ -85,7 +100,7 @@ export function BenefitsShowcase() {
 
           return (
             <div
-              key={block.title}
+              key={index}
               className={`grid items-start gap-10 lg:grid-cols-2 lg:gap-16 ${
                 isReversed ? "lg:[&>*:first-child]:order-2" : ""
               }`}
@@ -96,7 +111,7 @@ export function BenefitsShowcase() {
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               >
-                <ImageCollage images={block.images} alt={block.title} />
+                <ImageCollage images={block.images} alt={block.eyebrow} />
               </motion.div>
 
               <motion.div
