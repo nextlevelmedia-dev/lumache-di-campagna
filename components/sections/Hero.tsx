@@ -1,7 +1,16 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "motion/react";
-import { ArrowRight, MessageCircle, Leaf, Heart, MapPin, Rabbit, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  MessageCircle,
+  Leaf,
+  Heart,
+  MapPin,
+  Rabbit,
+  Sparkles,
+} from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { SplitTitle } from "@/components/ui/SplitTitle";
@@ -41,12 +50,18 @@ const buttonsRow = {
   },
 };
 
-const badgeFadeLeft = {
-  hidden: { opacity: 0, x: -24 },
+const badgeShine = {
+  hidden: { opacity: 0, y: 18, scale: 0.92, filter: "blur(6px)" },
   show: {
     opacity: 1,
-    x: 0,
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const, delay: 0.2 },
+    y: 0,
+    scale: [0.92, 1.06, 1],
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.9,
+      ease: [0.22, 1, 0.36, 1] as const,
+      delay: 0.15,
+    },
   },
 };
 
@@ -55,7 +70,7 @@ const boxesContainer = {
   show: {
     transition: {
       staggerChildren: 0.12,
-      delayChildren: 0.5,
+      delayChildren: 0.25,
     },
   },
 };
@@ -75,7 +90,6 @@ export function Hero() {
       <div className="absolute inset-0 opacity-[0.45] [background-image:radial-gradient(circle_at_20%_20%,#ffffff_0,transparent_32%),radial-gradient(circle_at_80%_10%,#eeebe3_0,transparent_34%)]" />
 
       <Container className="relative pt-6 pb-16 sm:pt-8 lg:py-20">
-        {/* Riga superiore: foto sopra su mobile, testo+foto affiancati da lg in su */}
         <div className="grid items-center gap-8 lg:gap-14 lg:grid-cols-[0.95fr_1.05fr]">
           <motion.div
             initial={{ opacity: 0, y: 28 }}
@@ -94,8 +108,12 @@ export function Hero() {
               delay={0.1}
               className="heading-display max-w-2xl text-[2.7rem] leading-[1.2] text-[var(--green)] sm:text-[3rem] md:text-[3.5rem] lg:text-[4.2rem] xl:text-[4.2rem]"
             >
-              <span className="italic text-[var(--red)]">Vivi meglio</span> ogni giorno con i{" "}
-              <span className="italic text-[var(--red)]">benefici naturali</span> della lumaca.
+              <span className="italic text-[var(--red)]">Vivi meglio</span>{" "}
+              ogni giorno con i{" "}
+              <span className="italic text-[var(--red)]">
+                benefici naturali
+              </span>{" "}
+              della lumaca.
             </SplitTitle>
 
             <motion.div
@@ -173,7 +191,11 @@ export function Hero() {
               clipPath: "inset(0% 0% 0% 0% round 40px)",
               filter: "blur(0px)",
             }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] as const, delay: 0.2 }}
+            transition={{
+              duration: 1.2,
+              ease: [0.16, 1, 0.3, 1] as const,
+              delay: 0.2,
+            }}
             className="relative order-1 lg:order-2"
           >
             <div className="absolute -left-8 top-12 z-20 hidden rounded-full border border-[var(--border)] bg-white/85 px-6 py-5 shadow-2xl backdrop-blur-xl md:block">
@@ -193,13 +215,17 @@ export function Hero() {
             </div>
 
             <div className="relative ml-auto aspect-[3/2] w-full max-w-[650px] overflow-hidden rounded-[2.5rem] rounded-bl-[5rem] border border-white/70 bg-[var(--soft-gray)] shadow-2xl shadow-black/10 lg:aspect-[4/3] lg:rounded-[4rem] lg:rounded-bl-[10rem]">
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(120deg, rgba(23,63,43,.18), rgba(165,31,36,.05)), url('/images/hero/hero-snail.jpg')",
-                }}
+              <Image
+                src="/images/hero/hero-snail.jpg"
+                alt="Lumache di Campagna"
+                fill
+                priority
+                
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
               />
+
+              <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(23,63,43,.18),rgba(165,31,36,.05))]" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-white/5" />
 
               <div className="absolute bottom-4 left-4 right-4 rounded-2xl border border-white/25 bg-white/15 p-4 text-white backdrop-blur-xl lg:bottom-8 lg:left-8 lg:right-8 lg:rounded-[2rem] lg:p-6">
@@ -214,17 +240,29 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Riga sotto: badge brand (fade da sinistra) + 4 trust box (fade da destra, in sequenza) */}
         <div className="mt-16 grid grid-cols-2 gap-5 lg:grid-cols-5">
           <motion.div
-            variants={badgeFadeLeft}
+            variants={badgeShine}
             initial="hidden"
-            animate="show"
+            whileInView="show"
+            viewport={{ once: true, margin: "-80px" }}
             className="col-span-2 flex flex-col items-center justify-center gap-3 text-center lg:col-span-1 lg:items-start lg:text-left"
           >
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--green)] text-white shadow-lg shadow-green-950/15">
+            <div className="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-[var(--green)] text-white shadow-lg shadow-green-950/15">
+              <motion.span
+                initial={{ x: "-160%", opacity: 0 }}
+                whileInView={{ x: "160%", opacity: [0, 1, 0] }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 1.1,
+                  delay: 0.35,
+                  ease: "easeInOut",
+                }}
+                className="absolute inset-y-0 w-5 rotate-12 bg-white/45 blur-sm"
+              />
               <Sparkles size={22} />
             </div>
+
             <div>
               <p className="font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--muted)]">
                 Qualità certificata
@@ -238,7 +276,8 @@ export function Hero() {
           <motion.div
             variants={boxesContainer}
             initial="hidden"
-            animate="show"
+            whileInView="show"
+            viewport={{ once: true, margin: "-80px" }}
             className="col-span-2 grid grid-cols-2 gap-4 lg:col-span-4 lg:grid-cols-4 lg:gap-5"
           >
             {trustItems.map((item) => {
@@ -254,7 +293,9 @@ export function Hero() {
                   <p className="font-sans text-sm font-bold uppercase tracking-[0.12em]">
                     {item.title}
                   </p>
-                  <p className="mt-1 text-sm text-[var(--muted)]">{item.text}</p>
+                  <p className="mt-1 text-sm text-[var(--muted)]">
+                    {item.text}
+                  </p>
                 </motion.div>
               );
             })}

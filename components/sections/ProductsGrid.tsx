@@ -271,36 +271,36 @@ function ProductSplit({
       </motion.div>
 
       <div>
-        <div className="grid grid-cols-2 gap-x-2 gap-y-5 sm:gap-x-5">
-          {products.map((product, i) => (
-            <motion.div
-              key={product.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ delay: (i % 2) * 0.08, duration: 0.5 }}
-            >
-              <ProductCard
-                name={product.name}
-                price={product.price}
-                image={product.image}
-              />
-            </motion.div>
-          ))}
-        </div>
+  <div className="grid grid-cols-2 gap-x-3 gap-y-5 sm:gap-x-5">
+    {products.map((product, i) => (
+      <motion.div
+        key={product.name}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ delay: (i % 2) * 0.08, duration: 0.5 }}
+      >
+        <ProductCard
+          name={product.name}
+          price={product.price}
+          image={product.image}
+        />
+      </motion.div>
+    ))}
+  </div>
 
-        <div className="mt-8 flex justify-center lg:hidden">
-          <Button
-            href={whatsappLink(
-              "Ciao, vorrei ricevere informazioni sui prodotti di Lumache di Campagna."
-            )}
-            className="gap-2 shadow-xl shadow-green-950/10"
-          >
-            <MessageCircle size={18} />
-            Richiedi informazioni
-          </Button>
-        </div>
-      </div>
+  <div className="mt-8 flex justify-center lg:hidden">
+    <Button
+      href={whatsappLink(
+        "Ciao, vorrei ricevere informazioni sui prodotti di Lumache di Campagna."
+      )}
+      className="gap-2 shadow-xl shadow-green-950/10"
+    >
+      <MessageCircle size={18} />
+      Richiedi informazioni
+    </Button>
+  </div>
+</div>
     </div>
   );
 }
