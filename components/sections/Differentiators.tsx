@@ -93,9 +93,9 @@ export function Differentiators() {
                   <Icon className="text-white" size={22} />
                 </div>
 
-                <h3 className="mt-5 font-sans text-lg font-bold text-white">
-                  {item.title}
-                </h3>
+                <h3 className="mt-5 heading-display text-xl leading-tight text-white">
+  {item.title}
+</h3>
 
                 <p className="mt-2 text-[15px] leading-relaxed text-white/70">
                   {item.text}

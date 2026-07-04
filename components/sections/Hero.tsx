@@ -120,7 +120,7 @@ export function Hero() {
                       fill="none"
                       className="h-3.5 w-3.5 text-white"
                       stroke="currentColor"
-                      strokeWidth="2.5"
+                      strokeWidth="2"
                     >
                       <path
                         d="M5 12.5l4 4L19 7"
@@ -239,7 +239,7 @@ export function Hero() {
             variants={boxesContainer}
             initial="hidden"
             animate="show"
-            className="col-span-2 grid grid-cols-2 gap-5 lg:col-span-4 lg:grid-cols-4"
+            className="col-span-2 grid grid-cols-2 gap-4 lg:col-span-4 lg:grid-cols-4 lg:gap-5"
           >
             {trustItems.map((item) => {
               const Icon = item.icon;
