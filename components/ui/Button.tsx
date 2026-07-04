@@ -14,15 +14,42 @@ export function Button({
   className = "",
 }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold tracking-wide transition duration-300";
+    "inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold tracking-wide transition-all duration-300 ease-[cubic-bezier(.22,1,.36,1)]";
 
   const styles =
     variant === "primary"
-      ? "bg-[var(--green)] text-white hover:bg-[var(--green-soft)]"
-      : "border border-[var(--border)] bg-white text-[var(--foreground)] hover:border-[var(--green)]";
+      ? `
+        bg-[var(--green)]
+        bg-[length:200%_100%]
+        bg-left
+        text-white
+        shadow-sm
+
+        hover:bg-[linear-gradient(110deg,var(--green),#065f46,var(--green))]
+        hover:bg-right
+        hover:shadow-[0_8px_24px_rgba(6,95,70,0.25)]
+
+        active:shadow-sm
+      `
+      : `
+        border
+        border-[var(--border)]
+        bg-white
+        text-[var(--foreground)]
+
+        hover:bg-[#f5f5f4]
+        hover:border-[#d6d3d1]
+        hover:shadow-[0_6px_18px_rgba(0,0,0,0.06)]
+
+        active:bg-[#eeeeec]
+        active:shadow-none
+      `;
 
   return (
-    <Link href={href} className={`${base} ${styles} ${className}`}>
+    <Link
+      href={href}
+      className={`${base} ${styles} ${className}`}
+    >
       {children}
     </Link>
   );

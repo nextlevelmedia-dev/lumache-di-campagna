@@ -6,6 +6,7 @@ import { motion } from "motion/react";
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { SplitTitle } from "@/components/ui/SplitTitle";
 import { whatsappLink } from "@/lib/whatsapp";
 
 const looseSnail = {
@@ -166,9 +167,12 @@ function SingleProductSplit({
       >
         <p className="eyebrow">{eyebrow}</p>
 
-        <h3 className="heading-display mt-4 text-[2rem] leading-[1.2] text-[var(--green)] sm:text-[2.4rem] lg:text-[2.6rem]">
+        <SplitTitle
+          as="h3"
+          className="heading-display mt-4 text-[2rem] leading-[1.2] text-[var(--green)] sm:text-[2.4rem] lg:text-[2.6rem]"
+        >
           {title}
-        </h3>
+        </SplitTitle>
 
         <p className="body-large mt-5">{text}</p>
 
@@ -238,9 +242,12 @@ function ProductSplit({
       >
         <p className="eyebrow">{eyebrow}</p>
 
-        <h3 className="heading-display mt-4 text-[2rem] leading-[1.2] text-[var(--green)] sm:text-[2.4rem] lg:text-[2.6rem]">
+        <SplitTitle
+          as="h3"
+          className="heading-display mt-4 text-[2rem] leading-[1.2] text-[var(--green)] sm:text-[2.4rem] lg:text-[2.6rem]"
+        >
           {title}
-        </h3>
+        </SplitTitle>
 
         <p className="body-large mt-5">{text}</p>
 
@@ -315,10 +322,13 @@ export function ProductsGrid() {
             <span className="h-px w-12 bg-[var(--green)]" />
           </div>
 
-          <h2 className="heading-display text-[2.25rem] leading-[1.2] text-[var(--green)] sm:text-[2.75rem] lg:text-[3.25rem]">
+          <SplitTitle
+            as="h2"
+            className="heading-display text-[2.25rem] leading-[1.2] text-[var(--green)] sm:text-[2.75rem] lg:text-[3.25rem]"
+          >
             Più gusto, più cura,{" "}
             <span className="italic text-[var(--red)]">più naturale</span>
-          </h2>
+          </SplitTitle>
         </motion.div>
 
         <SingleProductSplit

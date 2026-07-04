@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { ArrowRight, MessageCircle, Leaf, Heart, MapPin, Rabbit, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { SplitTitle } from "@/components/ui/SplitTitle";
 import { whatsappLink } from "@/lib/whatsapp";
 
 const trustItems = [
@@ -12,6 +13,61 @@ const trustItems = [
   { icon: MapPin, title: "Prodotto italiano", text: "A km 0" },
   { icon: Rabbit, title: "Rispetto per gli animali", text: "E l'ambiente" },
 ];
+
+const checksContainer = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.6,
+    },
+  },
+};
+
+const checkItem = {
+  hidden: { opacity: 0, y: 16 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
+
+const buttonsRow = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { duration: 0.8, ease: "easeOut" as const, delay: 1.2 },
+  },
+};
+
+const badgeFadeLeft = {
+  hidden: { opacity: 0, x: -24 },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const, delay: 0.2 },
+  },
+};
+
+const boxesContainer = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.5,
+    },
+  },
+};
+
+const boxFadeRight = {
+  hidden: { opacity: 0, x: 24 },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
 
 export function Hero() {
   return (
@@ -24,7 +80,7 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] as const }}
             className="order-2 lg:order-1"
           >
             <div className="mb-8 flex items-center gap-4">
@@ -32,18 +88,32 @@ export function Hero() {
               <p className="eyebrow">Eccellenza italiana</p>
             </div>
 
-            <h1 className="heading-display max-w-2xl text-[2.7rem] leading-[1.2] text-[var(--green)] sm:text-[3rem] md:text-[3.5rem] lg:text-[4.2rem] xl:text-[4.2rem]">
-  <span className="italic text-[var(--red)]">Vivi meglio</span> ogni giorno con i{" "}
-  <span className="italic text-[var(--red)]">benefici naturali</span> della lumaca.
-</h1>
+            <SplitTitle
+              as="h1"
+              scrollTrigger={false}
+              delay={0.1}
+              className="heading-display max-w-2xl text-[2.7rem] leading-[1.2] text-[var(--green)] sm:text-[3rem] md:text-[3.5rem] lg:text-[4.2rem] xl:text-[4.2rem]"
+            >
+              <span className="italic text-[var(--red)]">Vivi meglio</span> ogni giorno con i{" "}
+              <span className="italic text-[var(--red)]">benefici naturali</span> della lumaca.
+            </SplitTitle>
 
-            <div className="mt-9 flex flex-col gap-4">
+            <motion.div
+              variants={checksContainer}
+              initial="hidden"
+              animate="show"
+              className="mt-9 flex flex-col gap-4"
+            >
               {[
                 "Più benessere nella tua quotidianità",
                 "Più gusto e qualità sulla tua tavola",
                 "Più cura e bellezza per la tua pelle",
               ].map((item) => (
-                <div key={item} className="flex items-center gap-4">
+                <motion.div
+                  key={item}
+                  variants={checkItem}
+                  className="flex items-center gap-4"
+                >
                   <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--green)]">
                     <svg
                       viewBox="0 0 24 24"
@@ -63,11 +133,16 @@ export function Hero() {
                   <span className="font-sans text-[17px] font-medium text-[var(--foreground)]">
                     {item}
                   </span>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <motion.div
+              variants={buttonsRow}
+              initial="hidden"
+              animate="show"
+              className="mt-10 flex flex-col gap-4 sm:flex-row"
+            >
               <Button
                 href={whatsappLink(
                   "Ciao, vorrei ricevere informazioni sui prodotti di Lumache di Campagna."
@@ -82,13 +157,23 @@ export function Hero() {
                 Scopri i prodotti
                 <ArrowRight size={17} />
               </Button>
-            </div>
+            </motion.div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.96, x: 30 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            initial={{
+              opacity: 0,
+              scale: 1.08,
+              clipPath: "inset(18% 18% 18% 18% round 40px)",
+              filter: "blur(14px)",
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              clipPath: "inset(0% 0% 0% 0% round 40px)",
+              filter: "blur(0px)",
+            }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] as const, delay: 0.2 }}
             className="relative order-1 lg:order-2"
           >
             <div className="absolute -left-8 top-12 z-20 hidden rounded-full border border-[var(--border)] bg-white/85 px-6 py-5 shadow-2xl backdrop-blur-xl md:block">
@@ -129,47 +214,52 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Riga sotto: badge brand (senza box) + 4 trust box, 5 colonne totali */}
-<div className="mt-16 grid grid-cols-2 gap-5 lg:grid-cols-5">
-  <motion.div
-    initial={{ opacity: 0, y: 18 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 0.2, duration: 0.6 }}
-    className="col-span-2 flex flex-col items-center justify-center gap-3 text-center lg:col-span-1 lg:items-start lg:text-left"
-  >
-    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--green)] text-white shadow-lg shadow-green-950/15">
-      <Sparkles size={22} />
-    </div>
-    <div>
-      <p className="font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--muted)]">
-        Qualità certificata
-      </p>
-      <p className="font-serif text-xl text-[var(--green)]">
-        Azienda Agricola Doninelli
-      </p>
-    </div>
-  </motion.div>
+        {/* Riga sotto: badge brand (fade da sinistra) + 4 trust box (fade da destra, in sequenza) */}
+        <div className="mt-16 grid grid-cols-2 gap-5 lg:grid-cols-5">
+          <motion.div
+            variants={badgeFadeLeft}
+            initial="hidden"
+            animate="show"
+            className="col-span-2 flex flex-col items-center justify-center gap-3 text-center lg:col-span-1 lg:items-start lg:text-left"
+          >
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--green)] text-white shadow-lg shadow-green-950/15">
+              <Sparkles size={22} />
+            </div>
+            <div>
+              <p className="font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--muted)]">
+                Qualità certificata
+              </p>
+              <p className="font-serif text-xl text-[var(--green)]">
+                Azienda Agricola Doninelli
+              </p>
+            </div>
+          </motion.div>
 
-  {trustItems.map((item, index) => {
-    const Icon = item.icon;
+          <motion.div
+            variants={boxesContainer}
+            initial="hidden"
+            animate="show"
+            className="col-span-2 grid grid-cols-2 gap-5 lg:col-span-4 lg:grid-cols-4"
+          >
+            {trustItems.map((item) => {
+              const Icon = item.icon;
 
-    return (
-      <motion.div
-        key={item.title}
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 + index * 0.1, duration: 0.6 }}
-        className="card-primary p-5"
-      >
-        <Icon className="mb-4 text-[var(--green)]" size={24} />
-        <p className="font-sans text-sm font-bold uppercase tracking-[0.12em]">
-          {item.title}
-        </p>
-        <p className="mt-1 text-sm text-[var(--muted)]">{item.text}</p>
-      </motion.div>
-    );
-  })}
-</div>
+              return (
+                <motion.div
+                  key={item.title}
+                  variants={boxFadeRight}
+                  className="card-primary p-5"
+                >
+                  <Icon className="mb-4 text-[var(--green)]" size={24} />
+                  <p className="font-sans text-sm font-bold uppercase tracking-[0.12em]">
+                    {item.title}
+                  </p>
+                  <p className="mt-1 text-sm text-[var(--muted)]">{item.text}</p>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </div>
       </Container>
     </section>
   );
