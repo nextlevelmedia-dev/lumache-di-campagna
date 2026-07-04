@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { SplitTitle } from "@/components/ui/SplitTitle";
 import { whatsappLink } from "@/lib/whatsapp";
 
 const blocks = [
@@ -55,10 +56,66 @@ const blocks = [
   },
 ];
 
+const collageContainer = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const collageItem = {
+  hidden: { opacity: 0, scale: 1.08, clipPath: "inset(100% 0% 0% 0%)" },
+  show: {
+    opacity: 1,
+    scale: 1,
+    clipPath: "inset(0% 0% 0% 0%)",
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
+
+const textContainer = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const textItem = {
+  hidden: { opacity: 0, y: 20 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
+
+const buttonItem = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { duration: 0.7, ease: "easeOut" as const, delay: 0.35 },
+  },
+};
+
 function ImageCollage({ images, alt }: { images: string[]; alt: string }) {
   return (
-    <div className="grid h-[280px] grid-cols-2 grid-rows-2 gap-4 sm:h-[320px]">
-      <div className="relative col-span-1 row-span-2 overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--soft-gray)] shadow-lg shadow-black/5">
+    <motion.div
+      variants={collageContainer}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-100px" }}
+      className="grid h-[280px] grid-cols-2 grid-rows-2 gap-4 sm:h-[320px]"
+    >
+      <motion.div
+        variants={collageItem}
+        className="relative col-span-1 row-span-2 overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--soft-gray)] shadow-lg shadow-black/5"
+      >
         <Image
           src={images[0]}
           alt={alt}
@@ -66,9 +123,12 @@ function ImageCollage({ images, alt }: { images: string[]; alt: string }) {
           sizes="(max-width: 1024px) 50vw, 25vw"
           className="object-cover"
         />
-      </div>
+      </motion.div>
 
-      <div className="relative col-span-1 row-span-1 overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--soft-gray)] shadow-lg shadow-black/5">
+      <motion.div
+        variants={collageItem}
+        className="relative col-span-1 row-span-1 overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--soft-gray)] shadow-lg shadow-black/5"
+      >
         <Image
           src={images[1]}
           alt={alt}
@@ -76,9 +136,12 @@ function ImageCollage({ images, alt }: { images: string[]; alt: string }) {
           sizes="(max-width: 1024px) 25vw, 12vw"
           className="object-cover"
         />
-      </div>
+      </motion.div>
 
-      <div className="relative col-span-1 row-span-1 overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--soft-gray)] shadow-lg shadow-black/5">
+      <motion.div
+        variants={collageItem}
+        className="relative col-span-1 row-span-1 overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--soft-gray)] shadow-lg shadow-black/5"
+      >
         <Image
           src={images[2]}
           alt={alt}
@@ -86,8 +149,8 @@ function ImageCollage({ images, alt }: { images: string[]; alt: string }) {
           sizes="(max-width: 1024px) 25vw, 12vw"
           className="object-cover"
         />
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -105,38 +168,42 @@ export function BenefitsShowcase() {
                 isReversed ? "lg:[&>*:first-child]:order-2" : ""
               }`}
             >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.96 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <ImageCollage images={block.images} alt={block.eyebrow} />
-              </motion.div>
+              <ImageCollage images={block.images} alt={block.eyebrow} />
 
               <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                variants={textContainer}
+                initial="hidden"
+                whileInView="show"
                 viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               >
-                <p className="eyebrow">{block.eyebrow}</p>
+                <motion.p variants={textItem} className="eyebrow">
+                  {block.eyebrow}
+                </motion.p>
 
-                <h3 className="heading-display mt-4 text-[1.75rem] leading-[1.25] text-[var(--green)] sm:text-[2.1rem] lg:text-[2.4rem]">
-                  {block.title}
-                </h3>
+                <motion.div variants={textItem}>
+                  <SplitTitle
+                    as="h3"
+                    className="heading-display mt-4 text-[1.75rem] leading-[1.25] text-[var(--green)] sm:text-[2.1rem] lg:text-[2.4rem]"
+                  >
+                    {block.title}
+                  </SplitTitle>
+                </motion.div>
 
-                <p className="body-large mt-5">{block.text}</p>
+                <motion.p variants={textItem} className="body-large mt-5">
+                  {block.text}
+                </motion.p>
 
-                <Button
-                  href={whatsappLink(
-                    "Ciao, vorrei ricevere informazioni sui prodotti di Lumache di Campagna."
-                  )}
-                  className="mt-8 gap-2 shadow-xl shadow-green-950/10"
-                >
-                  <MessageCircle size={18} />
-                  Richiedi informazioni
-                </Button>
+                <motion.div variants={buttonItem} className="mt-8">
+                  <Button
+                    href={whatsappLink(
+                      "Ciao, vorrei ricevere informazioni sui prodotti di Lumache di Campagna."
+                    )}
+                    className="gap-2 shadow-xl shadow-green-950/10"
+                  >
+                    <MessageCircle size={18} />
+                    Richiedi informazioni
+                  </Button>
+                </motion.div>
               </motion.div>
             </div>
           );
