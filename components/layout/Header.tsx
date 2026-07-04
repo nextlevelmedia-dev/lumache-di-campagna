@@ -29,12 +29,12 @@ export function Header() {
             alt="Lumache di Campagna"
             width={88}
             height={88}
-            className="h-20 w-20 object-contain"
+            className="h-14 w-14 object-contain md:h-20 md:w-20"
             priority
           />
         </Link>
 
-        <nav className="hidden items-center gap-10 text-xs font-bold uppercase tracking-[0.22em] text-[var(--foreground)] md:flex">
+        <nav className="hidden items-center gap-10 font-serif text-lg text-[var(--foreground)] md:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -61,13 +61,13 @@ export function Header() {
 
         {/* Hamburger, solo mobile */}
         <button
-          type="button"
-          onClick={() => setIsOpen(true)}
-          aria-label="Apri il menu"
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] bg-white/70 text-[var(--green)] transition hover:bg-white md:hidden"
-        >
-          <Menu size={20} />
-        </button>
+  type="button"
+  onClick={() => setIsOpen(true)}
+  aria-label="Apri il menu"
+  className="flex h-11 w-11 items-center justify-center text-[var(--green)] md:hidden"
+>
+  <Menu size={24} />
+</button>
       </Container>
 
       {/* Drawer mobile a schermo intero */}
@@ -84,19 +84,19 @@ export function Header() {
               <Image
   src="/logo/logo-lumache-di-campagna.webp"
   alt="Lumache di Campagna"
-  width={44}
-  height={44}
-  className="h-11 w-11 object-contain"
+  width={56}
+  height={56}
+  className="h-14 w-14 object-contain"
 />
 
               <button
-                type="button"
-                onClick={() => setIsOpen(false)}
-                aria-label="Chiudi il menu"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] bg-white text-[var(--foreground)] transition hover:border-[var(--green)]"
-              >
-                <X size={20} />
-              </button>
+  type="button"
+  onClick={() => setIsOpen(false)}
+  aria-label="Chiudi il menu"
+  className="flex h-11 w-11 items-center justify-center text-[var(--foreground)]"
+>
+  <X size={24} />
+</button>
             </div>
 
             <nav className="mt-12 flex flex-col gap-2">
