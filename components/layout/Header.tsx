@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { Menu, X, MessageCircle } from "lucide-react";
+import { X, MessageCircle } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { whatsappLink } from "@/lib/whatsapp";
@@ -16,6 +16,16 @@ const navItems = [
   { label: "FAQ", href: "#faq" },
   { label: "Contatti", href: "#contatti" },
 ];
+
+function ElegantMenuIcon() {
+  return (
+    <span className="flex w-[31px] flex-col items-end gap-[7px]">
+      <span className="block h-[1.5px] w-[31px] rounded-full bg-[var(--green)] transition-transform duration-300 group-active:-translate-x-1" />
+      <span className="block h-[1.5px] w-[23px] rounded-full bg-[var(--green)] transition-transform duration-300 group-active:translate-x-1" />
+      <span className="block h-[1.5px] w-[28px] rounded-full bg-[var(--green)] transition-transform duration-300 group-active:-translate-x-0.5" />
+    </span>
+  );
+}
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,7 +56,6 @@ export function Header() {
           ))}
         </nav>
 
-        {/* CTA solo desktop, completamente nascosto su mobile */}
         <div className="hidden md:block">
           <Button
             href={whatsappLink(
@@ -59,18 +68,16 @@ export function Header() {
           </Button>
         </div>
 
-        {/* Hamburger, solo mobile */}
         <button
-  type="button"
-  onClick={() => setIsOpen(true)}
-  aria-label="Apri il menu"
-  className="flex h-11 w-11 items-center justify-center text-[var(--green)] md:hidden"
->
-  <Menu size={24} />
-</button>
+          type="button"
+          onClick={() => setIsOpen(true)}
+          aria-label="Apri il menu"
+          className="group flex h-12 w-12 items-center justify-center md:hidden"
+        >
+          <ElegantMenuIcon />
+        </button>
       </Container>
 
-      {/* Drawer mobile a schermo intero */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -82,21 +89,21 @@ export function Header() {
           >
             <div className="flex items-center justify-between">
               <Image
-  src="/logo/logo-lumache-di-campagna.webp"
-  alt="Lumache di Campagna"
-  width={56}
-  height={56}
-  className="h-14 w-14 object-contain"
-/>
+                src="/logo/logo-lumache-di-campagna.webp"
+                alt="Lumache di Campagna"
+                width={56}
+                height={56}
+                className="h-14 w-14 object-contain"
+              />
 
               <button
-  type="button"
-  onClick={() => setIsOpen(false)}
-  aria-label="Chiudi il menu"
-  className="flex h-11 w-11 items-center justify-center text-[var(--foreground)]"
->
-  <X size={24} />
-</button>
+                type="button"
+                onClick={() => setIsOpen(false)}
+                aria-label="Chiudi il menu"
+                className="flex h-12 w-12 items-center justify-center text-[var(--green)]"
+              >
+                <X size={26} strokeWidth={1.8} />
+              </button>
             </div>
 
             <nav className="mt-12 flex flex-col gap-2">

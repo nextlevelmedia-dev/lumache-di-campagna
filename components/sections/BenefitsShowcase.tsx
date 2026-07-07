@@ -183,7 +183,7 @@ export function BenefitsShowcase() {
                 <motion.div variants={textItem}>
                   <SplitTitle
                     as="h3"
-                    className="heading-display mt-4 text-[2.1rem] leading-[1.35] text-[var(--green)] sm:text-[2.1rem] lg:text-[2.8rem]"
+                    className="heading-display mt-4 text-[2.1rem] leading-[5.35] text-[var(--green)] sm:text-[2.1rem] lg:text-[2.8rem]"
                   >
                     {block.title}
                   </SplitTitle>

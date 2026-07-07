@@ -17,10 +17,26 @@ import { SplitTitle } from "@/components/ui/SplitTitle";
 import { whatsappLink } from "@/lib/whatsapp";
 
 const trustItems = [
-  { icon: Leaf, title: "100% Naturale", text: "Senza OGM e additivi" },
-  { icon: Heart, title: "Ricco di benefici", text: "Per te" },
-  { icon: MapPin, title: "Prodotto italiano", text: "A km 0" },
-  { icon: Rabbit, title: "Rispetto per gli animali", text: "E l'ambiente" },
+  {
+    icon: Leaf,
+    title: "100% Naturale",
+    text: "Senza OGM e additivi",
+  },
+  {
+    icon: Heart,
+    title: "Ricco di benefici",
+    text: "Per te",
+  },
+  {
+    icon: MapPin,
+    title: "Prodotto italiano",
+    text: "A km 0",
+  },
+  {
+    icon: Rabbit,
+    title: "Rispetto per gli animali",
+    text: "E l'ambiente",
+  },
 ];
 
 const checksContainer = {
@@ -34,24 +50,41 @@ const checksContainer = {
 };
 
 const checkItem = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: {
+    opacity: 0,
+    y: 16,
+  },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
   },
 };
 
 const buttonsRow = {
-  hidden: { opacity: 0 },
+  hidden: {
+    opacity: 0,
+  },
   show: {
     opacity: 1,
-    transition: { duration: 0.8, ease: "easeOut" as const, delay: 1.2 },
+    transition: {
+      duration: 0.8,
+      ease: "easeOut" as const,
+      delay: 1.2,
+    },
   },
 };
 
 const badgeShine = {
-  hidden: { opacity: 0, y: 18, scale: 0.92, filter: "blur(6px)" },
+  hidden: {
+    opacity: 0,
+    y: 18,
+    scale: 0.92,
+    filter: "blur(6px)",
+  },
   show: {
     opacity: 1,
     y: 0,
@@ -76,13 +109,44 @@ const boxesContainer = {
 };
 
 const boxFadeRight = {
-  hidden: { opacity: 0, x: 24 },
+  hidden: {
+    opacity: 0,
+    x: 24,
+  },
   show: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
   },
 };
+
+function ElegantCheck() {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      className="h-8 w-8 shrink-0 overflow-visible text-[var(--green)]"
+      aria-hidden="true"
+    >
+      <path
+        d="
+          M 5 25
+          C 9 27, 14 32, 18.5 39
+          C 22 30, 27 21, 33 14
+          C 36.5 10, 40.5 6.5, 44 4
+        "
+        stroke="currentColor"
+        strokeWidth="2.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
 
 export function Hero() {
   return (
@@ -90,16 +154,28 @@ export function Hero() {
       <div className="absolute inset-0 opacity-[0.45] [background-image:radial-gradient(circle_at_20%_20%,#ffffff_0,transparent_32%),radial-gradient(circle_at_80%_10%,#eeebe3_0,transparent_34%)]" />
 
       <Container className="relative pt-6 pb-16 sm:pt-8 lg:py-20">
-        <div className="grid items-center gap-8 lg:gap-14 lg:grid-cols-[0.95fr_1.05fr]">
+        <div className="grid items-center gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
           <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] as const }}
+            initial={{
+              opacity: 0,
+              y: 28,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            transition={{
+              duration: 0.8,
+              ease: [0.22, 1, 0.36, 1] as const,
+            }}
             className="order-2 lg:order-1"
           >
             <div className="mb-8 flex items-center gap-4">
               <span className="h-px w-12 bg-[var(--green)]" />
-              <p className="eyebrow">Eccellenza italiana</p>
+
+              <p className="eyebrow">
+                Eccellenza italiana
+              </p>
             </div>
 
             <SplitTitle
@@ -108,7 +184,9 @@ export function Hero() {
               delay={0.1}
               className="heading-display max-w-2xl text-[2.7rem] leading-[1.2] text-[var(--green)] sm:text-[3rem] md:text-[3.5rem] lg:text-[4.2rem] xl:text-[4.2rem]"
             >
-              <span className="italic text-[var(--red)]">Vivi meglio</span>{" "}
+              <span className="italic text-[var(--red)]">
+                Vivi meglio
+              </span>{" "}
               ogni giorno con i{" "}
               <span className="italic text-[var(--red)]">
                 benefici naturali
@@ -132,21 +210,7 @@ export function Hero() {
                   variants={checkItem}
                   className="flex items-center gap-4"
                 >
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--green)]">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      className="h-3.5 w-3.5 text-white"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path
-                        d="M5 12.5l4 4L19 7"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
+                  <ElegantCheck />
 
                   <span className="font-sans text-[17px] font-medium text-[var(--foreground)]">
                     {item}
@@ -168,11 +232,17 @@ export function Hero() {
                 className="gap-2 shadow-xl shadow-green-950/10"
               >
                 <MessageCircle size={18} />
+
                 Richiedi informazioni
               </Button>
 
-              <Button href="#prodotti" variant="secondary" className="gap-2">
+              <Button
+                href="#prodotti"
+                variant="secondary"
+                className="gap-2"
+              >
                 Scopri i prodotti
+
                 <ArrowRight size={17} />
               </Button>
             </motion.div>
@@ -182,13 +252,15 @@ export function Hero() {
             initial={{
               opacity: 0,
               scale: 1.08,
-              clipPath: "inset(18% 18% 18% 18% round 40px)",
+              clipPath:
+                "inset(18% 18% 18% 18% round 40px)",
               filter: "blur(14px)",
             }}
             animate={{
               opacity: 1,
               scale: 1,
-              clipPath: "inset(0% 0% 0% 0% round 40px)",
+              clipPath:
+                "inset(0% 0% 0% 0% round 40px)",
               filter: "blur(0px)",
             }}
             transition={{
@@ -203,10 +275,12 @@ export function Hero() {
                 <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--green)] text-white">
                   <Sparkles size={20} />
                 </div>
+
                 <div>
                   <p className="font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--muted)]">
                     Qualità
                   </p>
+
                   <p className="font-serif text-2xl text-[var(--green)]">
                     Artigianale
                   </p>
@@ -220,18 +294,19 @@ export function Hero() {
                 alt="Lumache di Campagna"
                 fill
                 priority
-                
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
               />
 
               <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(23,63,43,.18),rgba(165,31,36,.05))]" />
+
               <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-white/5" />
 
               <div className="absolute bottom-4 left-4 right-4 rounded-2xl border border-white/25 bg-white/15 p-4 text-white backdrop-blur-xl lg:bottom-8 lg:left-8 lg:right-8 lg:rounded-[2rem] lg:p-6">
                 <p className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] lg:text-xs lg:tracking-[0.28em]">
                   Dalla terra alla tavola
                 </p>
+
                 <p className="mt-2 font-serif text-lg leading-snug lg:mt-3 lg:text-4xl lg:leading-none">
                   Prodotti autentici, naturali e italiani.
                 </p>
@@ -245,21 +320,35 @@ export function Hero() {
             variants={badgeShine}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, margin: "-80px" }}
+            viewport={{
+              once: true,
+              margin: "-80px",
+            }}
             className="col-span-2 flex flex-col items-center justify-center gap-3 text-center lg:col-span-1 lg:items-start lg:text-left"
           >
             <div className="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-[var(--green)] text-white shadow-lg shadow-green-950/15">
               <motion.span
-                initial={{ x: "-160%", opacity: 0 }}
-                whileInView={{ x: "160%", opacity: [0, 1, 0] }}
-                viewport={{ once: true }}
+                initial={{
+                  x: "-160%",
+                  opacity: 0,
+                }}
+                whileInView={{
+                  x: ["-160%", "160%"],
+                  opacity: [0, 1, 0],
+                }}
+                viewport={{
+                  once: false,
+                }}
                 transition={{
                   duration: 1.1,
                   delay: 0.35,
+                  repeat: Infinity,
+                  repeatDelay: 4,
                   ease: "easeInOut",
                 }}
                 className="absolute inset-y-0 w-5 rotate-12 bg-white/45 blur-sm"
               />
+
               <Sparkles size={22} />
             </div>
 
@@ -267,6 +356,7 @@ export function Hero() {
               <p className="font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--muted)]">
                 Qualità certificata
               </p>
+
               <p className="font-serif text-xl text-[var(--green)]">
                 Azienda Agricola Doninelli
               </p>
@@ -277,7 +367,10 @@ export function Hero() {
             variants={boxesContainer}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, margin: "-80px" }}
+            viewport={{
+              once: true,
+              margin: "-80px",
+            }}
             className="col-span-2 grid grid-cols-2 gap-4 lg:col-span-4 lg:grid-cols-4 lg:gap-5"
           >
             {trustItems.map((item) => {
@@ -289,10 +382,15 @@ export function Hero() {
                   variants={boxFadeRight}
                   className="card-primary p-5"
                 >
-                  <Icon className="mb-4 text-[var(--green)]" size={24} />
+                  <Icon
+                    className="mb-4 text-[var(--green)]"
+                    size={24}
+                  />
+
                   <p className="font-sans text-sm font-bold uppercase tracking-[0.12em]">
                     {item.title}
                   </p>
+
                   <p className="mt-1 text-sm text-[var(--muted)]">
                     {item.text}
                   </p>

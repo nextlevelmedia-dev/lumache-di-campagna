@@ -113,24 +113,36 @@ function ProductCard({
   );
 }
 
+function ElegantCheck() {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      className="h-7 w-7 shrink-0 overflow-visible text-[var(--green)]"
+      aria-hidden="true"
+    >
+      <path
+        d="
+          M 5 25
+          C 9 27, 14 32, 18.5 39
+          C 22 30, 27 21, 33 14
+          C 36.5 10, 40.5 6.5, 44 4
+        "
+        stroke="currentColor"
+        strokeWidth="2.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
+
 function CheckItem({ text }: { text: string }) {
   return (
     <div className="flex items-center gap-4">
-      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--green)]">
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          className="h-3.5 w-3.5 text-white"
-          stroke="currentColor"
-          strokeWidth="2.5"
-        >
-          <path
-            d="M5 12.5l4 4L19 7"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </div>
+      <ElegantCheck />
+
       <span className="font-sans text-[15px] font-medium text-[var(--foreground)]">
         {text}
       </span>

@@ -100,30 +100,38 @@ export function FinalCTA() {
             </motion.p>
 
             <motion.div
-              variants={textItem}
-              className="mt-8 flex flex-col gap-3"
-            >
-              {valueProps.map((item) => (
-                <div key={item} className="flex items-center gap-3">
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      className="h-3.5 w-3.5 text-white"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                    >
-                      <path
-                        d="M5 12.5l4 4L19 7"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-[15px] text-white/80">{item}</span>
-                </div>
-              ))}
-            </motion.div>
+  variants={textItem}
+  className="mt-8 flex flex-col gap-3"
+>
+  {valueProps.map((item) => (
+    <div key={item} className="flex items-center gap-3">
+      <svg
+        viewBox="0 0 48 48"
+        fill="none"
+        className="h-7 w-7 shrink-0 overflow-visible text-white"
+        aria-hidden="true"
+      >
+        <path
+          d="
+            M 5 25
+            C 9 27, 14 32, 18.5 39
+            C 22 30, 27 21, 33 14
+            C 36.5 10, 40.5 6.5, 44 4
+          "
+          stroke="currentColor"
+          strokeWidth="2.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
+      </svg>
+
+      <span className="text-[15px] text-white/80">
+        {item}
+      </span>
+    </div>
+  ))}
+</motion.div>
 
             <motion.div variants={buttonItem} className="mt-9">
               <Button
