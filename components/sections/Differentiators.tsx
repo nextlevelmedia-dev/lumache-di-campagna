@@ -10,6 +10,7 @@ import {
   Ban,
   Heart,
 } from "lucide-react";
+
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { SplitTitle } from "@/components/ui/SplitTitle";
@@ -49,70 +50,99 @@ const differentiators = [
 
 export function Differentiators() {
   return (
-    <section className="relative overflow-hidden bg-[var(--green)] py-20 lg:py-28">
-      <div className="absolute inset-0 opacity-[0.08] [background-image:radial-gradient(circle_at_15%_15%,#ffffff_0,transparent_35%),radial-gradient(circle_at_85%_85%,#ffffff_0,transparent_35%)]" />
+    <section className="relative overflow-hidden bg-[var(--green)] py-14 sm:py-20 lg:py-28">
+      {/* Decorazione di sfondo */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:radial-gradient(circle_at_15%_15%,#ffffff_0,transparent_35%),radial-gradient(circle_at_85%_85%,#ffffff_0,transparent_35%)]" />
 
       <Container className="relative">
+        {/* Titolo */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{
+            duration: 0.65,
+            ease: [0.22, 1, 0.36, 1],
+          }}
           className="mx-auto max-w-2xl text-center"
         >
-          <div className="mb-6 flex items-center justify-center gap-4">
-            <span className="h-px w-12 bg-white/40" />
-            <p className="font-sans text-xs font-bold uppercase tracking-[0.32em] text-white/70">
+          <div className="mb-4 flex items-center justify-center gap-3 sm:mb-6 sm:gap-4">
+            <span className="h-px w-8 bg-white/40 sm:w-12" />
+
+            <p className="font-sans text-[10px] font-bold uppercase tracking-[0.26em] text-white/70 sm:text-xs sm:tracking-[0.32em]">
               Perché sceglierci
             </p>
-            <span className="h-px w-12 bg-white/40" />
+
+            <span className="h-px w-8 bg-white/40 sm:w-12" />
           </div>
 
           <SplitTitle
             as="h2"
-            className="heading-display text-[2.25rem] leading-[1.2] text-white sm:text-[2.75rem] lg:text-[3.25rem]"
+            className="heading-display text-[2rem] leading-[1.15] text-white sm:text-[2.75rem] lg:text-[3.25rem]"
           >
             Cosa ci rende <span className="italic">diversi</span>
           </SplitTitle>
         </motion.div>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3">
+        {/* Card */}
+        <div className="mt-10 grid gap-5 sm:mt-12 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3">
           {differentiators.map((item, index) => {
             const Icon = item.icon;
 
             return (
-              <motion.div
+              <motion.article
                 key={item.title}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 32 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ delay: index * 0.08, duration: 0.6 }}
-                className="card-dark p-7"
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{
+                  delay: index * 0.06,
+                  duration: 0.5,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="card-dark p-5 sm:p-6 lg:p-7"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10">
-                  <Icon className="text-white" size={22} />
+                <div className="flex items-start gap-3 sm:block">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 sm:h-12 sm:w-12">
+                    <Icon
+                      className="text-white"
+                      size={19}
+                      strokeWidth={1.8}
+                    />
+                  </div>
+
+                  <div className="min-w-0 sm:mt-5">
+                    <h3 className="heading-display text-[1.05rem] leading-tight text-white sm:text-xl">
+                      {item.title}
+                    </h3>
+
+                    <p className="mt-1.5 text-[13px] leading-[1.55] text-white/70 sm:mt-2 sm:text-[15px] sm:leading-relaxed">
+                      {item.text}
+                    </p>
+                  </div>
                 </div>
-
-                <h3 className="mt-5 heading-display text-xl leading-tight text-white">
-  {item.title}
-</h3>
-
-                <p className="mt-2 text-[15px] leading-relaxed text-white/70">
-                  {item.text}
-                </p>
-              </motion.div>
+              </motion.article>
             );
           })}
         </div>
 
+        {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="mt-12 flex justify-center lg:mt-16"
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{
+            delay: 0.25,
+            duration: 0.55,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="mt-10 flex justify-center sm:mt-12 lg:mt-16"
         >
-          <Button href="#prodotti" variant="secondary" className="gap-2">
+          <Button
+            href="#prodotti"
+            variant="secondary"
+            className="gap-2"
+          >
             Richiedi informazioni
             <ArrowRight size={17} />
           </Button>

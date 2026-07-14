@@ -4,6 +4,7 @@ import { Hero } from "@/components/sections/Hero";
 import { ProblemSolution } from "@/components/sections/ProblemSolution";
 import { BenefitsShowcase } from "@/components/sections/BenefitsShowcase";
 import { Differentiators } from "@/components/sections/Differentiators";
+import { ZoomGallery } from "@/components/sections/ZoomGallery";
 import { ProductsGrid } from "@/components/sections/ProductsGrid";
 import { Allevamento } from "@/components/sections/Allevamento";
 import { ChiSiamo } from "@/components/sections/ChiSiamo";
@@ -21,6 +22,7 @@ export default function Home() {
         <ProblemSolution />
         <BenefitsShowcase />
         <Differentiators />
+        <ZoomGallery />
         <ProductsGrid />
         <Allevamento />
         <ChiSiamo />
