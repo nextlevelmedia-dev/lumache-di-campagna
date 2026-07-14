@@ -11,6 +11,7 @@ import {
 } from "motion/react";
 
 import { Container } from "@/components/ui/Container";
+import { SplitTitle } from "@/components/ui/SplitTitle";
 
 /* ------------------------------------------------------------------ */
 /*  CONFIGURAZIONE                                                     */
@@ -162,11 +163,13 @@ function GalleryImage({
       style={{
         scale,
         translateZ: 0,
+        willChange: "transform",
       }}
       className={[
         "absolute inset-0",
         "flex items-center justify-center",
         "transform-gpu",
+        "[transform-style:preserve-3d]",
         positions[index] ?? "",
       ].join(" ")}
     >
@@ -179,6 +182,8 @@ function GalleryImage({
           "border border-white/60",
           "shadow-none",
           "[backface-visibility:hidden]",
+          "[transform:translateZ(0)]",
+          "[contain:paint]",
         ].join(" ")}
       >
         <Image
@@ -219,7 +224,8 @@ export function ZoomGallery() {
           ? MOBILE_HORIZONTAL_PADDING
           : DESKTOP_HORIZONTAL_PADDING;
 
-      const availableWidth = viewportWidth - horizontalPadding;
+      const availableWidth =
+        viewportWidth - horizontalPadding;
 
       const targetWidth = Math.min(
         MAX_ZOOM_WIDTH,
@@ -228,17 +234,26 @@ export function ZoomGallery() {
 
       const initialWidth = viewportWidth * 0.25;
 
-      const nextScale = targetWidth / initialWidth;
+      const nextScale =
+        targetWidth / initialWidth;
 
-      setCenterEndScale(Math.max(1, nextScale));
+      setCenterEndScale(
+        Math.max(1, nextScale),
+      );
     };
 
     calculateCenterScale();
 
-    window.addEventListener("resize", calculateCenterScale);
+    window.addEventListener(
+      "resize",
+      calculateCenterScale,
+    );
 
     return () => {
-      window.removeEventListener("resize", calculateCenterScale);
+      window.removeEventListener(
+        "resize",
+        calculateCenterScale,
+      );
     };
   }, []);
 
@@ -247,12 +262,20 @@ export function ZoomGallery() {
     offset: ["start start", "end end"],
   });
 
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 30,
-    mass: 0.25,
-    restDelta: 0.001,
-  });
+  /*
+   * Più veloce della versione precedente,
+   * ma con sufficiente inerzia da restare morbido.
+   */
+  const smoothProgress = useSpring(
+    scrollYProgress,
+    {
+      stiffness: 90,
+      damping: 26,
+      mass: 0.42,
+      restDelta: 0.0001,
+      restSpeed: 0.001,
+    },
+  );
 
   const centerScale = useTransform(
     smoothProgress,
@@ -290,8 +313,8 @@ export function ZoomGallery() {
 
   return (
     <section className="bg-[var(--background)]">
-      {/* Intro compatta su mobile e desktop */}
-      <Container className="flex h-[20vh] min-h-[130px] flex-col items-center justify-center text-center sm:h-[24vh] sm:min-h-[170px] lg:h-[30vh] lg:min-h-[220px]">
+      {/* Intro compatta */}
+      <Container className="flex min-h-[220px] flex-col items-center justify-center pb-8 pt-16 text-center sm:min-h-[280px] sm:pb-10 sm:pt-20 lg:min-h-[360px] lg:pb-14 lg:pt-24">
         <div className="mb-2 flex items-center gap-3 sm:mb-3 sm:gap-4">
           <span className="h-px w-8 bg-[var(--green)] sm:w-10" />
 
@@ -302,19 +325,25 @@ export function ZoomGallery() {
           <span className="h-px w-8 bg-[var(--green)] sm:w-10" />
         </div>
 
-        <h2 className="heading-display max-w-2xl text-[1.85rem] leading-[1.12] text-[var(--green)] sm:text-[2.7rem] lg:text-[3.4rem]">
-          Ogni scatto racconta la nostra{" "}
-          <span className="italic text-[var(--red)]">
-            cura artigianale
-          </span>
-          .
-        </h2>
+        <SplitTitle
+  as="h2"
+  repeat
+  duration={1.3}
+  stagger={0.065}
+  className="heading-display max-w-2xl text-[1.85rem] leading-[1.12] text-[var(--green)] sm:text-[2.7rem] lg:text-[3.4rem]"
+>
+  Ogni scatto racconta la nostra{" "}
+  <span className="italic text-[var(--red)]">
+    cura artigianale
+  </span>
+  .
+</SplitTitle>
       </Container>
 
-      {/* Zoom avvicinato al titolo */}
+      {/* Zoom più rapido, senza cambiare l'effetto */}
       <div
         ref={containerRef}
-        className="relative -mt-14 h-[300vh] sm:-mt-12 lg:-mt-8"
+        className="relative -mt-14 h-[290vh] sm:-mt-12 sm:h-[285vh] lg:-mt-8 lg:h-[290vh]"
       >
         <div className="sticky top-0 h-dvh overflow-hidden">
           {images.map(({ src, alt }, index) => (
@@ -329,7 +358,7 @@ export function ZoomGallery() {
         </div>
       </div>
 
-      {/* Spazio finale ridotto */}
+      {/* Spazio finale */}
       <div
         className="h-[4vh] sm:h-[5vh] lg:h-[6vh]"
         aria-hidden="true"
