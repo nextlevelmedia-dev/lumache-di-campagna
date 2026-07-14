@@ -32,15 +32,15 @@ const slides = [
     bottomTitle: "Prodotti autentici, naturali e italiani.",
   },
   {
-    src: "/images/hero/hero-snail.jpg",
+    src: "/images/piatto-2.png",
     alt: "Allevamento naturale",
     topEyebrow: "Allevamento",
     topTitle: "All'aperto",
     bottomEyebrow: "Rispetto dei tempi",
-    bottomTitle: "Crescita lenta e naturale, come vuole la terra.",
+    bottomTitle: "Crescita naturale, come vuole la terra.",
   },
   {
-    src: "/images/hero/hero-snail.jpg",
+    src: "/images/sulla-tavola.png",
     alt: "Cura della bava",
     topEyebrow: "Cosmesi",
     topTitle: "Bava pura",
