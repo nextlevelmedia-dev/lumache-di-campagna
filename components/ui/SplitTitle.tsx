@@ -39,10 +39,10 @@ export function SplitTitle({
     let cancelled = false;
 
     let splitInstance: {
-      revert: () => void;
-      words?: HTMLElement[];
-      lines?: HTMLElement[];
-    } | null = null;
+  revert: () => void;
+  words?: Element[];
+  lines?: Element[];
+} | null = null;
 
     let context: {
       revert: () => void;
