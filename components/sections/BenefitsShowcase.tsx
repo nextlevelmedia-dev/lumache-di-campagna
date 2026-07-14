@@ -10,7 +10,6 @@ import Image from "next/image";
 import {
   motion,
   useAnimationControls,
-  type AnimationControls,
 } from "motion/react";
 import { MessageCircle } from "lucide-react";
 
@@ -162,7 +161,7 @@ const buttonItem = {
 
 type ScrollDownAnimation<T extends HTMLElement> = {
   ref: RefObject<T | null>;
-  controls: AnimationControls;
+  controls: ReturnType<typeof useAnimationControls>;
 };
 
 function useRepeatOnScrollDown<
