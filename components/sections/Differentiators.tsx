@@ -112,11 +112,11 @@ export function Differentiators() {
                   </div>
 
                   <div className="min-w-0 sm:mt-5">
-                    <h3 className="heading-display text-[1.05rem] leading-tight text-white sm:text-xl">
+                    <h3 className="heading-display text-[1.2rem] leading-tight text-white sm:text-[1.45rem]">
                       {item.title}
                     </h3>
 
-                    <p className="mt-1.5 text-[13px] leading-[1.55] text-white/70 sm:mt-2 sm:text-[15px] sm:leading-relaxed">
+                    <p className="mt-2 text-[14px] leading-[1.65] text-white/75 sm:text-[16px] sm:leading-[1.75]">
                       {item.text}
                     </p>
                   </div>
