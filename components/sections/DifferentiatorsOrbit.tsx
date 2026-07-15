@@ -167,13 +167,10 @@ function AnimatedValuesPath() {
   const cardsRef =
     useRef<Array<HTMLDivElement | null>>([]);
 
-  /*
-   * Safari modifica continuamente l'altezza della viewport
-   * quando mostra o nasconde la toolbar.
-   *
-   * Qui salviamo l'altezza reale iniziale e la manteniamo
-   * stabile durante lo scroll.
-   */
+  /* ---------------------------------------------------------------- */
+  /*  ALTEZZA DISPONIBILE                                              */
+  /* ---------------------------------------------------------------- */
+
   useLayoutEffect(() => {
     const panel = panelRef.current;
 
@@ -184,12 +181,28 @@ function AnimatedValuesPath() {
     let previousWidth = window.innerWidth;
     let resizeFrame = 0;
 
-    const setStableViewportHeight = () => {
-      const viewportHeight = window.innerHeight;
+    const measureLayout = () => {
+      const header =
+        document.querySelector<HTMLElement>("header");
+
+      const headerHeight =
+        header?.getBoundingClientRect().height ?? 0;
+
+      /*
+       * Il pannello deve occupare soltanto lo spazio
+       * sotto l'header sticky.
+       */
+      const availableHeight =
+        window.innerHeight - headerHeight;
 
       panel.style.setProperty(
-        "--values-screen-height",
-        `${Math.ceil(viewportHeight)}px`,
+        "--values-panel-height",
+        `${Math.ceil(availableHeight)}px`,
+      );
+
+      panel.style.setProperty(
+        "--values-header-height",
+        `${Math.ceil(headerHeight)}px`,
       );
     };
 
@@ -197,11 +210,8 @@ function AnimatedValuesPath() {
       const currentWidth = window.innerWidth;
 
       /*
-       * La toolbar Safari cambia principalmente l'altezza.
-       * Non aggiorniamo il pannello per questi resize.
-       *
-       * Aggiorniamo solamente se cambia anche la larghezza,
-       * quindi per rotazione o vero cambio viewport.
+       * Ignora i resize verticali minimi causati
+       * dalle toolbar dei browser mobile.
        */
       if (
         Math.abs(currentWidth - previousWidth) < 20
@@ -213,12 +223,12 @@ function AnimatedValuesPath() {
 
       window.cancelAnimationFrame(resizeFrame);
 
-      resizeFrame = window.requestAnimationFrame(() => {
-        setStableViewportHeight();
-      });
+      resizeFrame = window.requestAnimationFrame(
+        measureLayout,
+      );
     };
 
-    setStableViewportHeight();
+    measureLayout();
 
     window.addEventListener(
       "resize",
@@ -246,6 +256,10 @@ function AnimatedValuesPath() {
       );
     };
   }, []);
+
+  /* ---------------------------------------------------------------- */
+  /*  GSAP                                                             */
+  /* ---------------------------------------------------------------- */
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -294,16 +308,24 @@ function AnimatedValuesPath() {
         MotionPathPlugin,
       );
 
-      /*
-       * Impedisce a Safari di ricostruire lo ScrollTrigger
-       * ogni volta che si muove la barra inferiore.
-       */
       ScrollTrigger.config({
         ignoreMobileResize: true,
       });
 
       context = gsap.context(() => {
         const media = gsap.matchMedia();
+
+        const getHeaderHeight = () => {
+          const header =
+            document.querySelector<HTMLElement>(
+              "header",
+            );
+
+          return (
+            header?.getBoundingClientRect().height ??
+            0
+          );
+        };
 
         /* ---------------------------------------------------------- */
         /*  MOBILE E TABLET                                           */
@@ -333,7 +355,14 @@ function AnimatedValuesPath() {
 
               scrollTrigger: {
                 trigger: section,
-                start: "top top",
+
+                /*
+                 * Il pin parte appena la sezione
+                 * raggiunge il fondo dell'header.
+                 */
+                start: () =>
+                  `top top+=${getHeaderHeight()}`,
+
                 end: "+=3400",
 
                 scrub: 0.85,
@@ -341,11 +370,12 @@ function AnimatedValuesPath() {
                 pin: panel,
                 pinSpacing: true,
 
-                /*
-                 * Non forziamo pinType transform:
-                 * lasciamo a GSAP la modalità più adatta.
-                 */
                 anticipatePin: 1,
+
+                /*
+                 * Evita che il browser mobile
+                 * ricalcoli il pannello durante il pin.
+                 */
                 invalidateOnRefresh: false,
               },
             });
@@ -436,7 +466,10 @@ function AnimatedValuesPath() {
 
               scrollTrigger: {
                 trigger: section,
-                start: "top top",
+
+                start: () =>
+                  `top top+=${getHeaderHeight()}`,
+
                 end: "+=3600",
 
                 scrub: 1.1,
@@ -532,26 +565,18 @@ function AnimatedValuesPath() {
         ref={panelRef}
         style={{
           height:
-            "var(--values-screen-height, 100vh)",
-          minHeight:
-            "var(--values-screen-height, 100vh)",
-        }}
-        className={[
-          "relative w-full overflow-hidden",
-          "bg-[var(--green)]",
+            "var(--values-panel-height, calc(100vh - 96px))",
 
-          /*
-           * Da desktop torniamo alla viewport standard.
-           */
-          "lg:!h-screen",
-          "lg:!min-h-screen",
-        ].join(" ")}
+          minHeight:
+            "var(--values-panel-height, calc(100vh - 96px))",
+        }}
+        className="relative w-full overflow-hidden bg-[var(--green)]"
       >
         {/* Fondo */}
         <div className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:radial-gradient(circle_at_15%_15%,#ffffff_0,transparent_35%),radial-gradient(circle_at_85%_85%,#ffffff_0,transparent_35%)]" />
 
         {/* Titolo */}
-        <div className="pointer-events-none absolute left-1/2 top-28 z-30 w-full max-w-[760px] -translate-x-1/2 px-5 text-center sm:top-28 sm:px-8 lg:top-24 xl:top-28">
+        <div className="pointer-events-none absolute left-1/2 top-8 z-30 w-full max-w-[760px] -translate-x-1/2 px-5 text-center sm:top-10 sm:px-8 lg:top-10 xl:top-12">
           <div className="mb-4 flex items-center justify-center gap-3 sm:mb-5 sm:gap-4">
             <span className="h-px w-8 bg-white/35 sm:w-12" />
 
@@ -647,7 +672,7 @@ function AnimatedValuesPath() {
         </div>
 
         {/* CTA */}
-        <div className="absolute bottom-12 left-1/2 z-40 -translate-x-1/2 sm:bottom-8 lg:bottom-10">
+        <div className="absolute bottom-[max(1.5rem,env(safe-area-inset-bottom))] left-1/2 z-40 -translate-x-1/2 lg:bottom-10">
           <Button
             href="#prodotti"
             variant="secondary"
