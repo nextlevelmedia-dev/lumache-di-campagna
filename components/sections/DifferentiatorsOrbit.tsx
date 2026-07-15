@@ -162,6 +162,16 @@ function AnimatedValuesPath() {
   const desktopPathRef =
     useRef<SVGPathElement>(null);
 
+  const valuesTextRef =
+    useRef<HTMLDivElement>(null);
+
+  /*
+   * Livello luminoso sovrapposto:
+   * il gradiente attraversa il testo da sinistra a destra.
+   */
+  const valuesShineRef =
+    useRef<HTMLParagraphElement>(null);
+
   const cardsRef =
     useRef<Array<HTMLDivElement | null>>([]);
 
@@ -184,20 +194,22 @@ function AnimatedValuesPath() {
         window.innerWidth < 1024;
 
       const header =
-        document.querySelector<HTMLElement>("header");
+        document.querySelector<HTMLElement>(
+          "header",
+        );
 
       const headerHeight =
         header?.getBoundingClientRect().height ?? 0;
 
       /*
        * Mobile/tablet:
-       * altezza pari al 100% della viewport.
+       * altezza pari al 90% della viewport.
        *
        * Desktop:
        * altezza disponibile sotto l'header.
        */
       const panelHeight = isMobileOrTablet
-        ? window.innerHeight
+        ? window.innerHeight * 0.9
         : window.innerHeight - headerHeight;
 
       panel.style.setProperty(
@@ -264,8 +276,18 @@ function AnimatedValuesPath() {
   useEffect(() => {
     const section = sectionRef.current;
     const panel = panelRef.current;
-    const mobilePath = mobilePathRef.current;
-    const desktopPath = desktopPathRef.current;
+
+    const mobilePath =
+      mobilePathRef.current;
+
+    const desktopPath =
+      desktopPathRef.current;
+
+    const valuesText =
+      valuesTextRef.current;
+
+    const valuesShine =
+      valuesShineRef.current;
 
     const cards = cardsRef.current.filter(
       (card): card is HTMLDivElement =>
@@ -277,6 +299,8 @@ function AnimatedValuesPath() {
       !panel ||
       !mobilePath ||
       !desktopPath ||
+      !valuesText ||
+      !valuesShine ||
       cards.length === 0
     ) {
       return;
@@ -322,8 +346,8 @@ function AnimatedValuesPath() {
             );
 
           return (
-            header?.getBoundingClientRect().height ??
-            0
+            header?.getBoundingClientRect()
+              .height ?? 0
           );
         };
 
@@ -346,6 +370,27 @@ function AnimatedValuesPath() {
 
               willChange:
                 "transform, opacity, filter",
+            });
+
+            /*
+             * La scritta è già visibile.
+             */
+            gsap.set(valuesText, {
+              autoAlpha: 1,
+              y: 0,
+              scale: 1,
+              filter: "blur(0px)",
+            });
+
+            /*
+             * Il riflesso parte fuori dal lato sinistro.
+             */
+            gsap.set(valuesShine, {
+              autoAlpha: 0,
+              backgroundPosition:
+                "200% center",
+              willChange:
+                "opacity, background-position",
             });
 
             const timeline = gsap.timeline({
@@ -371,6 +416,37 @@ function AnimatedValuesPath() {
                 invalidateOnRefresh: false,
               },
             });
+
+            timeline.to(
+              valuesShine,
+              {
+                autoAlpha: 0.7,
+                duration: 0.12,
+                ease: "sine.out",
+              },
+              0.04,
+            );
+
+            timeline.to(
+              valuesShine,
+              {
+                backgroundPosition:
+                  "-100% center",
+                duration: 0.62,
+                ease: "sine.inOut",
+              },
+              0.04,
+            );
+
+            timeline.to(
+              valuesShine,
+              {
+                autoAlpha: 0,
+                duration: 0.2,
+                ease: "sine.inOut",
+              },
+              0.5,
+            );
 
             timeline.to(
               cards,
@@ -454,6 +530,27 @@ function AnimatedValuesPath() {
                 "transform, opacity, filter",
             });
 
+            /*
+             * La scritta è già visibile.
+             */
+            gsap.set(valuesText, {
+              autoAlpha: 1,
+              y: 0,
+              scale: 1,
+              filter: "blur(0px)",
+            });
+
+            /*
+             * Il riflesso parte fuori dal lato sinistro.
+             */
+            gsap.set(valuesShine, {
+              autoAlpha: 0,
+              backgroundPosition:
+                "200% center",
+              willChange:
+                "opacity, background-position",
+            });
+
             const timeline = gsap.timeline({
               defaults: {
                 ease: "none",
@@ -473,9 +570,41 @@ function AnimatedValuesPath() {
                 pinSpacing: true,
 
                 anticipatePin: 1,
+
                 invalidateOnRefresh: true,
               },
             });
+
+            timeline.to(
+              valuesShine,
+              {
+                autoAlpha: 0.7,
+                duration: 0.12,
+                ease: "sine.out",
+              },
+              0.04,
+            );
+
+            timeline.to(
+              valuesShine,
+              {
+                backgroundPosition:
+                  "-100% center",
+                duration: 0.62,
+                ease: "sine.inOut",
+              },
+              0.04,
+            );
+
+            timeline.to(
+              valuesShine,
+              {
+                autoAlpha: 0,
+                duration: 0.2,
+                ease: "sine.inOut",
+              },
+              0.5,
+            );
 
             timeline.to(
               cards,
@@ -596,26 +725,76 @@ function AnimatedValuesPath() {
         </div>
 
         {/* Scritta centrale */}
-<div className="pointer-events-none absolute left-1/2 top-[54%] z-0 w-full -translate-x-1/2 -translate-y-1/2 px-2 text-center lg:top-[57%] lg:px-0">
-  <p
-    aria-hidden="true"
-    className="font-serif text-[15vw] leading-[1.08] tracking-[-0.055em] text-white/[0.04] sm:text-[13vw] sm:leading-[0.82] lg:text-[10.5vw]"
-  >
-    <span className="hidden whitespace-nowrap sm:inline">
-      I NOSTRI VALORI
-    </span>
+        <div
+          ref={valuesTextRef}
+          className="pointer-events-none absolute left-1/2 top-[42%] z-0 w-full -translate-x-1/2 -translate-y-1/2 px-2 text-center sm:top-[54%] lg:top-[57%] lg:px-0"
+        >
+          {/* Testo base */}
+          <p
+            aria-hidden="true"
+            className="relative font-serif text-[15vw] leading-[1.08] tracking-[-0.055em] text-white/[0.07] sm:text-[13vw] sm:leading-[0.82] lg:text-[10.5vw] lg:text-white/[0.04]"
+          >
+            <span className="hidden whitespace-nowrap sm:inline">
+              I NOSTRI VALORI
+            </span>
 
-    <span className="block sm:hidden">
-      <span className="whitespace-nowrap">
-        I NOSTRI
-      </span>
+            <span className="block sm:hidden">
+              <span className="whitespace-nowrap">
+                I NOSTRI
+              </span>
 
-      <span className="mt-[0.18em] block whitespace-nowrap">
-        VALORI
-      </span>
-    </span>
-  </p>
-</div>
+              <span className="mt-[0.18em] block whitespace-nowrap">
+                VALORI
+              </span>
+            </span>
+          </p>
+
+          {/* Riflesso sovrapposto */}
+          <p
+            ref={valuesShineRef}
+            aria-hidden="true"
+            style={{
+              backgroundImage:
+                "linear-gradient(110deg, transparent 0%, transparent 38%, rgba(255,255,255,0.18) 44%, rgba(255,255,255,0.65) 50%, rgba(255,255,255,0.28) 56%, transparent 62%, transparent 100%)",
+
+              backgroundSize:
+                "220% 100%",
+
+              backgroundPosition:
+                "200% center",
+
+              WebkitBackgroundClip:
+                "text",
+
+              backgroundClip:
+                "text",
+
+              color:
+                "transparent",
+
+              WebkitTextFillColor:
+                "transparent",
+
+              filter:
+                "drop-shadow(0 0 12px rgba(255,255,255,0.25))",
+            }}
+            className="absolute inset-0 font-serif text-[15vw] leading-[1.08] tracking-[-0.055em] sm:text-[13vw] sm:leading-[0.82] lg:text-[10.5vw]"
+          >
+            <span className="hidden whitespace-nowrap sm:inline">
+              I NOSTRI VALORI
+            </span>
+
+            <span className="block sm:hidden">
+              <span className="whitespace-nowrap">
+                I NOSTRI
+              </span>
+
+              <span className="mt-[0.18em] block whitespace-nowrap">
+                VALORI
+              </span>
+            </span>
+          </p>
+        </div>
 
         {/* Percorso mobile */}
         <svg
@@ -646,12 +825,12 @@ function AnimatedValuesPath() {
         >
           <path
             ref={desktopPathRef}
-           d="
-  M 1760 140
-  C 1540 210, 1360 350, 1160 470
-  C 940 570, 700 605, 430 565
-  C 170 520, -20 570, -220 620
-"
+            d="
+              M 1760 140
+              C 1540 210, 1360 350, 1160 470
+              C 940 570, 700 605, 430 565
+              C 170 520, -20 570, -220 620
+            "
             fill="none"
             stroke="transparent"
           />
@@ -677,8 +856,6 @@ function AnimatedValuesPath() {
             ),
           )}
         </div>
-
-        
       </div>
     </div>
   );
