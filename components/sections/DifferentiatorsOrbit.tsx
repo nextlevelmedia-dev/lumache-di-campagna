@@ -168,7 +168,7 @@ function AnimatedValuesPath() {
     useRef<Array<HTMLDivElement | null>>([]);
 
   /* ---------------------------------------------------------------- */
-  /*  ALTEZZA DISPONIBILE                                              */
+  /*  ALTEZZA PANNELLO                                                 */
   /* ---------------------------------------------------------------- */
 
   useLayoutEffect(() => {
@@ -182,6 +182,9 @@ function AnimatedValuesPath() {
     let resizeFrame = 0;
 
     const measureLayout = () => {
+      const isMobileOrTablet =
+        window.innerWidth < 1024;
+
       const header =
         document.querySelector<HTMLElement>("header");
 
@@ -189,20 +192,20 @@ function AnimatedValuesPath() {
         header?.getBoundingClientRect().height ?? 0;
 
       /*
-       * Il pannello deve occupare soltanto lo spazio
-       * sotto l'header sticky.
+       * Mobile/tablet:
+       * pannello alto il 120% della viewport.
+       *
+       * Desktop:
+       * pannello alto quanto lo spazio disponibile
+       * sotto l'header.
        */
-      const availableHeight =
-        window.innerHeight - headerHeight;
+      const panelHeight = isMobileOrTablet
+        ? window.innerHeight * 1.2
+        : window.innerHeight - headerHeight;
 
       panel.style.setProperty(
         "--values-panel-height",
-        `${Math.ceil(availableHeight)}px`,
-      );
-
-      panel.style.setProperty(
-        "--values-header-height",
-        `${Math.ceil(headerHeight)}px`,
+        `${Math.ceil(panelHeight)}px`,
       );
     };
 
@@ -210,8 +213,8 @@ function AnimatedValuesPath() {
       const currentWidth = window.innerWidth;
 
       /*
-       * Ignora i resize verticali minimi causati
-       * dalle toolbar dei browser mobile.
+       * Ignora i piccoli resize verticali causati
+       * dalla toolbar del browser.
        */
       if (
         Math.abs(currentWidth - previousWidth) < 20
@@ -356,10 +359,6 @@ function AnimatedValuesPath() {
               scrollTrigger: {
                 trigger: section,
 
-                /*
-                 * Il pin parte appena la sezione
-                 * raggiunge il fondo dell'header.
-                 */
                 start: () =>
                   `top top+=${getHeaderHeight()}`,
 
@@ -372,10 +371,6 @@ function AnimatedValuesPath() {
 
                 anticipatePin: 1,
 
-                /*
-                 * Evita che il browser mobile
-                 * ricalcoli il pannello durante il pin.
-                 */
                 invalidateOnRefresh: false,
               },
             });
@@ -564,11 +559,15 @@ function AnimatedValuesPath() {
       <div
         ref={panelRef}
         style={{
+          /*
+           * Mobile/tablet: viene impostato via JS a 120vh.
+           * Desktop: viewport meno altezza dell'header.
+           */
           height:
-            "var(--values-panel-height, calc(100vh - 96px))",
+            "var(--values-panel-height, 120vh)",
 
           minHeight:
-            "var(--values-panel-height, calc(100vh - 96px))",
+            "var(--values-panel-height, 120vh)",
         }}
         className="relative w-full overflow-hidden bg-[var(--green)]"
       >
