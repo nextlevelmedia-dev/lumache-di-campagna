@@ -8,7 +8,6 @@ import {
   type SVGProps,
 } from "react";
 import {
-  ArrowRight,
   Ban,
   Hand,
   Heart,
@@ -17,7 +16,6 @@ import {
   Sprout,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/Button";
 import { SplitTitle } from "@/components/ui/SplitTitle";
 
 /* ------------------------------------------------------------------ */
@@ -598,14 +596,26 @@ function AnimatedValuesPath() {
         </div>
 
         {/* Scritta centrale */}
-        <div className="pointer-events-none absolute left-1/2 top-[54%] z-0 -translate-x-1/2 -translate-y-1/2 lg:top-[57%]">
-          <p
-            aria-hidden="true"
-            className="whitespace-nowrap font-serif text-[23vw] leading-[0.72] tracking-[-0.075em] text-white/[0.04] sm:text-[21vw] lg:text-[18vw]"
-          >
-            VALORI
-          </p>
-        </div>
+<div className="pointer-events-none absolute left-1/2 top-[54%] z-0 w-full -translate-x-1/2 -translate-y-1/2 px-2 text-center lg:top-[57%] lg:px-0">
+  <p
+    aria-hidden="true"
+    className="font-serif text-[15vw] leading-[1.08] tracking-[-0.055em] text-white/[0.04] sm:text-[13vw] sm:leading-[0.82] lg:text-[10.5vw]"
+  >
+    <span className="hidden whitespace-nowrap sm:inline">
+      I NOSTRI VALORI
+    </span>
+
+    <span className="block sm:hidden">
+      <span className="whitespace-nowrap">
+        I NOSTRI
+      </span>
+
+      <span className="mt-[0.18em] block whitespace-nowrap">
+        VALORI
+      </span>
+    </span>
+  </p>
+</div>
 
         {/* Percorso mobile */}
         <svg
@@ -636,12 +646,12 @@ function AnimatedValuesPath() {
         >
           <path
             ref={desktopPathRef}
-            d="
-              M 1760 90
-              C 1540 160, 1360 300, 1160 420
-              C 940 520, 700 555, 430 515
-              C 170 470, -20 520, -220 570
-            "
+           d="
+  M 1760 140
+  C 1540 210, 1360 350, 1160 470
+  C 940 570, 700 605, 430 565
+  C 170 520, -20 570, -220 620
+"
             fill="none"
             stroke="transparent"
           />
@@ -668,17 +678,7 @@ function AnimatedValuesPath() {
           )}
         </div>
 
-        {/* CTA */}
-        <div className="absolute bottom-[max(1.5rem,env(safe-area-inset-bottom))] left-1/2 z-40 -translate-x-1/2 lg:bottom-10">
-          <Button
-            href="#prodotti"
-            variant="secondary"
-            className="gap-2 whitespace-nowrap"
-          >
-            Richiedi informazioni
-            <ArrowRight size={17} />
-          </Button>
-        </div>
+        
       </div>
     </div>
   );
