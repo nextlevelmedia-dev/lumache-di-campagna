@@ -200,7 +200,7 @@ function AnimatedValuesPath() {
        * sotto l'header.
        */
       const panelHeight = isMobileOrTablet
-        ? window.innerHeight * 1.1
+        ? window.innerHeight * 1
         : window.innerHeight - headerHeight;
 
       panel.style.setProperty(
