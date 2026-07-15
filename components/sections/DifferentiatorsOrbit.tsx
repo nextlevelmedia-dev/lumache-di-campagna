@@ -185,13 +185,11 @@ function AnimatedValuesPath() {
     let resizeFrame = 0;
 
     const setStableViewportHeight = () => {
-      const viewportHeight =
-        window.visualViewport?.height ??
-        window.innerHeight;
+      const viewportHeight = window.innerHeight;
 
       panel.style.setProperty(
         "--values-screen-height",
-        `${Math.round(viewportHeight)}px`,
+        `${Math.ceil(viewportHeight)}px`,
       );
     };
 
@@ -348,7 +346,7 @@ function AnimatedValuesPath() {
                  * lasciamo a GSAP la modalità più adatta.
                  */
                 anticipatePin: 1,
-                invalidateOnRefresh: true,
+                invalidateOnRefresh: false,
               },
             });
 
@@ -534,9 +532,9 @@ function AnimatedValuesPath() {
         ref={panelRef}
         style={{
           height:
-            "var(--values-screen-height, 100dvh)",
+            "var(--values-screen-height, 100vh)",
           minHeight:
-            "var(--values-screen-height, 100dvh)",
+            "var(--values-screen-height, 100vh)",
         }}
         className={[
           "relative w-full overflow-hidden",
