@@ -93,22 +93,29 @@ function ValueCard({
     <article
       className={[
         "group relative overflow-hidden",
-        "w-[calc(100vw-40px)] max-w-[330px]",
+
+        // Mobile
+        "w-[calc(100vw-40px)]",
+        "max-w-[330px]",
         "rounded-[1.35rem]",
-        "border border-white/20",
-        "bg-white/[0.15]",
         "p-5",
+
+        // Aspetto
+        "border border-white/20",
+        "bg-white/[0.10]",
         "text-white",
         "backdrop-blur-xl",
         "transition-[background,border-color] duration-500",
         "hover:border-white/30",
         "hover:bg-white/[0.19]",
 
+        // Tablet
         "sm:w-[340px]",
         "sm:max-w-none",
         "sm:rounded-[1.6rem]",
         "sm:p-6",
 
+        // Desktop
         "lg:w-[clamp(255px,20vw,310px)]",
         "lg:min-h-[300px]",
         "lg:rounded-[1.8rem]",
@@ -151,10 +158,14 @@ function AnimatedValuesPath() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const mobilePathRef = useRef<SVGPathElement>(null);
-  const desktopPathRef = useRef<SVGPathElement>(null);
+  const mobilePathRef =
+    useRef<SVGPathElement>(null);
 
-  const cardsRef = useRef<Array<HTMLDivElement | null>>([]);
+  const desktopPathRef =
+    useRef<SVGPathElement>(null);
+
+  const cardsRef =
+    useRef<Array<HTMLDivElement | null>>([]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -163,7 +174,8 @@ function AnimatedValuesPath() {
     const desktopPath = desktopPathRef.current;
 
     const cards = cardsRef.current.filter(
-      (card): card is HTMLDivElement => card !== null,
+      (card): card is HTMLDivElement =>
+        card !== null,
     );
 
     if (
@@ -177,7 +189,10 @@ function AnimatedValuesPath() {
     }
 
     let cancelled = false;
-    let context: { revert: () => void } | null = null;
+
+    let context: {
+      revert: () => void;
+    } | null = null;
 
     const initialiseAnimation = async () => {
       const [
@@ -212,10 +227,13 @@ function AnimatedValuesPath() {
             gsap.set(cards, {
               zIndex: (index: number) =>
                 cards.length - index,
+
               autoAlpha: 0,
               scale: 0.72,
               filter: "blur(8px)",
+
               transformOrigin: "50% 50%",
+
               willChange:
                 "transform, opacity, filter",
             });
@@ -224,13 +242,22 @@ function AnimatedValuesPath() {
               defaults: {
                 ease: "none",
               },
+
               scrollTrigger: {
                 trigger: section,
                 start: "top top",
-                end: "+=3000",
+
+                /*
+                 * Più spazio di scroll per tenere
+                 * le card maggiormente distanziate.
+                 */
+                end: "+=3400",
+
                 scrub: 0.85,
+
                 pin: panel,
                 pinSpacing: true,
+
                 anticipatePin: 1,
                 invalidateOnRefresh: true,
               },
@@ -240,6 +267,7 @@ function AnimatedValuesPath() {
               cards,
               {
                 duration: 1,
+
                 motionPath: {
                   path: mobilePath,
                   align: mobilePath,
@@ -247,8 +275,9 @@ function AnimatedValuesPath() {
                   autoRotate: false,
                   curviness: 1.8,
                 },
+
                 stagger: {
-                  each: 0.19,
+                  each: 0.24,
                 },
               },
               0,
@@ -260,9 +289,11 @@ function AnimatedValuesPath() {
                 autoAlpha: 1,
                 scale: 1,
                 filter: "blur(0px)",
+
                 duration: 0.18,
+
                 stagger: {
-                  each: 0.19,
+                  each: 0.24,
                 },
               },
               0,
@@ -274,9 +305,11 @@ function AnimatedValuesPath() {
                 autoAlpha: 0,
                 scale: 0.82,
                 filter: "blur(7px)",
+
                 duration: 0.13,
+
                 stagger: {
-                  each: 0.19,
+                  each: 0.24,
                 },
               },
               0.87,
@@ -298,10 +331,13 @@ function AnimatedValuesPath() {
             gsap.set(cards, {
               zIndex: (index: number) =>
                 cards.length - index,
+
               autoAlpha: 0,
               scale: 0.58,
               filter: "blur(14px)",
+
               transformOrigin: "50% 50%",
+
               willChange:
                 "transform, opacity, filter",
             });
@@ -310,13 +346,17 @@ function AnimatedValuesPath() {
               defaults: {
                 ease: "none",
               },
+
               scrollTrigger: {
                 trigger: section,
                 start: "top top",
                 end: "+=3600",
+
                 scrub: 1.1,
+
                 pin: panel,
                 pinSpacing: true,
+
                 anticipatePin: 1,
                 invalidateOnRefresh: true,
               },
@@ -326,6 +366,7 @@ function AnimatedValuesPath() {
               cards,
               {
                 duration: 1,
+
                 motionPath: {
                   path: desktopPath,
                   align: desktopPath,
@@ -333,6 +374,7 @@ function AnimatedValuesPath() {
                   autoRotate: false,
                   curviness: 2,
                 },
+
                 stagger: {
                   each: 0.18,
                 },
@@ -346,7 +388,9 @@ function AnimatedValuesPath() {
                 autoAlpha: 1,
                 scale: 1,
                 filter: "blur(0px)",
+
                 duration: 0.2,
+
                 stagger: {
                   each: 0.18,
                 },
@@ -360,7 +404,9 @@ function AnimatedValuesPath() {
                 autoAlpha: 0,
                 scale: 0.78,
                 filter: "blur(11px)",
+
                 duration: 0.14,
+
                 stagger: {
                   each: 0.18,
                 },
@@ -397,7 +443,23 @@ function AnimatedValuesPath() {
     >
       <div
         ref={panelRef}
-        className="relative h-dvh min-h-[620px] w-full overflow-hidden bg-[var(--green)]"
+        className={[
+          "relative w-full overflow-hidden",
+          "bg-[var(--green)]",
+
+          /*
+           * Full screen stabile su mobile.
+           * Non cambia con le barre di Safari.
+           */
+          "h-[100svh]",
+          "min-h-[100svh]",
+
+          /*
+           * Desktop.
+           */
+          "lg:h-screen",
+          "lg:min-h-screen",
+        ].join(" ")}
       >
         {/* Fondo */}
         <div className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:radial-gradient(circle_at_15%_15%,#ffffff_0,transparent_35%),radial-gradient(circle_at_85%_85%,#ffffff_0,transparent_35%)]" />
@@ -430,22 +492,13 @@ function AnimatedValuesPath() {
         {/* Decorazione centrale */}
         <div className="pointer-events-none absolute left-1/2 top-[54%] z-0 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center lg:top-[57%]">
           <p
-            aria-hidden="true"
-            className="whitespace-nowrap font-serif text-[30vw] leading-[0.72] tracking-[-0.075em] text-white/[0.035] lg:text-[18vw]"
-          >
-            VALORI
-          </p>
+  aria-hidden="true"
+  className="whitespace-nowrap font-serif text-[23vw] leading-[0.72] tracking-[-0.075em] text-white/[0.04] sm:text-[21vw] lg:text-[18vw]"
+>
+  VALORI
+</p>
 
-          <div className="mt-10 flex justify-center lg:hidden">
-  <Image
-    src="/logo/logo-inverso.png"
-    alt=""
-    width={380}
-    height={380}
-    aria-hidden="true"
-    className="h-auto w-[240px] opacity-[0.1] sm:w-[270px]"
-  />
-</div>
+          
         </div>
 
         {/* Percorso mobile */}
@@ -456,19 +509,19 @@ function AnimatedValuesPath() {
           aria-hidden="true"
         >
           <path
-            ref={mobilePathRef}
-            d="
-              M 500 20
-              C 290 75, 340 230, 205 310
-              C 70 390, 80 560, 220 635
-              C 345 705, 315 835, -90 915
-            "
-            fill="none"
-            stroke="transparent"
-          />
+  ref={mobilePathRef}
+  d="
+    M 500 20
+    C 305 70, 325 205, 225 290
+    C 130 370, 120 500, 220 575
+    C 300 640, 265 735, 15 845
+  "
+  fill="none"
+  stroke="transparent"
+/>
         </svg>
 
-        {/* Percorso desktop: entra dal basso a sinistra */}
+        {/* Percorso desktop */}
         <svg
           viewBox="0 0 1600 900"
           preserveAspectRatio="none"
@@ -476,16 +529,16 @@ function AnimatedValuesPath() {
           aria-hidden="true"
         >
           <path
-  ref={desktopPathRef}
-  d="
-    M 1760 90
-    C 1540 160, 1360 300, 1160 420
-    C 940 545, 700 590, 430 545
-    C 170 510, -20 595, -220 690
-  "
-  fill="none"
-  stroke="transparent"
-/>
+            ref={desktopPathRef}
+            d="
+              M 1760 90
+              C 1540 160, 1360 300, 1160 420
+              C 940 545, 700 590, 430 545
+              C 170 510, -20 595, -220 690
+            "
+            fill="none"
+            stroke="transparent"
+          />
         </svg>
 
         {/* Card animate */}
