@@ -209,8 +209,8 @@ function AnimatedValuesPath() {
        * altezza disponibile sotto l'header.
        */
       const panelHeight = isMobileOrTablet
-        ? window.innerHeight * 0.9
-        : window.innerHeight - headerHeight;
+  ? window.innerHeight
+  : window.innerHeight - headerHeight;
 
       panel.style.setProperty(
         "--values-panel-height",
@@ -465,7 +465,7 @@ function AnimatedValuesPath() {
                  * Più distanza tra le card mobile.
                  */
                 stagger: {
-                  each: 0.28,
+                  each: 0.32,
                 },
               },
               0,
