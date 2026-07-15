@@ -98,14 +98,18 @@ function ValueCard({
         "rounded-[1.35rem]",
         "p-5",
 
-        // Aspetto
+        // Glass verde più coprente
         "border border-white/20",
-        "bg-white/[0.10]",
+        "bg-[rgba(44,82,61,0.92)]",
         "text-white",
-        "backdrop-blur-xl",
-        "transition-[background,border-color] duration-500",
+        "shadow-[0_22px_60px_rgba(7,32,20,0.28)]",
+        "backdrop-blur-2xl",
+        "backdrop-saturate-150",
+        "transition-[background,border-color,box-shadow] duration-500",
+
         "hover:border-white/30",
-        "hover:bg-white/[0.14]",
+        "hover:bg-[rgba(50,91,68,0.96)]",
+        "hover:shadow-[0_28px_70px_rgba(7,32,20,0.34)]",
 
         // Tablet
         "sm:w-[340px]",
@@ -120,18 +124,21 @@ function ValueCard({
         "lg:p-7",
       ].join(" ")}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(255,255,255,.12),transparent_45%)]" />
+      {/* Fondo interno: mantiene il look glass senza mostrare il testo dietro */}
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,0.10),rgba(255,255,255,0.025)_48%,rgba(8,40,25,0.14))]" />
+
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(255,255,255,0.13),transparent_46%)]" />
 
       <div className="relative flex h-full flex-col">
         <div className="flex items-center justify-between gap-4">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white sm:h-12 sm:w-12 lg:h-14 lg:w-14">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white shadow-inner shadow-white/5 sm:h-12 sm:w-12 lg:h-14 lg:w-14">
             <Icon
               size={21}
               strokeWidth={1.7}
             />
           </div>
 
-          <span className="font-sans text-[10px] font-semibold tracking-[0.24em] text-white/35">
+          <span className="font-sans text-[10px] font-semibold tracking-[0.24em] text-white/40">
             0{index + 1}
           </span>
         </div>
@@ -140,7 +147,7 @@ function ValueCard({
           {item.title}
         </h3>
 
-        <p className="mt-2.5 font-sans text-[13px] leading-[1.65] text-white/70 sm:text-[14px] sm:leading-[1.7] lg:mt-4 lg:text-[14px] lg:leading-[1.75]">
+        <p className="mt-2.5 font-sans text-[13px] leading-[1.65] text-white/75 sm:text-[14px] sm:leading-[1.7] lg:mt-4 lg:text-[14px] lg:leading-[1.75]">
           {item.text}
         </p>
       </div>
@@ -153,8 +160,11 @@ function ValueCard({
 /* ------------------------------------------------------------------ */
 
 function AnimatedValuesPath() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
+  const sectionRef =
+    useRef<HTMLDivElement>(null);
+
+  const panelRef =
+    useRef<HTMLDivElement>(null);
 
   const mobilePathRef =
     useRef<SVGPathElement>(null);
@@ -165,10 +175,6 @@ function AnimatedValuesPath() {
   const valuesTextRef =
     useRef<HTMLDivElement>(null);
 
-  /*
-   * Livello luminoso sovrapposto:
-   * il gradiente attraversa il testo da sinistra a destra.
-   */
   const valuesShineRef =
     useRef<HTMLParagraphElement>(null);
 
@@ -186,7 +192,9 @@ function AnimatedValuesPath() {
       return;
     }
 
-    let previousWidth = window.innerWidth;
+    let previousWidth =
+      window.innerWidth;
+
     let resizeFrame = 0;
 
     const measureLayout = () => {
@@ -199,45 +207,59 @@ function AnimatedValuesPath() {
         );
 
       const headerHeight =
-        header?.getBoundingClientRect().height ?? 0;
+        header?.getBoundingClientRect().height ??
+        0;
 
-      /*
-       * Mobile/tablet:
-       * altezza pari al 90% della viewport.
-       *
-       * Desktop:
-       * altezza disponibile sotto l'header.
-       */
-      const panelHeight = isMobileOrTablet
-  ? window.innerHeight
-  : window.innerHeight - headerHeight;
+      const panelHeight =
+        isMobileOrTablet
+          ? window.innerHeight
+          : window.innerHeight -
+            headerHeight;
 
       panel.style.setProperty(
         "--values-panel-height",
         `${Math.ceil(panelHeight)}px`,
       );
+
+      /*
+       * Segnala alla timeline GSAP che il pannello
+       * ha cambiato misura.
+       */
+      window.dispatchEvent(
+        new Event(
+          "values-panel-layout-change",
+        ),
+      );
     };
 
     const handleResize = () => {
-      const currentWidth = window.innerWidth;
+      const currentWidth =
+        window.innerWidth;
 
       /*
-       * Ignora i piccoli cambiamenti verticali
-       * causati dalle toolbar mobili.
+       * Evita refresh continui causati dalla toolbar
+       * del browser mobile.
        */
       if (
-        Math.abs(currentWidth - previousWidth) < 20
+        Math.abs(
+          currentWidth -
+            previousWidth,
+        ) < 20
       ) {
         return;
       }
 
-      previousWidth = currentWidth;
+      previousWidth =
+        currentWidth;
 
-      window.cancelAnimationFrame(resizeFrame);
-
-      resizeFrame = window.requestAnimationFrame(
-        measureLayout,
+      window.cancelAnimationFrame(
+        resizeFrame,
       );
+
+      resizeFrame =
+        window.requestAnimationFrame(
+          measureLayout,
+        );
     };
 
     measureLayout();
@@ -245,17 +267,23 @@ function AnimatedValuesPath() {
     window.addEventListener(
       "resize",
       handleResize,
-      { passive: true },
+      {
+        passive: true,
+      },
     );
 
     window.addEventListener(
       "orientationchange",
       handleResize,
-      { passive: true },
+      {
+        passive: true,
+      },
     );
 
     return () => {
-      window.cancelAnimationFrame(resizeFrame);
+      window.cancelAnimationFrame(
+        resizeFrame,
+      );
 
       window.removeEventListener(
         "resize",
@@ -274,8 +302,11 @@ function AnimatedValuesPath() {
   /* ---------------------------------------------------------------- */
 
   useEffect(() => {
-    const section = sectionRef.current;
-    const panel = panelRef.current;
+    const section =
+      sectionRef.current;
+
+    const panel =
+      panelRef.current;
 
     const mobilePath =
       mobilePathRef.current;
@@ -289,10 +320,13 @@ function AnimatedValuesPath() {
     const valuesShine =
       valuesShineRef.current;
 
-    const cards = cardsRef.current.filter(
-      (card): card is HTMLDivElement =>
-        card !== null,
-    );
+    const cards =
+      cardsRef.current.filter(
+        (
+          card,
+        ): card is HTMLDivElement =>
+          card !== null,
+      );
 
     if (
       !section ||
@@ -312,370 +346,489 @@ function AnimatedValuesPath() {
       revert: () => void;
     } | null = null;
 
-    const initialiseAnimation = async () => {
-      const [
-        { gsap },
-        { ScrollTrigger },
-        { MotionPathPlugin },
-      ] = await Promise.all([
-        import("gsap"),
-        import("gsap/ScrollTrigger"),
-        import("gsap/MotionPathPlugin"),
-      ]);
+    let refreshFrameOne = 0;
+    let refreshFrameTwo = 0;
 
-      if (cancelled) {
-        return;
-      }
+    const initialiseAnimation =
+      async () => {
+        const [
+          { gsap },
+          { ScrollTrigger },
+          { MotionPathPlugin },
+        ] = await Promise.all([
+          import("gsap"),
+          import("gsap/ScrollTrigger"),
+          import(
+            "gsap/MotionPathPlugin"
+          ),
+        ]);
 
-      gsap.registerPlugin(
-        ScrollTrigger,
-        MotionPathPlugin,
-      );
+        if (cancelled) {
+          return;
+        }
 
-      ScrollTrigger.config({
-        ignoreMobileResize: true,
-      });
-
-      context = gsap.context(() => {
-        const media = gsap.matchMedia();
-
-        const getHeaderHeight = () => {
-          const header =
-            document.querySelector<HTMLElement>(
-              "header",
-            );
-
-          return (
-            header?.getBoundingClientRect()
-              .height ?? 0
-          );
-        };
-
-        /* ---------------------------------------------------------- */
-        /*  MOBILE E TABLET                                           */
-        /* ---------------------------------------------------------- */
-
-        media.add(
-          "(max-width: 1023px)",
-          () => {
-            gsap.set(cards, {
-              zIndex: (index: number) =>
-                cards.length - index,
-
-              autoAlpha: 0,
-              scale: 0.72,
-              filter: "blur(8px)",
-
-              transformOrigin: "50% 50%",
-
-              willChange:
-                "transform, opacity, filter",
-            });
-
-            /*
-             * La scritta è già visibile.
-             */
-            gsap.set(valuesText, {
-              autoAlpha: 1,
-              y: 0,
-              scale: 1,
-              filter: "blur(0px)",
-            });
-
-            /*
-             * Il riflesso parte fuori dal lato sinistro.
-             */
-            gsap.set(valuesShine, {
-              autoAlpha: 0,
-              backgroundPosition:
-                "200% center",
-              willChange:
-                "opacity, background-position",
-            });
-
-            const timeline = gsap.timeline({
-              defaults: {
-                ease: "none",
-              },
-
-              scrollTrigger: {
-                trigger: section,
-
-                start: () =>
-                  `top top+=${getHeaderHeight()}`,
-
-                end: "+=3400",
-
-                scrub: 0.85,
-
-                pin: panel,
-                pinSpacing: true,
-
-                anticipatePin: 1,
-
-                invalidateOnRefresh: false,
-              },
-            });
-
-            timeline.to(
-              valuesShine,
-              {
-                autoAlpha: 0.7,
-                duration: 0.12,
-                ease: "sine.out",
-              },
-              0.04,
-            );
-
-            timeline.to(
-              valuesShine,
-              {
-                backgroundPosition:
-                  "-100% center",
-                duration: 0.62,
-                ease: "sine.inOut",
-              },
-              0.04,
-            );
-
-            timeline.to(
-              valuesShine,
-              {
-                autoAlpha: 0,
-                duration: 0.2,
-                ease: "sine.inOut",
-              },
-              0.5,
-            );
-
-            timeline.to(
-              cards,
-              {
-                duration: 1,
-
-                motionPath: {
-                  path: mobilePath,
-                  align: mobilePath,
-                  alignOrigin: [0.5, 0.5],
-                  autoRotate: false,
-                  curviness: 1.8,
-                },
-
-                /*
-                 * Più distanza tra le card mobile.
-                 */
-                stagger: {
-                  each: 0.32,
-                },
-              },
-              0,
-            );
-
-            timeline.to(
-              cards,
-              {
-                autoAlpha: 1,
-                scale: 1,
-                filter: "blur(0px)",
-
-                duration: 0.18,
-
-                stagger: {
-                  each: 0.28,
-                },
-              },
-              0,
-            );
-
-            timeline.to(
-              cards,
-              {
-                autoAlpha: 0,
-                scale: 0.82,
-                filter: "blur(7px)",
-
-                duration: 0.13,
-
-                stagger: {
-                  each: 0.28,
-                },
-              },
-              0.87,
-            );
-
-            return () => {
-              timeline.kill();
-            };
-          },
+        gsap.registerPlugin(
+          ScrollTrigger,
+          MotionPathPlugin,
         );
 
-        /* ---------------------------------------------------------- */
-        /*  DESKTOP                                                   */
-        /* ---------------------------------------------------------- */
+        ScrollTrigger.config({
+          ignoreMobileResize: true,
+        });
 
-        media.add(
-          "(min-width: 1024px)",
+        const refreshAllTriggers =
           () => {
-            gsap.set(cards, {
-              zIndex: (index: number) =>
-                cards.length - index,
-
-              autoAlpha: 0,
-              scale: 0.58,
-              filter: "blur(14px)",
-
-              transformOrigin: "50% 50%",
-
-              willChange:
-                "transform, opacity, filter",
-            });
-
-            /*
-             * La scritta è già visibile.
-             */
-            gsap.set(valuesText, {
-              autoAlpha: 1,
-              y: 0,
-              scale: 1,
-              filter: "blur(0px)",
-            });
-
-            /*
-             * Il riflesso parte fuori dal lato sinistro.
-             */
-            gsap.set(valuesShine, {
-              autoAlpha: 0,
-              backgroundPosition:
-                "200% center",
-              willChange:
-                "opacity, background-position",
-            });
-
-            const timeline = gsap.timeline({
-              defaults: {
-                ease: "none",
-              },
-
-              scrollTrigger: {
-                trigger: section,
-
-                start: () =>
-                  `top top+=${getHeaderHeight()}`,
-
-                end: "+=3600",
-
-                scrub: 1.1,
-
-                pin: panel,
-                pinSpacing: true,
-
-                anticipatePin: 1,
-
-                invalidateOnRefresh: true,
-              },
-            });
-
-            timeline.to(
-              valuesShine,
-              {
-                autoAlpha: 0.7,
-                duration: 0.12,
-                ease: "sine.out",
-              },
-              0.04,
+            window.cancelAnimationFrame(
+              refreshFrameOne,
             );
 
-            timeline.to(
-              valuesShine,
-              {
-                backgroundPosition:
-                  "-100% center",
-                duration: 0.62,
-                ease: "sine.inOut",
-              },
-              0.04,
+            window.cancelAnimationFrame(
+              refreshFrameTwo,
             );
 
-            timeline.to(
-              valuesShine,
-              {
+            refreshFrameOne =
+              window.requestAnimationFrame(
+                () => {
+                  refreshFrameTwo =
+                    window.requestAnimationFrame(
+                      () => {
+                        if (cancelled) {
+                          return;
+                        }
+
+                        /*
+                         * Il pin viene ordinato e misurato
+                         * prima dei titoli nelle sezioni
+                         * successive.
+                         */
+                        ScrollTrigger.sort();
+                        ScrollTrigger.refresh(
+                          true,
+                        );
+                      },
+                    );
+                },
+              );
+          };
+
+        const handleLayoutChange =
+          () => {
+            refreshAllTriggers();
+          };
+
+        window.addEventListener(
+          "values-panel-layout-change",
+          handleLayoutChange,
+        );
+
+        context = gsap.context(() => {
+          const media =
+            gsap.matchMedia();
+
+          const getHeaderHeight =
+            () => {
+              const header =
+                document.querySelector<HTMLElement>(
+                  "header",
+                );
+
+              return (
+                header?.getBoundingClientRect()
+                  .height ?? 0
+              );
+            };
+
+          /* -------------------------------------------------------- */
+          /*  MOBILE E TABLET                                         */
+          /* -------------------------------------------------------- */
+
+          media.add(
+            "(max-width: 1023px)",
+            () => {
+              gsap.set(cards, {
+                zIndex: (
+                  index: number,
+                ) =>
+                  cards.length -
+                  index,
+
                 autoAlpha: 0,
-                duration: 0.2,
-                ease: "sine.inOut",
-              },
-              0.5,
-            );
+                scale: 0.72,
+                filter: "blur(8px)",
 
-            timeline.to(
-              cards,
-              {
-                duration: 1,
+                transformOrigin:
+                  "50% 50%",
 
-                motionPath: {
-                  path: desktopPath,
-                  align: desktopPath,
-                  alignOrigin: [0.5, 0.5],
-                  autoRotate: false,
-                  curviness: 2,
-                },
+                willChange:
+                  "transform, opacity, filter",
+              });
 
-                stagger: {
-                  each: 0.18,
-                },
-              },
-              0,
-            );
-
-            timeline.to(
-              cards,
-              {
+              gsap.set(valuesText, {
                 autoAlpha: 1,
+                y: 0,
                 scale: 1,
                 filter: "blur(0px)",
+              });
 
-                duration: 0.2,
-
-                stagger: {
-                  each: 0.18,
-                },
-              },
-              0,
-            );
-
-            timeline.to(
-              cards,
-              {
+              gsap.set(valuesShine, {
                 autoAlpha: 0,
-                scale: 0.78,
-                filter: "blur(11px)",
+                backgroundPosition:
+                  "200% center",
 
-                duration: 0.14,
+                willChange:
+                  "opacity, background-position",
+              });
 
-                stagger: {
-                  each: 0.18,
+              const timeline =
+                gsap.timeline({
+                  defaults: {
+                    ease: "none",
+                  },
+
+                  scrollTrigger: {
+                    trigger: section,
+
+                    start: () =>
+                      `top top+=${getHeaderHeight()}`,
+
+                    end: "+=3400",
+
+                    scrub: 0.85,
+
+                    pin: panel,
+                    pinSpacing: true,
+
+                    anticipatePin: 1,
+
+                    invalidateOnRefresh:
+                      true,
+
+                    /*
+                     * Deve essere misurato prima
+                     * degli SplitTitle successivi.
+                     */
+                    refreshPriority: 100,
+                  },
+                });
+
+              /*
+               * Riflesso lento:
+               * accensione graduale, attraversamento
+               * morbido e uscita delicata.
+               */
+              timeline.to(
+                valuesShine,
+                {
+                  autoAlpha: 0.62,
+                  duration: 0.22,
+                  ease: "sine.out",
                 },
-              },
-              0.86,
-            );
+                0.01,
+              );
 
-            return () => {
-              timeline.kill();
-            };
+              timeline.to(
+                valuesShine,
+                {
+                  backgroundPosition:
+                    "-100% center",
+
+                  duration: 0.95,
+                  ease: "sine.inOut",
+                },
+                0.01,
+              );
+
+              timeline.to(
+                valuesShine,
+                {
+                  autoAlpha: 0,
+                  duration: 0.3,
+                  ease: "sine.inOut",
+                },
+                0.72,
+              );
+
+              timeline.to(
+                cards,
+                {
+                  duration: 1,
+
+                  motionPath: {
+                    path: mobilePath,
+                    align: mobilePath,
+                    alignOrigin: [
+                      0.5,
+                      0.5,
+                    ],
+                    autoRotate: false,
+                    curviness: 1.8,
+                  },
+
+                  stagger: {
+                    each: 0.32,
+                  },
+                },
+                0,
+              );
+
+              timeline.to(
+                cards,
+                {
+                  autoAlpha: 1,
+                  scale: 1,
+                  filter: "blur(0px)",
+
+                  duration: 0.18,
+
+                  stagger: {
+                    each: 0.28,
+                  },
+                },
+                0,
+              );
+
+              timeline.to(
+                cards,
+                {
+                  autoAlpha: 0,
+                  scale: 0.82,
+                  filter: "blur(7px)",
+
+                  duration: 0.13,
+
+                  stagger: {
+                    each: 0.28,
+                  },
+                },
+                0.87,
+              );
+
+              return () => {
+                timeline.kill();
+              };
+            },
+          );
+
+          /* -------------------------------------------------------- */
+          /*  DESKTOP                                                 */
+          /* -------------------------------------------------------- */
+
+          media.add(
+            "(min-width: 1024px)",
+            () => {
+              gsap.set(cards, {
+                zIndex: (
+                  index: number,
+                ) =>
+                  cards.length -
+                  index,
+
+                autoAlpha: 0,
+                scale: 0.58,
+                filter: "blur(14px)",
+
+                transformOrigin:
+                  "50% 50%",
+
+                willChange:
+                  "transform, opacity, filter",
+              });
+
+              gsap.set(valuesText, {
+                autoAlpha: 1,
+                y: 0,
+                scale: 1,
+                filter: "blur(0px)",
+              });
+
+              gsap.set(valuesShine, {
+                autoAlpha: 0,
+                backgroundPosition:
+                  "200% center",
+
+                willChange:
+                  "opacity, background-position",
+              });
+
+              const timeline =
+                gsap.timeline({
+                  defaults: {
+                    ease: "none",
+                  },
+
+                  scrollTrigger: {
+                    trigger: section,
+
+                    start: () =>
+                      `top top+=${getHeaderHeight()}`,
+
+                    end: "+=3600",
+
+                    scrub: 1.1,
+
+                    pin: panel,
+                    pinSpacing: true,
+
+                    anticipatePin: 1,
+
+                    invalidateOnRefresh:
+                      true,
+
+                    refreshPriority: 100,
+                  },
+                });
+
+              /*
+               * Stesso riflesso lento usato
+               * su mobile.
+               */
+              timeline.to(
+                valuesShine,
+                {
+                  autoAlpha: 0.62,
+                  duration: 0.22,
+                  ease: "sine.out",
+                },
+                0.01,
+              );
+
+              timeline.to(
+                valuesShine,
+                {
+                  backgroundPosition:
+                    "-100% center",
+
+                  duration: 0.95,
+                  ease: "sine.inOut",
+                },
+                0.01,
+              );
+
+              timeline.to(
+                valuesShine,
+                {
+                  autoAlpha: 0,
+                  duration: 0.3,
+                  ease: "sine.inOut",
+                },
+                0.72,
+              );
+
+              timeline.to(
+                cards,
+                {
+                  duration: 1,
+
+                  motionPath: {
+                    path: desktopPath,
+                    align: desktopPath,
+                    alignOrigin: [
+                      0.5,
+                      0.5,
+                    ],
+                    autoRotate: false,
+                    curviness: 2,
+                  },
+
+                  stagger: {
+                    each: 0.18,
+                  },
+                },
+                0,
+              );
+
+              timeline.to(
+                cards,
+                {
+                  autoAlpha: 1,
+                  scale: 1,
+                  filter: "blur(0px)",
+
+                  duration: 0.2,
+
+                  stagger: {
+                    each: 0.18,
+                  },
+                },
+                0,
+              );
+
+              timeline.to(
+                cards,
+                {
+                  autoAlpha: 0,
+                  scale: 0.78,
+                  filter:
+                    "blur(11px)",
+
+                  duration: 0.14,
+
+                  stagger: {
+                    each: 0.18,
+                  },
+                },
+                0.86,
+              );
+
+              return () => {
+                timeline.kill();
+              };
+            },
+          );
+
+          return () => {
+            media.revert();
+          };
+        }, section);
+
+        /*
+         * Aspetta la creazione del pin-spacer,
+         * poi ricalcola tutti i trigger successivi.
+         */
+        refreshAllTriggers();
+
+        /*
+         * SplitText dipende dalle misure reali dei font.
+         */
+        void document.fonts.ready.then(
+          () => {
+            if (!cancelled) {
+              refreshAllTriggers();
+            }
           },
         );
 
         return () => {
-          media.revert();
+          window.removeEventListener(
+            "values-panel-layout-change",
+            handleLayoutChange,
+          );
         };
-      }, section);
+      };
 
-      ScrollTrigger.refresh();
-    };
+    let removeLayoutListener:
+      | (() => void)
+      | undefined;
 
-    void initialiseAnimation();
+    void initialiseAnimation().then(
+      (cleanup) => {
+        removeLayoutListener =
+          cleanup;
+      },
+    );
 
     return () => {
       cancelled = true;
+
+      window.cancelAnimationFrame(
+        refreshFrameOne,
+      );
+
+      window.cancelAnimationFrame(
+        refreshFrameTwo,
+      );
+
+      removeLayoutListener?.();
       context?.revert();
     };
   }, []);
@@ -711,8 +864,14 @@ function AnimatedValuesPath() {
             <span className="h-px w-8 bg-white/35 sm:w-12" />
           </div>
 
+          {/*
+           * Il titolo è già dentro la sezione pin.
+           * Non crea un secondo ScrollTrigger annidato.
+           */}
           <SplitTitle
             as="h2"
+            scrollTrigger={false}
+            delay={0.08}
             duration={1.35}
             stagger={0.065}
             className="heading-display text-[2.35rem] leading-[1.06] text-white sm:text-[3.1rem] lg:text-[3.8rem] xl:text-[4.6rem]"
@@ -749,13 +908,13 @@ function AnimatedValuesPath() {
             </span>
           </p>
 
-          {/* Riflesso sovrapposto */}
+          {/* Riflesso */}
           <p
             ref={valuesShineRef}
             aria-hidden="true"
             style={{
               backgroundImage:
-                "linear-gradient(110deg, transparent 0%, transparent 38%, rgba(255,255,255,0.18) 44%, rgba(255,255,255,0.65) 50%, rgba(255,255,255,0.28) 56%, transparent 62%, transparent 100%)",
+                "linear-gradient(110deg, transparent 0%, transparent 36%, rgba(255,255,255,0.08) 43%, rgba(255,255,255,0.58) 50%, rgba(255,255,255,0.14) 57%, transparent 64%, transparent 100%)",
 
               backgroundSize:
                 "220% 100%",
@@ -776,7 +935,7 @@ function AnimatedValuesPath() {
                 "transparent",
 
               filter:
-                "drop-shadow(0 0 12px rgba(255,255,255,0.25))",
+                "drop-shadow(0 0 18px rgba(255,255,255,0.14))",
             }}
             className="absolute inset-0 font-serif text-[15vw] leading-[1.08] tracking-[-0.055em] sm:text-[13vw] sm:leading-[0.82] lg:text-[10.5vw]"
           >

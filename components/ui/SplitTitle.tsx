@@ -27,7 +27,8 @@ export function SplitTitle({
   delay = 0,
   repeat = false,
 }: SplitTitleProps) {
-  const ref = useRef<HTMLHeadingElement>(null);
+  const ref =
+    useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     const element = ref.current;
@@ -39,14 +40,17 @@ export function SplitTitle({
     let cancelled = false;
 
     let splitInstance: {
-  revert: () => void;
-  words?: Element[];
-  lines?: Element[];
-} | null = null;
+      revert: () => void;
+      words?: Element[];
+      lines?: Element[];
+    } | null = null;
 
     let context: {
       revert: () => void;
     } | null = null;
+
+    let refreshFrameOne = 0;
+    let refreshFrameTwo = 0;
 
     const setupAnimation = async () => {
       const [
@@ -61,7 +65,10 @@ export function SplitTitle({
           : Promise.resolve(null),
       ]);
 
-      if (cancelled || !ref.current) {
+      if (
+        cancelled ||
+        !ref.current
+      ) {
         return;
       }
 
@@ -74,23 +81,32 @@ export function SplitTitle({
           scrollTriggerModule.ScrollTrigger,
         );
       } else {
-        gsap.registerPlugin(SplitText);
+        gsap.registerPlugin(
+          SplitText,
+        );
       }
 
       context = gsap.context(() => {
-        const split = new SplitText(element, {
-          type: "lines,words",
-          linesClass: "split-title-line",
-          wordsClass: "split-title-word",
-        });
+        const split = new SplitText(
+          element,
+          {
+            type: "lines,words",
+            linesClass:
+              "split-title-line",
+            wordsClass:
+              "split-title-word",
+          },
+        );
 
         splitInstance = split;
 
         const words =
-          (split.words ?? []) as HTMLElement[];
+          (split.words ??
+            []) as HTMLElement[];
 
         const lines =
-          (split.lines ?? []) as HTMLElement[];
+          (split.lines ??
+            []) as HTMLElement[];
 
         /*
          * Ogni riga diventa una maschera:
@@ -105,7 +121,8 @@ export function SplitTitle({
 
         gsap.set(element, {
           perspective: 1000,
-          transformStyle: "preserve-3d",
+          transformStyle:
+            "preserve-3d",
         });
 
         gsap.set(words, {
@@ -120,68 +137,132 @@ export function SplitTitle({
             "transform, opacity, filter",
         });
 
-        const animation = gsap.to(words, {
-          opacity: 1,
-          yPercent: 0,
-          rotateX: 0,
-          rotateZ: 0,
-          scale: 1,
-          filter: "blur(0px)",
-          duration,
-          stagger: {
-            each: stagger,
-            from: "start",
+        const animation = gsap.to(
+          words,
+          {
+            opacity: 1,
+            yPercent: 0,
+            rotateX: 0,
+            rotateZ: 0,
+            scale: 1,
+            filter: "blur(0px)",
+            duration,
+
+            stagger: {
+              each: stagger,
+              from: "start",
+            },
+
+            delay,
+            ease: "power4.out",
+
+            clearProps:
+              "willChange,transformOrigin",
+
+            paused: scrollTrigger,
           },
-          delay,
-          ease: "power4.out",
-          clearProps:
-            "willChange,transformOrigin",
-          paused: scrollTrigger,
-        });
+        );
 
         if (
           scrollTrigger &&
           scrollTriggerModule
         ) {
-          scrollTriggerModule.ScrollTrigger.create({
-            trigger: element,
-            start: "top 88%",
-            end: "bottom 10%",
-            once: !repeat,
+          scrollTriggerModule.ScrollTrigger.create(
+            {
+              trigger: element,
 
-            onEnter: () => {
-              animation.restart(true);
+              start: "top 88%",
+              end: "bottom 10%",
+
+              once: !repeat,
+
+              /*
+               * Fondamentale quando sopra ci sono
+               * sezioni sticky o pin GSAP.
+               */
+              invalidateOnRefresh: true,
+
+              onEnter: () => {
+                animation.restart(true);
+              },
+
+              /*
+               * Durante la risalita il titolo resta
+               * visibile.
+               */
+              onEnterBack: () => {
+                animation
+                  .progress(1)
+                  .pause();
+              },
+
+              /*
+               * Se repeat è attivo, viene preparato
+               * soltanto quando il titolo torna
+               * completamente sotto la viewport.
+               */
+              onLeaveBack: () => {
+                if (!repeat) {
+                  return;
+                }
+
+                animation.pause(0);
+
+                gsap.set(words, {
+                  opacity: 0,
+                  yPercent: 115,
+                  rotateX: -22,
+                  rotateZ: 1.5,
+                  scale: 0.96,
+                  filter: "blur(9px)",
+                });
+              },
             },
+          );
 
-            /*
-             * Durante la risalita il titolo resta visibile.
-             */
-            onEnterBack: () => {
-              animation.progress(1).pause();
-            },
+          /*
+           * Il doppio requestAnimationFrame aspetta:
+           * 1. il rendering React;
+           * 2. la creazione degli eventuali pin-spacer;
+           * 3. il ricalcolo del layout.
+           *
+           * Serve soprattutto per i titoli che si trovano
+           * dopo una sezione sticky.
+           */
+          refreshFrameOne =
+            window.requestAnimationFrame(
+              () => {
+                refreshFrameTwo =
+                  window.requestAnimationFrame(
+                    () => {
+                      if (cancelled) {
+                        return;
+                      }
 
-            /*
-             * Se repeat è attivo, viene preparato soltanto
-             * quando il titolo torna completamente sotto
-             * la viewport.
-             */
-            onLeaveBack: () => {
-              if (!repeat) {
+                      scrollTriggerModule
+                        .ScrollTrigger
+                        .refresh(true);
+                    },
+                  );
+              },
+            );
+
+          /*
+           * Ricalcola anche dopo il caricamento dei font,
+           * perché SplitText dipende dalla misura reale
+           * delle righe e delle parole.
+           */
+          void document.fonts.ready.then(
+            () => {
+              if (cancelled) {
                 return;
               }
 
-              animation.pause(0);
-
-              gsap.set(words, {
-                opacity: 0,
-                yPercent: 115,
-                rotateX: -22,
-                rotateZ: 1.5,
-                scale: 0.96,
-                filter: "blur(9px)",
-              });
+              scrollTriggerModule
+                .ScrollTrigger
+                .refresh(true);
             },
-          });
+          );
 
           return;
         }
@@ -194,6 +275,15 @@ export function SplitTitle({
 
     return () => {
       cancelled = true;
+
+      window.cancelAnimationFrame(
+        refreshFrameOne,
+      );
+
+      window.cancelAnimationFrame(
+        refreshFrameTwo,
+      );
+
       context?.revert();
       splitInstance?.revert();
     };

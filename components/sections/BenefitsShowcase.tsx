@@ -15,6 +15,7 @@ import { MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { Reveal } from "@/components/ui/Reveal";
 import { SplitTitle } from "@/components/ui/SplitTitle";
 import { whatsappLink } from "@/lib/whatsapp";
 
@@ -84,7 +85,7 @@ const blocks: BenefitBlock[] = [
 ];
 
 /* ------------------------------------------------------------------ */
-/*  ANIMAZIONI                                                         */
+/*  ANIMAZIONI COLLAGE                                                 */
 /* ------------------------------------------------------------------ */
 
 const collageContainer = {
@@ -103,53 +104,14 @@ const collageItem = {
     scale: 1.08,
     clipPath: "inset(100% 0% 0% 0%)",
   },
+
   show: {
     opacity: 1,
     scale: 1,
     clipPath: "inset(0% 0% 0% 0%)",
+
     transition: {
       duration: 0.8,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  },
-};
-
-const textContainer = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.1,
-    },
-  },
-};
-
-const textItem = {
-  hidden: {
-    opacity: 0,
-    y: 20,
-  },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.8,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  },
-};
-
-const buttonItem = {
-  hidden: {
-    opacity: 0,
-    y: 12,
-  },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.7,
-      delay: 0.25,
       ease: [0.22, 1, 0.36, 1] as const,
     },
   },
@@ -161,18 +123,27 @@ const buttonItem = {
 
 type ScrollDownAnimation<T extends HTMLElement> = {
   ref: RefObject<T | null>;
-  controls: ReturnType<typeof useAnimationControls>;
+  controls: ReturnType<
+    typeof useAnimationControls
+  >;
 };
 
 function useRepeatOnScrollDown<
   T extends HTMLElement,
 >(): ScrollDownAnimation<T> {
   const ref = useRef<T>(null);
-  const controls = useAnimationControls();
 
-  const previousScrollY = useRef(0);
-  const readyToAnimate = useRef(true);
-  const frameId = useRef<number | null>(null);
+  const controls =
+    useAnimationControls();
+
+  const previousScrollY =
+    useRef(0);
+
+  const readyToAnimate =
+    useRef(true);
+
+  const frameId =
+    useRef<number | null>(null);
 
   useEffect(() => {
     const element = ref.current;
@@ -181,10 +152,14 @@ function useRepeatOnScrollDown<
       return;
     }
 
-    previousScrollY.current = window.scrollY;
+    previousScrollY.current =
+      window.scrollY;
 
-    const initialRect = element.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
+    const initialRect =
+      element.getBoundingClientRect();
+
+    const viewportHeight =
+      window.innerHeight;
 
     const isInitiallyVisible =
       initialRect.top < viewportHeight &&
@@ -207,17 +182,22 @@ function useRepeatOnScrollDown<
     const updateAnimation = () => {
       frameId.current = null;
 
-      const currentElement = ref.current;
+      const currentElement =
+        ref.current;
 
       if (!currentElement) {
         return;
       }
 
-      const currentScrollY = window.scrollY;
-      const scrollingDown =
-        currentScrollY > previousScrollY.current;
+      const currentScrollY =
+        window.scrollY;
 
-      previousScrollY.current = currentScrollY;
+      const scrollingDown =
+        currentScrollY >
+        previousScrollY.current;
+
+      previousScrollY.current =
+        currentScrollY;
 
       const rect =
         currentElement.getBoundingClientRect();
@@ -285,7 +265,9 @@ function useRepeatOnScrollDown<
     window.addEventListener(
       "scroll",
       handleScroll,
-      { passive: true },
+      {
+        passive: true,
+      },
     );
 
     window.addEventListener(
@@ -395,41 +377,45 @@ type BenefitTextProps = {
 function BenefitText({
   block,
 }: BenefitTextProps) {
-  const { ref, controls } =
-    useRepeatOnScrollDown<HTMLDivElement>();
-
   return (
-    <motion.div
-      ref={ref}
-      variants={textContainer}
-      initial="hidden"
-      animate={controls}
-    >
-      <motion.p
-        variants={textItem}
-        className="eyebrow"
+    <div>
+      {/* Eyebrow */}
+      <Reveal
+        variant="up"
+        delay={0}
+        duration={0.65}
       >
-        {block.eyebrow}
-      </motion.p>
+        <p className="eyebrow">
+          {block.eyebrow}
+        </p>
+      </Reveal>
 
-      <motion.div variants={textItem}>
-        <SplitTitle
-          as="h3"
-          className="heading-display mt-4 text-[2.1rem] leading-[1.35] text-[var(--green)] sm:text-[2.1rem] lg:text-[2.8rem]"
-        >
-          {block.title}
-        </SplitTitle>
-      </motion.div>
+      {/* Titolo */}
+      <SplitTitle
+        as="h3"
+        duration={1.1}
+        stagger={0.055}
+        className="heading-display mt-4 text-[2.1rem] leading-[1.35] text-[var(--green)] sm:text-[2.1rem] lg:text-[2.8rem]"
+      >
+        {block.title}
+      </SplitTitle>
 
-      <motion.p
-        variants={textItem}
+      {/* Paragrafo */}
+      <Reveal
+        as="p"
+        variant="text"
+        delay={0.45}
+        duration={0.8}
         className="body-large mt-5"
       >
         {block.text}
-      </motion.p>
+      </Reveal>
 
-      <motion.div
-        variants={buttonItem}
+      {/* CTA */}
+      <Reveal
+        variant="cta"
+        delay={0.82}
+        duration={0.7}
         className="mt-8"
       >
         <Button
@@ -441,8 +427,8 @@ function BenefitText({
           <MessageCircle size={18} />
           Richiedi informazioni
         </Button>
-      </motion.div>
-    </motion.div>
+      </Reveal>
+    </div>
   );
 }
 
@@ -454,28 +440,32 @@ export function BenefitsShowcase() {
   return (
     <section className="relative bg-[var(--background)] py-20 lg:py-28">
       <Container className="relative flex flex-col gap-20 lg:gap-28">
-        {blocks.map((block, index) => {
-          const isReversed =
-            index % 2 === 1;
+        {blocks.map(
+          (block, index) => {
+            const isReversed =
+              index % 2 === 1;
 
-          return (
-            <div
-              key={block.eyebrow}
-              className={`grid items-start gap-10 lg:grid-cols-2 lg:gap-16 ${
-                isReversed
-                  ? "lg:[&>*:first-child]:order-2"
-                  : ""
-              }`}
-            >
-              <ImageCollage
-                images={block.images}
-                alt={block.eyebrow}
-              />
+            return (
+              <div
+                key={block.eyebrow}
+                className={`grid items-start gap-10 lg:grid-cols-2 lg:gap-16 ${
+                  isReversed
+                    ? "lg:[&>*:first-child]:order-2"
+                    : ""
+                }`}
+              >
+                <ImageCollage
+                  images={block.images}
+                  alt={block.eyebrow}
+                />
 
-              <BenefitText block={block} />
-            </div>
-          );
-        })}
+                <BenefitText
+                  block={block}
+                />
+              </div>
+            );
+          },
+        )}
       </Container>
     </section>
   );
