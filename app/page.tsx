@@ -3,7 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { ProblemSolution } from "@/components/sections/ProblemSolution";
 import { BenefitsShowcase } from "@/components/sections/BenefitsShowcase";
-import { Differentiators } from "@/components/sections/Differentiators";
+import { DifferentiatorsOrbit } from "@/components/sections/DifferentiatorsOrbit";
 import { ZoomGallery } from "@/components/sections/ZoomGallery";
 import { ProductsGrid } from "@/components/sections/ProductsGrid";
 import { Allevamento } from "@/components/sections/Allevamento";
@@ -21,7 +21,7 @@ export default function Home() {
         <Hero />
         <ProblemSolution />
         <BenefitsShowcase />
-        <Differentiators />
+        <DifferentiatorsOrbit />
         <ZoomGallery />
         <ProductsGrid />
         <Allevamento />
