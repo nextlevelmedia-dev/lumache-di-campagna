@@ -193,14 +193,13 @@ function AnimatedValuesPath() {
 
       /*
        * Mobile/tablet:
-       * pannello alto il 120% della viewport.
+       * altezza pari al 100% della viewport.
        *
        * Desktop:
-       * pannello alto quanto lo spazio disponibile
-       * sotto l'header.
+       * altezza disponibile sotto l'header.
        */
       const panelHeight = isMobileOrTablet
-        ? window.innerHeight * 1
+        ? window.innerHeight
         : window.innerHeight - headerHeight;
 
       panel.style.setProperty(
@@ -213,8 +212,8 @@ function AnimatedValuesPath() {
       const currentWidth = window.innerWidth;
 
       /*
-       * Ignora i piccoli resize verticali causati
-       * dalla toolbar del browser.
+       * Ignora i piccoli cambiamenti verticali
+       * causati dalle toolbar mobili.
        */
       if (
         Math.abs(currentWidth - previousWidth) < 20
@@ -388,8 +387,11 @@ function AnimatedValuesPath() {
                   curviness: 1.8,
                 },
 
+                /*
+                 * Più distanza tra le card mobile.
+                 */
                 stagger: {
-                  each: 0.24,
+                  each: 0.28,
                 },
               },
               0,
@@ -405,7 +407,7 @@ function AnimatedValuesPath() {
                 duration: 0.18,
 
                 stagger: {
-                  each: 0.24,
+                  each: 0.28,
                 },
               },
               0,
@@ -421,7 +423,7 @@ function AnimatedValuesPath() {
                 duration: 0.13,
 
                 stagger: {
-                  each: 0.24,
+                  each: 0.28,
                 },
               },
               0.87,
@@ -559,15 +561,11 @@ function AnimatedValuesPath() {
       <div
         ref={panelRef}
         style={{
-          /*
-           * Mobile/tablet: viene impostato via JS a 120vh.
-           * Desktop: viewport meno altezza dell'header.
-           */
           height:
-            "var(--values-panel-height, 120vh)",
+            "var(--values-panel-height, 100vh)",
 
           minHeight:
-            "var(--values-panel-height, 120vh)",
+            "var(--values-panel-height, 100vh)",
         }}
         className="relative w-full overflow-hidden bg-[var(--green)]"
       >
@@ -641,8 +639,8 @@ function AnimatedValuesPath() {
             d="
               M 1760 90
               C 1540 160, 1360 300, 1160 420
-              C 940 545, 700 590, 430 545
-              C 170 510, -20 595, -220 690
+              C 940 520, 700 555, 430 515
+              C 170 470, -20 520, -220 570
             "
             fill="none"
             stroke="transparent"
