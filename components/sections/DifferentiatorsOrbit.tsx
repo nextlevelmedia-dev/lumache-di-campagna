@@ -2,11 +2,11 @@
 
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
   type ComponentType,
   type SVGProps,
 } from "react";
-import Image from "next/image";
 import {
   ArrowRight,
   Ban,
@@ -107,7 +107,7 @@ function ValueCard({
         "backdrop-blur-xl",
         "transition-[background,border-color] duration-500",
         "hover:border-white/30",
-        "hover:bg-white/[0.19]",
+        "hover:bg-white/[0.14]",
 
         // Tablet
         "sm:w-[340px]",
@@ -167,6 +167,88 @@ function AnimatedValuesPath() {
   const cardsRef =
     useRef<Array<HTMLDivElement | null>>([]);
 
+  /*
+   * Safari modifica continuamente l'altezza della viewport
+   * quando mostra o nasconde la toolbar.
+   *
+   * Qui salviamo l'altezza reale iniziale e la manteniamo
+   * stabile durante lo scroll.
+   */
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+
+    if (!panel) {
+      return;
+    }
+
+    let previousWidth = window.innerWidth;
+    let resizeFrame = 0;
+
+    const setStableViewportHeight = () => {
+      const viewportHeight =
+        window.visualViewport?.height ??
+        window.innerHeight;
+
+      panel.style.setProperty(
+        "--values-screen-height",
+        `${Math.round(viewportHeight)}px`,
+      );
+    };
+
+    const handleResize = () => {
+      const currentWidth = window.innerWidth;
+
+      /*
+       * La toolbar Safari cambia principalmente l'altezza.
+       * Non aggiorniamo il pannello per questi resize.
+       *
+       * Aggiorniamo solamente se cambia anche la larghezza,
+       * quindi per rotazione o vero cambio viewport.
+       */
+      if (
+        Math.abs(currentWidth - previousWidth) < 20
+      ) {
+        return;
+      }
+
+      previousWidth = currentWidth;
+
+      window.cancelAnimationFrame(resizeFrame);
+
+      resizeFrame = window.requestAnimationFrame(() => {
+        setStableViewportHeight();
+      });
+    };
+
+    setStableViewportHeight();
+
+    window.addEventListener(
+      "resize",
+      handleResize,
+      { passive: true },
+    );
+
+    window.addEventListener(
+      "orientationchange",
+      handleResize,
+      { passive: true },
+    );
+
+    return () => {
+      window.cancelAnimationFrame(resizeFrame);
+
+      window.removeEventListener(
+        "resize",
+        handleResize,
+      );
+
+      window.removeEventListener(
+        "orientationchange",
+        handleResize,
+      );
+    };
+  }, []);
+
   useEffect(() => {
     const section = sectionRef.current;
     const panel = panelRef.current;
@@ -214,6 +296,14 @@ function AnimatedValuesPath() {
         MotionPathPlugin,
       );
 
+      /*
+       * Impedisce a Safari di ricostruire lo ScrollTrigger
+       * ogni volta che si muove la barra inferiore.
+       */
+      ScrollTrigger.config({
+        ignoreMobileResize: true,
+      });
+
       context = gsap.context(() => {
         const media = gsap.matchMedia();
 
@@ -246,11 +336,6 @@ function AnimatedValuesPath() {
               scrollTrigger: {
                 trigger: section,
                 start: "top top",
-
-                /*
-                 * Più spazio di scroll per tenere
-                 * le card maggiormente distanziate.
-                 */
                 end: "+=3400",
 
                 scrub: 0.85,
@@ -258,6 +343,10 @@ function AnimatedValuesPath() {
                 pin: panel,
                 pinSpacing: true,
 
+                /*
+                 * Non forziamo pinType transform:
+                 * lasciamo a GSAP la modalità più adatta.
+                 */
                 anticipatePin: 1,
                 invalidateOnRefresh: true,
               },
@@ -443,28 +532,27 @@ function AnimatedValuesPath() {
     >
       <div
         ref={panelRef}
+        style={{
+          height:
+            "var(--values-screen-height, 100dvh)",
+          minHeight:
+            "var(--values-screen-height, 100dvh)",
+        }}
         className={[
           "relative w-full overflow-hidden",
           "bg-[var(--green)]",
 
           /*
-           * Full screen stabile su mobile.
-           * Non cambia con le barre di Safari.
+           * Da desktop torniamo alla viewport standard.
            */
-          "h-[100svh]",
-          "min-h-[100svh]",
-
-          /*
-           * Desktop.
-           */
-          "lg:h-screen",
-          "lg:min-h-screen",
+          "lg:!h-screen",
+          "lg:!min-h-screen",
         ].join(" ")}
       >
         {/* Fondo */}
         <div className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:radial-gradient(circle_at_15%_15%,#ffffff_0,transparent_35%),radial-gradient(circle_at_85%_85%,#ffffff_0,transparent_35%)]" />
 
-        {/* Titolo in alto */}
+        {/* Titolo */}
         <div className="pointer-events-none absolute left-1/2 top-28 z-30 w-full max-w-[760px] -translate-x-1/2 px-5 text-center sm:top-28 sm:px-8 lg:top-24 xl:top-28">
           <div className="mb-4 flex items-center justify-center gap-3 sm:mb-5 sm:gap-4">
             <span className="h-px w-8 bg-white/35 sm:w-12" />
@@ -489,16 +577,14 @@ function AnimatedValuesPath() {
           </SplitTitle>
         </div>
 
-        {/* Decorazione centrale */}
-        <div className="pointer-events-none absolute left-1/2 top-[54%] z-0 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center lg:top-[57%]">
+        {/* Scritta centrale */}
+        <div className="pointer-events-none absolute left-1/2 top-[54%] z-0 -translate-x-1/2 -translate-y-1/2 lg:top-[57%]">
           <p
-  aria-hidden="true"
-  className="whitespace-nowrap font-serif text-[23vw] leading-[0.72] tracking-[-0.075em] text-white/[0.04] sm:text-[21vw] lg:text-[18vw]"
->
-  VALORI
-</p>
-
-          
+            aria-hidden="true"
+            className="whitespace-nowrap font-serif text-[23vw] leading-[0.72] tracking-[-0.075em] text-white/[0.04] sm:text-[21vw] lg:text-[18vw]"
+          >
+            VALORI
+          </p>
         </div>
 
         {/* Percorso mobile */}
@@ -509,16 +595,16 @@ function AnimatedValuesPath() {
           aria-hidden="true"
         >
           <path
-  ref={mobilePathRef}
-  d="
-    M 500 20
-    C 305 70, 325 205, 225 290
-    C 130 370, 120 500, 220 575
-    C 300 640, 265 735, 15 845
-  "
-  fill="none"
-  stroke="transparent"
-/>
+            ref={mobilePathRef}
+            d="
+              M 500 20
+              C 305 70, 325 205, 225 290
+              C 130 370, 120 500, 220 575
+              C 300 640, 265 735, 15 845
+            "
+            fill="none"
+            stroke="transparent"
+          />
         </svg>
 
         {/* Percorso desktop */}
@@ -541,7 +627,7 @@ function AnimatedValuesPath() {
           />
         </svg>
 
-        {/* Card animate */}
+        {/* Card */}
         <div className="pointer-events-none absolute inset-0 z-20">
           {differentiators.map(
             (item, index) => (
