@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import {
   Cormorant_Garamond,
-  Manrope,
+  Lato,
 } from "next/font/google";
 
 import "./globals.css";
@@ -13,10 +13,10 @@ const serif = Cormorant_Garamond({
   display: "swap",
 });
 
-const sans = Manrope({
+const sans = Lato({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "700", "900"],
   display: "swap",
 });
 
@@ -33,9 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="it">
-      <body
-        className={`${serif.variable} ${sans.variable} antialiased`}
-      >
+      <body className={`${serif.variable} ${sans.variable} antialiased`}>
         {children}
       </body>
     </html>
