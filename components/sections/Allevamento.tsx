@@ -545,18 +545,12 @@ export function Allevamento() {
 
           <div
             className={[
-              "absolute inset-x-0 bottom-0",
-
-              /*
-               * Il titolo mobile ora è più grande,
-               * quindi la timeline parte un poco
-               * più in basso.
-               */
-              "top-[142px]",
-              "sm:top-[150px]",
-              "lg:top-[132px]",
-              "xl:top-[140px]",
-            ].join(" ")}
+  "absolute inset-x-0 bottom-0",
+  "top-[118px]",
+  "sm:top-[150px]",
+  "lg:top-[132px]",
+  "xl:top-[140px]",
+].join(" ")}
           >
             <div
               className={[
