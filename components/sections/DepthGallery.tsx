@@ -1,277 +1,223 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { SplitTitle } from "@/components/ui/SplitTitle";
 
 const images = [
-  { src: "/images/lumache-sfuse-1.png", label: "01 / Allevamento" },
-  { src: "/images/lumache-sfuse-2.png", label: "02 / Raccolta" },
-  { src: "/images/lumache-sfuse-3.png", label: "03 / Lavorazione" },
-  { src: "/images/piatto-1.png", label: "04 / Prodotto" },
+  { src: "/images/lumache-sfuse-1.png", alt: "Lumache allevate" },
+  { src: "/images/lumache-sfuse-2.png", alt: "Lumache nel verde" },
+  { src: "/images/lumache-sfuse-3.png", alt: "Lumache raccolte" },
+  { src: "/images/lumache-sfuse-3.png", alt: "Piatto con lumache" },
+  { src: "/images/lumache-sfuse-3.png", alt: "Preparazione gastronomica" },
+  { src: "/images/lumache-sfuse-3.png", alt: "Piatto della tradizione" },
+  {
+    src: "/images/allevamento-immagine-drone.jpg",
+    alt: "Allevamento visto dall’alto",
+  },
+  { src: "/images/lumaca.jpg", alt: "Lumaca in primo piano" },
 ];
 
+const MOBILE_HEADER_HEIGHT = 97;
+
 export function DepthGallery() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
-  const tilesRef = useRef<Array<HTMLDivElement | null>>([]);
+  const sectionRef = useRef<HTMLElement>(null);
+  const frameRef = useRef<number | null>(null);
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [rotation, setRotation] = useState(0);
+  const [radius, setRadius] = useState(330);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   useEffect(() => {
-    let scrollTriggerInstance: { kill: () => void } | null = null;
-
-    const container = containerRef.current;
-    const list = listRef.current;
-    const tiles = tilesRef.current.filter(
-      (el): el is HTMLDivElement => el !== null
-    );
-
-    if (!container || !list || tiles.length < 2) return;
-
-    Promise.all([
-      import("gsap"),
-      import("gsap/ScrollTrigger"),
-      import("gsap/CustomEase"),
-    ]).then(([{ gsap }, { ScrollTrigger }, { CustomEase }]) => {
-      gsap.registerPlugin(ScrollTrigger, CustomEase);
-      CustomEase.create("depth", "M0,0 C0.6,0 0,1 1,1");
-
-      const tileCount = tiles.length;
-      const xMultiplier = window.innerWidth < 768 ? 0.46: 0.65;
-      const backScale = 0.5;
-      const backOpacity = 1;
-      const backDarkness = 1;
-      const sideRotateY = 5;
-      const perspective = 75;
-
-      const moveDuration = 1.5;
-      const startDelay = 0.5;
-      const pauseDuration = 0.125;
-
-      const state = { progress: 0 };
-
-      let isActive = false;
-      let isHovering = false;
-      let hasStarted = false;
-      let stepTimeline: ReturnType<typeof gsap.timeline> | undefined;
-      let delayedCall: ReturnType<typeof gsap.delayedCall> | undefined;
-      let startDelayedCall: ReturnType<typeof gsap.delayedCall> | undefined;
-      let activeTileIndex = -1;
-
-      gsap.set(list, { perspective: `${perspective}em` });
-      gsap.set(tiles, {
-        transformStyle: "preserve-3d",
-        transformPerspective: perspective * 16,
-      });
-
-      function getRelativeIndex(index: number) {
-        let relative = index - state.progress;
-        relative =
-          (((relative + tileCount / 2) % tileCount) + tileCount) %
-            tileCount -
-          tileCount / 2;
-        return gsap.utils.clamp(-2, 2, relative);
+    const updateRadius = () => {
+      if (window.innerWidth < 640) {
+        setRadius(250);
+        return;
       }
 
-      function getActiveIndex() {
-        return (
-          ((Math.round(state.progress) % tileCount) + tileCount) % tileCount
-        );
+      if (window.innerWidth < 1024) {
+        setRadius(280);
+        return;
       }
 
-      function updateTileStatus() {
-        const currentActiveIndex = getActiveIndex();
-        if (currentActiveIndex === activeTileIndex) return;
-        activeTileIndex = currentActiveIndex;
-      }
+      setRadius(390);
+    };
 
-      function renderDepth() {
-        const tileWidth = tiles[0].offsetWidth;
-        const radiusX = tileWidth * xMultiplier;
+    updateRadius();
 
-        updateTileStatus();
-
-        tiles.forEach((tile, index) => {
-          const relative = getRelativeIndex(index);
-          const angle = (relative / 2) * Math.PI;
-
-          const orbitX = Math.sin(angle) * radiusX;
-          const orbitDepth = (Math.cos(angle) + 1) / 2;
-
-          const x = relative <= -2 || relative >= 2 ? 0 : orbitX;
-          const scale = gsap.utils.interpolate(backScale, 1, orbitDepth);
-          const opacity = gsap.utils.interpolate(backOpacity, 1, orbitDepth);
-          const brightness = gsap.utils.interpolate(
-            backDarkness,
-            1,
-            orbitDepth
-          );
-          const rotateY = Math.sin(angle) * -sideRotateY;
-          const zIndex = Math.round(
-            gsap.utils.interpolate(1, 1000, orbitDepth)
-          );
-
-          gsap.set(tile, {
-            x,
-            scale,
-            opacity,
-            rotateY,
-            filter: `brightness(${brightness})`,
-            zIndex,
-          });
-        });
-      }
-
-      function goToNextTile() {
-        if (!isActive || isHovering) return;
-
-        stepTimeline = gsap.timeline({
-          paused: true,
-          onComplete: () => {
-            if (isActive && !isHovering) {
-              delayedCall = gsap.delayedCall(pauseDuration, goToNextTile);
-            }
-          },
-        });
-
-        stepTimeline.to(state, {
-          progress: state.progress + 1,
-          duration: moveDuration,
-          ease: "depth",
-          onUpdate: renderDepth,
-        });
-
-        stepTimeline.play();
-      }
-
-      function pauseDepth() {
-        isActive = false;
-        stepTimeline?.pause();
-        delayedCall?.kill();
-        startDelayedCall?.kill();
-      }
-
-      function playDepth() {
-        isActive = true;
-        if (isHovering) return;
-
-        if (!hasStarted) {
-          hasStarted = true;
-          startDelayedCall = gsap.delayedCall(startDelay, goToNextTile);
-          return;
-        }
-
-        if (stepTimeline && stepTimeline.progress() < 1) {
-          stepTimeline.play();
-        } else {
-          goToNextTile();
-        }
-      }
-
-      function handleHoverStart() {
-        isHovering = true;
-        delayedCall?.pause();
-        startDelayedCall?.pause();
-      }
-
-      function handleHoverEnd() {
-        isHovering = false;
-        if (!isActive) return;
-
-        if (!hasStarted) {
-          playDepth();
-          return;
-        }
-
-        if (stepTimeline && stepTimeline.progress() < 1) {
-          stepTimeline.play();
-        } else {
-          goToNextTile();
-        }
-      }
-
-      const onPointerOver = (event: PointerEvent) => {
-        if (!(event.target as HTMLElement).closest("[data-tile]")) return;
-        handleHoverStart();
-      };
-      const onPointerLeave = () => handleHoverEnd();
-
-      list.addEventListener("pointerover", onPointerOver);
-      list.addEventListener("pointerleave", onPointerLeave);
-
-      renderDepth();
-
-      scrollTriggerInstance = ScrollTrigger.create({
-        trigger: container,
-        start: "top bottom",
-        end: "bottom top",
-        onToggle: (self: { isActive: boolean }) =>
-          self.isActive ? playDepth() : pauseDepth(),
-      });
-
-      return () => {
-        list.removeEventListener("pointerover", onPointerOver);
-        list.removeEventListener("pointerleave", onPointerLeave);
-      };
-    });
+    window.addEventListener("resize", updateRadius);
 
     return () => {
-      scrollTriggerInstance?.kill();
+      window.removeEventListener("resize", updateRadius);
     };
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const section = sectionRef.current;
+
+      if (!section) {
+        return;
+      }
+
+      setIsScrolling(true);
+
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+
+      const rect = section.getBoundingClientRect();
+
+      const availableViewportHeight =
+        window.innerHeight - MOBILE_HEADER_HEIGHT;
+
+      const scrollableDistance =
+        section.offsetHeight - availableViewportHeight;
+
+      const progress =
+        scrollableDistance > 0
+          ? Math.min(1, Math.max(0, -rect.top / scrollableDistance))
+          : 0;
+
+      setRotation(progress * 360);
+
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 180);
+    };
+
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const autoRotate = () => {
+      if (!isScrolling) {
+        setRotation((currentRotation) => currentRotation + 0.025);
+      }
+
+      frameRef.current = requestAnimationFrame(autoRotate);
+    };
+
+    frameRef.current = requestAnimationFrame(autoRotate);
+
+    return () => {
+      if (frameRef.current !== null) {
+        cancelAnimationFrame(frameRef.current);
+      }
+    };
+  }, [isScrolling]);
+
+  const anglePerItem = 360 / images.length;
+
   return (
-    <section className="relative overflow-hidden bg-[var(--background)] py-10 lg:py-28">
-      <Container className="relative">
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="mb-6 flex items-center justify-center gap-4">
-            <span className="h-px w-12 bg-[var(--green)]" />
-            <p className="eyebrow">Momenti dalla fattoria</p>
-            <span className="h-px w-12 bg-[var(--green)]" />
+    <section
+      ref={sectionRef}
+      className="relative h-[320vh] bg-[var(--background)] sm:h-[360vh] lg:h-[420vh]"
+    >
+      <div className="sticky top-[97px] flex h-[calc(100svh-97px)] flex-col overflow-hidden lg:top-[103px] lg:h-[calc(100svh-103px)]">
+        <Container className="relative z-20 shrink-0 pt-15 pb-0 sm:pt-10 sm:pb-5 lg:pt-16 lg:pb-10">
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="mb-3 flex items-center justify-center gap-3 sm:mb-4 sm:gap-4 lg:mb-6">
+              <span className="h-px w-8 bg-[var(--green)] sm:w-10 lg:w-12" />
+
+              <p className="eyebrow">Momenti dalla fattoria</p>
+
+              <span className="h-px w-8 bg-[var(--green)] sm:w-10 lg:w-12" />
+            </div>
+
+            <SplitTitle
+              as="h2"
+              className="heading-display text-[2.45rem] leading-[0.98] text-[var(--green)] sm:text-[3rem] lg:text-[4rem]"
+            >
+              Uno sguardo dietro le quinte
+            </SplitTitle>
+
+            <p className="mt-3 text-sm text-[var(--muted-foreground)] sm:mt-4 sm:text-base">
+              Scorri per esplorare
+            </p>
           </div>
+        </Container>
 
-          <SplitTitle
-            as="h2"
-            className="heading-display text-[2.25rem] leading-[1.2] text-[var(--green)] sm:text-[2.75rem] lg:text-[3.25rem]"
+        <div
+          role="region"
+          aria-label="Galleria circolare"
+           className="relative -mt-28 -mb-24 flex min-h-0 flex-1 items-center justify-center sm:mt-0 sm:mb-0"
+          style={{
+            perspective: "1800px",
+          }}
+        >
+          <div
+            className="relative h-full w-full will-change-transform"
+            style={{
+              transform: `rotateY(${rotation}deg)`,
+              transformStyle: "preserve-3d",
+            }}
           >
-            Uno sguardo dietro le quinte
-          </SplitTitle>
-        </div>
-      </Container>
+            {images.map((image, index) => {
+              const itemAngle = index * anglePerItem;
 
-      {/* Carosello full-width, fuori dal Container */}
-      <div
-        ref={containerRef}
-        className="mt-8 flex h-[40vh] w-full items-center justify-center overflow-clip sm:h-[55vh] lg:mt-16 lg:h-[70vh]"
-      >
-        <div className="relative flex items-center justify-center">
-          <div ref={listRef} className="grid place-items-center">
-            {images.map((img, index) => (
-              <div
-                key={img.src}
-                data-tile
-                ref={(el) => {
-                  tilesRef.current[index] = el;
-                }}
-                className="col-start-1 row-start-1 flex w-max items-center justify-center will-change-[transform,opacity,filter]"
-              >
-                <div className="relative aspect-square w-[clamp(13em,25vw,32em)] overflow-hidden rounded-[1.5em] shadow-2xl shadow-black/20 transition-transform duration-[400ms] [transition-timing-function:cubic-bezier(0.35,1.5,0.6,1)] hover:scale-95">
-                  <Image
-                    src={img.src}
-                    alt={img.label}
-                    fill
-                    sizes="32em"
-                    className="rounded-[inherit] object-cover"
-                  />
-                  <div className="absolute bottom-0 left-0 flex w-full items-center gap-2 p-6 text-white">
-                    <div className="h-2 w-2 rounded-full bg-current" />
-                    <p className="text-[1.125em] font-medium tracking-tight">
-                      {img.label}
-                    </p>
+              const relativeAngle =
+                (itemAngle + (rotation % 360) + 360) % 360;
+
+              const normalizedAngle = Math.abs(
+                relativeAngle > 180
+                  ? 360 - relativeAngle
+                  : relativeAngle
+              );
+
+              const opacity = Math.max(
+                0.18,
+                1 - normalizedAngle / 150
+              );
+
+              const scale =
+                0.82 +
+                Math.max(0, 1 - normalizedAngle / 180) * 0.18;
+
+              return (
+                <article
+                  key={image.src}
+                  aria-label={image.alt}
+                  className="absolute left-1/2 top-1/2 h-[250px] w-[180px] sm:h-[310px] sm:w-[225px] lg:h-[380px] lg:w-[280px]"
+                  style={{
+                    transform: `
+                      translate(-50%, -50%)
+                      rotateY(${itemAngle}deg)
+                      translateZ(${radius}px)
+                      scale(${scale})
+                    `,
+                    opacity,
+                    transition:
+                      "opacity 180ms linear, transform 180ms linear",
+                    transformStyle: "preserve-3d",
+                  }}
+                >
+                  <div className="group relative h-full w-full overflow-hidden rounded-[1.5rem] border border-black/10 bg-[var(--background)] shadow-2xl shadow-black/20">
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      sizes="(max-width: 639px) 180px, (max-width: 1023px) 225px, 280px"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
                   </div>
-                </div>
-              </div>
-            ))}
+                </article>
+              );
+            })}
           </div>
         </div>
       </div>
