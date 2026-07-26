@@ -159,118 +159,118 @@ function ValueCard({
 /*  SCENA ANIMATA                                                      */
 /* ------------------------------------------------------------------ */
 
+const MOBILE_SCROLL_LENGTH = 3400;
+const DESKTOP_SCROLL_LENGTH = 3600;
+
 function AnimatedValuesPath() {
-  const sectionRef =
-    useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const mobilePathRef = useRef<SVGPathElement>(null);
+  const desktopPathRef = useRef<SVGPathElement>(null);
+  const valuesTextRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<Array<HTMLDivElement | null>>([]);
 
-  const panelRef =
-    useRef<HTMLDivElement>(null);
-
-  const mobilePathRef =
-    useRef<SVGPathElement>(null);
-
-  const desktopPathRef =
-    useRef<SVGPathElement>(null);
-
-  const valuesTextRef =
-    useRef<HTMLDivElement>(null);
-
-  const valuesShineRef =
-    useRef<HTMLParagraphElement>(null);
-
-  const cardsRef =
-    useRef<Array<HTMLDivElement | null>>([]);
-
-  /* ---------------------------------------------------------------- */
-  /*  ALTEZZA PANNELLO                                                 */
-  /* ---------------------------------------------------------------- */
-
+  /*
+   * La sezione contiene tutta la distanza di scroll.
+   * Il pannello, invece, usa position: sticky.
+   *
+   * In questo modo la timeline può iniziare prima che il pannello
+   * diventi sticky e può terminare dopo che il pannello viene rilasciato,
+   * come nella sezione Shopify di riferimento.
+   */
   useLayoutEffect(() => {
+    const section = sectionRef.current;
     const panel = panelRef.current;
 
-    if (!panel) {
+    if (!section || !panel) {
       return;
     }
 
-    let previousWidth =
-      window.innerWidth;
-
+    let previousWidth = window.innerWidth;
     let resizeFrame = 0;
 
-    const measureLayout = () => {
-      const isMobileOrTablet =
-        window.innerWidth < 1024;
+    const getHeaderHeight = () => {
+      const isDesktop = window.innerWidth >= 1024;
+
+      if (!isDesktop) {
+        return 0;
+      }
 
       const header =
-        document.querySelector<HTMLElement>(
-          "header",
-        );
+        document.querySelector<HTMLElement>("header");
 
-      const headerHeight =
-        header?.getBoundingClientRect().height ??
-        0;
+      return Math.ceil(
+        header?.getBoundingClientRect().height ?? 0,
+      );
+    };
 
-      const panelHeight =
-        isMobileOrTablet
-          ? window.innerHeight
-          : window.innerHeight -
-            headerHeight;
+    const measureLayout = () => {
+      const isDesktop = window.innerWidth >= 1024;
+      const headerHeight = getHeaderHeight();
 
-      panel.style.setProperty(
-        "--values-panel-height",
-        `${Math.ceil(panelHeight)}px`,
+      const viewportHeight = Math.round(
+        window.visualViewport?.height ??
+          window.innerHeight,
       );
 
-      /*
-       * Segnala alla timeline GSAP che il pannello
-       * ha cambiato misura.
-       */
+      const panelHeight = Math.max(
+        isDesktop
+          ? viewportHeight - headerHeight
+          : viewportHeight,
+        560,
+      );
+
+      const scrollLength = isDesktop
+        ? DESKTOP_SCROLL_LENGTH
+        : MOBILE_SCROLL_LENGTH;
+
+      section.style.setProperty(
+        "--values-header-height",
+        `${headerHeight}px`,
+      );
+
+      section.style.setProperty(
+        "--values-panel-height",
+        `${panelHeight}px`,
+      );
+
+      section.style.setProperty(
+        "--values-section-height",
+        `${panelHeight + scrollLength}px`,
+      );
+
       window.dispatchEvent(
-        new Event(
-          "values-panel-layout-change",
-        ),
+        new Event("values-panel-layout-change"),
       );
     };
 
     const handleResize = () => {
-      const currentWidth =
-        window.innerWidth;
+      const currentWidth = window.innerWidth;
 
       /*
-       * Evita refresh continui causati dalla toolbar
-       * del browser mobile.
+       * Evita continui ricalcoli causati dalla toolbar
+       * dei browser mobile.
        */
       if (
-        Math.abs(
-          currentWidth -
-            previousWidth,
-        ) < 20
+        Math.abs(currentWidth - previousWidth) < 20
       ) {
         return;
       }
 
-      previousWidth =
-        currentWidth;
+      previousWidth = currentWidth;
 
-      window.cancelAnimationFrame(
-        resizeFrame,
+      window.cancelAnimationFrame(resizeFrame);
+
+      resizeFrame = window.requestAnimationFrame(
+        measureLayout,
       );
-
-      resizeFrame =
-        window.requestAnimationFrame(
-          measureLayout,
-        );
     };
 
     measureLayout();
 
-    window.addEventListener(
-      "resize",
-      handleResize,
-      {
-        passive: true,
-      },
-    );
+    window.addEventListener("resize", handleResize, {
+      passive: true,
+    });
 
     window.addEventListener(
       "orientationchange",
@@ -281,9 +281,7 @@ function AnimatedValuesPath() {
     );
 
     return () => {
-      window.cancelAnimationFrame(
-        resizeFrame,
-      );
+      window.cancelAnimationFrame(resizeFrame);
 
       window.removeEventListener(
         "resize",
@@ -297,535 +295,326 @@ function AnimatedValuesPath() {
     };
   }, []);
 
-  /* ---------------------------------------------------------------- */
-  /*  GSAP                                                             */
-  /* ---------------------------------------------------------------- */
-
   useEffect(() => {
-    const section =
-      sectionRef.current;
+    const section = sectionRef.current;
+    const mobilePath = mobilePathRef.current;
+    const desktopPath = desktopPathRef.current;
+    const valuesText = valuesTextRef.current;
 
-    const panel =
-      panelRef.current;
-
-    const mobilePath =
-      mobilePathRef.current;
-
-    const desktopPath =
-      desktopPathRef.current;
-
-    const valuesText =
-      valuesTextRef.current;
-
-    const valuesShine =
-      valuesShineRef.current;
-
-    const cards =
-      cardsRef.current.filter(
-        (
-          card,
-        ): card is HTMLDivElement =>
-          card !== null,
-      );
+    const cards = cardsRef.current.filter(
+      (card): card is HTMLDivElement =>
+        card !== null,
+    );
 
     if (
       !section ||
-      !panel ||
       !mobilePath ||
       !desktopPath ||
       !valuesText ||
-      !valuesShine ||
       cards.length === 0
     ) {
       return;
     }
 
     let cancelled = false;
-
-    let context: {
-      revert: () => void;
-    } | null = null;
-
     let refreshFrameOne = 0;
     let refreshFrameTwo = 0;
+    let context: { revert: () => void } | null =
+      null;
 
-    const initialiseAnimation =
-      async () => {
-        const [
-          { gsap },
-          { ScrollTrigger },
-          { MotionPathPlugin },
-        ] = await Promise.all([
-          import("gsap"),
-          import("gsap/ScrollTrigger"),
-          import(
-            "gsap/MotionPathPlugin"
-          ),
-        ]);
+    const initialiseAnimation = async () => {
+      const [
+        { gsap },
+        { ScrollTrigger },
+        { MotionPathPlugin },
+      ] = await Promise.all([
+        import("gsap"),
+        import("gsap/ScrollTrigger"),
+        import("gsap/MotionPathPlugin"),
+      ]);
 
-        if (cancelled) {
-          return;
-        }
+      if (cancelled) {
+        return;
+      }
 
-        gsap.registerPlugin(
-          ScrollTrigger,
-          MotionPathPlugin,
+      gsap.registerPlugin(
+        ScrollTrigger,
+        MotionPathPlugin,
+      );
+
+      ScrollTrigger.config({
+        ignoreMobileResize: true,
+      });
+
+      const refreshAllTriggers = () => {
+        window.cancelAnimationFrame(
+          refreshFrameOne,
         );
 
-        ScrollTrigger.config({
-          ignoreMobileResize: true,
-        });
-
-        const refreshAllTriggers =
-          () => {
-            window.cancelAnimationFrame(
-              refreshFrameOne,
-            );
-
-            window.cancelAnimationFrame(
-              refreshFrameTwo,
-            );
-
-            refreshFrameOne =
-              window.requestAnimationFrame(
-                () => {
-                  refreshFrameTwo =
-                    window.requestAnimationFrame(
-                      () => {
-                        if (cancelled) {
-                          return;
-                        }
-
-                        /*
-                         * Il pin viene ordinato e misurato
-                         * prima dei titoli nelle sezioni
-                         * successive.
-                         */
-                        ScrollTrigger.sort();
-                        ScrollTrigger.refresh(
-                          true,
-                        );
-                      },
-                    );
-                },
-              );
-          };
-
-        const handleLayoutChange =
-          () => {
-            refreshAllTriggers();
-          };
-
-        window.addEventListener(
-          "values-panel-layout-change",
-          handleLayoutChange,
+        window.cancelAnimationFrame(
+          refreshFrameTwo,
         );
 
-        context = gsap.context(() => {
-          const media =
-            gsap.matchMedia();
+        refreshFrameOne =
+          window.requestAnimationFrame(() => {
+            refreshFrameTwo =
+              window.requestAnimationFrame(() => {
+                if (cancelled) {
+                  return;
+                }
 
-          const getHeaderHeight =
-            () => {
-              const header =
-                document.querySelector<HTMLElement>(
-                  "header",
-                );
-
-              return (
-                header?.getBoundingClientRect()
-                  .height ?? 0
-              );
-            };
-
-          /* -------------------------------------------------------- */
-          /*  MOBILE E TABLET                                         */
-          /* -------------------------------------------------------- */
-
-          media.add(
-            "(max-width: 1023px)",
-            () => {
-              gsap.set(cards, {
-                zIndex: (
-                  index: number,
-                ) =>
-                  cards.length -
-                  index,
-
-                autoAlpha: 0,
-                scale: 0.72,
-                filter: "blur(8px)",
-
-                transformOrigin:
-                  "50% 50%",
-
-                willChange:
-                  "transform, opacity, filter",
+                ScrollTrigger.sort();
+                ScrollTrigger.refresh(true);
+                ScrollTrigger.update();
               });
+          });
+      };
 
-              gsap.set(valuesText, {
-                autoAlpha: 1,
-                y: 0,
-                scale: 1,
-                filter: "blur(0px)",
-              });
-
-              gsap.set(valuesShine, {
-                autoAlpha: 0,
-                backgroundPosition:
-                  "200% center",
-
-                willChange:
-                  "opacity, background-position",
-              });
-
-              const timeline =
-                gsap.timeline({
-                  defaults: {
-                    ease: "none",
-                  },
-
-                  scrollTrigger: {
-                    trigger: section,
-
-                    start: () =>
-                      `top top+=${getHeaderHeight()}`,
-
-                    end: "+=3400",
-
-                    scrub: 0.85,
-
-                    pin: panel,
-                    pinSpacing: true,
-
-                    anticipatePin: 1,
-
-                    invalidateOnRefresh:
-                      true,
-
-                    /*
-                     * Deve essere misurato prima
-                     * degli SplitTitle successivi.
-                     */
-                    refreshPriority: 100,
-                  },
-                });
-
-              /*
-               * Riflesso lento:
-               * accensione graduale, attraversamento
-               * morbido e uscita delicata.
-               */
-              for (let i = 0; i < 6; i++) {
-  const start = i * 0.16;
-
-  timeline.set(
-    valuesShine,
-    {
-      backgroundPosition: "200% center",
-    },
-    start,
-  );
-
-  timeline.to(
-    valuesShine,
-    {
-      autoAlpha: 0.45,
-      duration: 0.05,
-      ease: "none",
-    },
-    start,
-  );
-
-  timeline.to(
-    valuesShine,
-    {
-      backgroundPosition: "-100% center",
-      duration: 0.14,
-      ease: "none",
-    },
-    start,
-  );
-
-  timeline.to(
-    valuesShine,
-    {
-      autoAlpha: 0,
-      duration: 0.05,
-      ease: "none",
-    },
-    start + 0.12,
-  );
-}
-
-              timeline.to(
-                cards,
-                {
-                  duration: 1,
-
-                  motionPath: {
-                    path: mobilePath,
-                    align: mobilePath,
-                    alignOrigin: [
-                      0.5,
-                      0.5,
-                    ],
-                    autoRotate: false,
-                    curviness: 1.8,
-                  },
-
-                  stagger: {
-                    each: 0.32,
-                  },
-                },
-                0,
-              );
-
-              timeline.to(
-                cards,
-                {
-                  autoAlpha: 1,
-                  scale: 1,
-                  filter: "blur(0px)",
-
-                  duration: 0.18,
-
-                  stagger: {
-                    each: 0.28,
-                  },
-                },
-                0,
-              );
-
-              timeline.to(
-                cards,
-                {
-                  autoAlpha: 0,
-                  scale: 0.82,
-                  filter: "blur(7px)",
-
-                  duration: 0.13,
-
-                  stagger: {
-                    each: 0.28,
-                  },
-                },
-                0.87,
-              );
-
-              return () => {
-                timeline.kill();
-              };
-            },
-          );
-
-          /* -------------------------------------------------------- */
-          /*  DESKTOP                                                 */
-          /* -------------------------------------------------------- */
-
-          media.add(
-            "(min-width: 1024px)",
-            () => {
-              gsap.set(cards, {
-                zIndex: (
-                  index: number,
-                ) =>
-                  cards.length -
-                  index,
-
-                autoAlpha: 0,
-                scale: 0.58,
-                filter: "blur(14px)",
-
-                transformOrigin:
-                  "50% 50%",
-
-                willChange:
-                  "transform, opacity, filter",
-              });
-
-              gsap.set(valuesText, {
-                autoAlpha: 1,
-                y: 0,
-                scale: 1,
-                filter: "blur(0px)",
-              });
-
-              gsap.set(valuesShine, {
-                autoAlpha: 0,
-                backgroundPosition:
-                  "200% center",
-
-                willChange:
-                  "opacity, background-position",
-              });
-
-              const timeline =
-                gsap.timeline({
-                  defaults: {
-                    ease: "none",
-                  },
-
-                  scrollTrigger: {
-                    trigger: section,
-
-                    start: () =>
-                      `top top+=${getHeaderHeight()}`,
-
-                    end: "+=3600",
-
-                    scrub: 1.1,
-
-                    pin: panel,
-                    pinSpacing: true,
-
-                    anticipatePin: 1,
-
-                    invalidateOnRefresh:
-                      true,
-
-                    refreshPriority: 100,
-                  },
-                });
-
-              /*
-               * Stesso riflesso lento usato
-               * su mobile.
-               */
-              timeline.to(
-                valuesShine,
-                {
-                  autoAlpha: 0.62,
-                  duration: 0.22,
-                  ease: "sine.out",
-                },
-                0.01,
-              );
-
-              timeline.to(
-                valuesShine,
-                {
-                  backgroundPosition:
-                    "-100% center",
-
-                  duration: 0.95,
-                  ease: "sine.inOut",
-                },
-                0.01,
-              );
-
-              timeline.to(
-                valuesShine,
-                {
-                  autoAlpha: 0,
-                  duration: 0.3,
-                  ease: "sine.inOut",
-                },
-                0.72,
-              );
-
-              timeline.to(
-                cards,
-                {
-                  duration: 1,
-
-                  motionPath: {
-                    path: desktopPath,
-                    align: desktopPath,
-                    alignOrigin: [
-                      0.5,
-                      0.5,
-                    ],
-                    autoRotate: false,
-                    curviness: 2,
-                  },
-
-                  stagger: {
-                    each: 0.18,
-                  },
-                },
-                0,
-              );
-
-              timeline.to(
-                cards,
-                {
-                  autoAlpha: 1,
-                  scale: 1,
-                  filter: "blur(0px)",
-
-                  duration: 0.2,
-
-                  stagger: {
-                    each: 0.18,
-                  },
-                },
-                0,
-              );
-
-              timeline.to(
-                cards,
-                {
-                  autoAlpha: 0,
-                  scale: 0.78,
-                  filter:
-                    "blur(11px)",
-
-                  duration: 0.14,
-
-                  stagger: {
-                    each: 0.18,
-                  },
-                },
-                0.86,
-              );
-
-              return () => {
-                timeline.kill();
-              };
-            },
-          );
-
-          return () => {
-            media.revert();
-          };
-        }, section);
-
-        /*
-         * Aspetta la creazione del pin-spacer,
-         * poi ricalcola tutti i trigger successivi.
-         */
+      const handleLayoutChange = () => {
         refreshAllTriggers();
+      };
 
-        /*
-         * SplitText dipende dalle misure reali dei font.
-         */
-        void document.fonts.ready.then(
+      window.addEventListener(
+        "values-panel-layout-change",
+        handleLayoutChange,
+      );
+
+      context = gsap.context(() => {
+        const media = gsap.matchMedia();
+
+        const prepareCommonElements = () => {
+          gsap.set(valuesText, {
+            autoAlpha: 1,
+            y: 0,
+            scale: 1,
+            filter: "blur(0px)",
+          });
+
+        };
+
+        const createTimeline = ({
+          name,
+          path,
+          start,
+          end,
+          scrub,
+          startScale,
+          endScale,
+          blurIn,
+          blurOut,
+          stagger,
+          curviness,
+          fadeIn,
+          fadeOut,
+          exitAt,
+        }: {
+          name: string;
+          path: SVGPathElement;
+          start: string;
+          end: string;
+          scrub: number;
+          startScale: number;
+          endScale: number;
+          blurIn: number;
+          blurOut: number;
+          stagger: number;
+          curviness: number;
+          fadeIn: number;
+          fadeOut: number;
+          exitAt: number;
+        }) => {
+          prepareCommonElements();
+
+          gsap.set(cards, {
+            x: 0,
+            y: 0,
+            xPercent: 0,
+            yPercent: 0,
+            zIndex: (index: number) =>
+              cards.length - index,
+            autoAlpha: 0,
+            scale: startScale,
+            filter: `blur(${blurIn}px)`,
+            force3D: true,
+            transformOrigin: "50% 50%",
+            willChange:
+              "transform, opacity, filter",
+          });
+
+          const timeline = gsap.timeline({
+            defaults: {
+              ease: "none",
+            },
+
+            scrollTrigger: {
+              id: `values-orbit-${name}`,
+              trigger: section,
+
+              /*
+               * L'animazione comincia mentre la sezione
+               * è ancora in ingresso.
+               */
+              start,
+
+              /*
+               * L'animazione termina quando la sezione
+               * ha già iniziato a lasciare lo sticky.
+               */
+              end,
+
+              scrub,
+              invalidateOnRefresh: false,
+              refreshPriority: 100,
+              fastScrollEnd: false,
+            },
+          });
+
+          timeline.to(
+            cards,
+            {
+              duration: 1,
+              force3D: true,
+
+              motionPath: {
+                path,
+                align: path,
+                alignOrigin: [0.5, 0.5],
+                autoRotate: false,
+                curviness,
+              },
+
+              stagger: {
+                each: stagger,
+              },
+            },
+            0,
+          );
+
+          timeline.to(
+            cards,
+            {
+              autoAlpha: 1,
+              scale: 1,
+              filter: "blur(0px)",
+              force3D: true,
+              duration: fadeIn,
+
+              stagger: {
+                each: stagger,
+              },
+            },
+            0,
+          );
+
+          timeline.to(
+            cards,
+            {
+              autoAlpha: 0,
+              scale: endScale,
+              filter: `blur(${blurOut}px)`,
+              force3D: true,
+              duration: fadeOut,
+
+              stagger: {
+                each: stagger,
+              },
+            },
+            exitAt,
+          );
+
+          return timeline;
+        };
+
+        media.add(
+          "(max-width: 1023px)",
           () => {
-            if (!cancelled) {
-              refreshAllTriggers();
-            }
+            const timeline = createTimeline({
+              name: "mobile",
+              path: mobilePath,
+
+              // Prima che il pannello diventi sticky.
+              start: "top 92%",
+
+              // Dopo che il pannello ha iniziato a uscire.
+              end: "bottom 8%",
+
+              scrub: 0.55,
+              startScale: 0.76,
+              endScale: 0.88,
+              blurIn: 8,
+              blurOut: 7,
+              stagger: 0.20,
+              curviness: 1.8,
+              fadeIn: 0.3,
+              fadeOut: 0.2,
+              exitAt: 0.84,
+            });
+
+            return () => {
+              timeline.kill();
+            };
+          },
+        );
+
+        media.add(
+          "(min-width: 1024px)",
+          () => {
+            const timeline = createTimeline({
+              name: "desktop",
+              path: desktopPath,
+
+              // Le prime card compaiono prima dello sticky.
+              start: "top 86%",
+
+              // Le ultime card spariscono durante il rilascio.
+              end: "bottom 12%",
+
+              scrub: 0.4,
+              startScale: 0.58,
+              endScale: 0.78,
+              blurIn: 14,
+              blurOut: 11,
+              stagger: 0.24,
+              curviness: 2,
+              fadeIn: 0.15,
+              fadeOut: 0.13,
+              exitAt: 0.86,
+            });
+
+            return () => {
+              timeline.kill();
+            };
           },
         );
 
         return () => {
-          window.removeEventListener(
-            "values-panel-layout-change",
-            handleLayoutChange,
-          );
+          media.revert();
         };
+      }, section);
+
+      refreshAllTriggers();
+
+      void document.fonts.ready.then(() => {
+        if (!cancelled) {
+          refreshAllTriggers();
+        }
+      });
+
+      return () => {
+        window.removeEventListener(
+          "values-panel-layout-change",
+          handleLayoutChange,
+        );
       };
+    };
 
     let removeLayoutListener:
       | (() => void)
       | undefined;
 
-    void initialiseAnimation().then(
-      (cleanup) => {
-        removeLayoutListener =
-          cleanup;
-      },
-    );
+    void initialiseAnimation().then((cleanup) => {
+      removeLayoutListener = cleanup;
+    });
 
     return () => {
       cancelled = true;
@@ -846,18 +635,22 @@ function AnimatedValuesPath() {
   return (
     <div
       ref={sectionRef}
+      style={{
+        height:
+          "var(--values-section-height, calc(100vh + 3400px))",
+      }}
       className="relative"
     >
       <div
         ref={panelRef}
         style={{
+          top: "var(--values-header-height, 0px)",
           height:
             "var(--values-panel-height, 100vh)",
-
           minHeight:
             "var(--values-panel-height, 100vh)",
         }}
-        className="relative w-full overflow-hidden bg-[var(--green)]"
+        className="sticky w-full overflow-hidden bg-[var(--green)] [transform:translateZ(0)] [backface-visibility:hidden]"
       >
         {/* Fondo */}
         <div className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:radial-gradient(circle_at_15%_15%,#ffffff_0,transparent_35%),radial-gradient(circle_at_85%_85%,#ffffff_0,transparent_35%)]" />
@@ -874,10 +667,6 @@ function AnimatedValuesPath() {
             <span className="h-px w-8 bg-white/35 sm:w-12" />
           </div>
 
-          {/*
-           * Il titolo è già dentro la sezione pin.
-           * Non crea un secondo ScrollTrigger annidato.
-           */}
           <SplitTitle
             as="h2"
             scrollTrigger={false}
@@ -898,7 +687,6 @@ function AnimatedValuesPath() {
           ref={valuesTextRef}
           className="pointer-events-none absolute left-1/2 top-[42%] z-0 w-full -translate-x-1/2 -translate-y-1/2 px-2 text-center sm:top-[54%] lg:top-[57%] lg:px-0"
         >
-          {/* Testo base */}
           <p
             aria-hidden="true"
             className="relative font-serif text-[15vw] leading-[1.08] tracking-[-0.055em] text-white/[0.07] sm:text-[13vw] sm:leading-[0.82] lg:text-[10.5vw] lg:text-white/[0.04]"
@@ -918,51 +706,6 @@ function AnimatedValuesPath() {
             </span>
           </p>
 
-          {/* Riflesso */}
-          <p
-            ref={valuesShineRef}
-            aria-hidden="true"
-            style={{
-              backgroundImage:
-                "linear-gradient(110deg, transparent 0%, transparent 36%, rgba(255,255,255,0.08) 43%, rgba(255,255,255,0.58) 50%, rgba(255,255,255,0.14) 57%, transparent 64%, transparent 100%)",
-
-              backgroundSize:
-                "220% 100%",
-
-              backgroundPosition:
-                "200% center",
-
-              WebkitBackgroundClip:
-                "text",
-
-              backgroundClip:
-                "text",
-
-              color:
-                "transparent",
-
-              WebkitTextFillColor:
-                "transparent",
-
-              filter:
-                "drop-shadow(0 0 18px rgba(255,255,255,0.14))",
-            }}
-            className="absolute inset-0 font-serif text-[15vw] leading-[1.08] tracking-[-0.055em] sm:text-[13vw] sm:leading-[0.82] lg:text-[10.5vw]"
-          >
-            <span className="hidden whitespace-nowrap sm:inline">
-              I NOSTRI VALORI
-            </span>
-
-            <span className="block sm:hidden">
-              <span className="whitespace-nowrap">
-                I NOSTRI
-              </span>
-
-              <span className="mt-[0.18em] block whitespace-nowrap">
-                VALORI
-              </span>
-            </span>
-          </p>
         </div>
 
         {/* Percorso mobile */}
@@ -975,10 +718,8 @@ function AnimatedValuesPath() {
           <path
             ref={mobilePathRef}
             d="
-              M 500 20
-              C 305 70, 325 205, 225 290
-              C 130 370, 120 500, 220 575
-              C 300 640, 265 735, 15 845
+              M 215 -140
+              L 215 1040
             "
             fill="none"
             stroke="transparent"
@@ -995,10 +736,10 @@ function AnimatedValuesPath() {
           <path
             ref={desktopPathRef}
             d="
-              M 1760 140
-              C 1540 210, 1360 350, 1160 470
-              C 940 570, 700 605, 430 565
-              C 170 520, -20 570, -220 620
+              M 1510 170
+              C 1360 215, 1245 315, 1090 420
+              C 900 550, 680 610, 445 570
+              C 220 530, 55 575, -180 670
             "
             fill="none"
             stroke="transparent"
@@ -1012,10 +753,9 @@ function AnimatedValuesPath() {
               <div
                 key={item.title}
                 ref={(node) => {
-                  cardsRef.current[index] =
-                    node;
+                  cardsRef.current[index] = node;
                 }}
-                className="pointer-events-auto absolute left-0 top-0"
+                className="pointer-events-auto absolute left-0 top-0 [backface-visibility:hidden]"
               >
                 <ValueCard
                   item={item}
