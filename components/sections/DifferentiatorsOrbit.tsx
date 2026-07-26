@@ -516,37 +516,47 @@ function AnimatedValuesPath() {
                * accensione graduale, attraversamento
                * morbido e uscita delicata.
                */
-              timeline.to(
-                valuesShine,
-                {
-                  autoAlpha: 0.62,
-                  duration: 0.22,
-                  ease: "sine.out",
-                },
-                0.01,
-              );
+              for (let i = 0; i < 6; i++) {
+  const start = i * 0.16;
 
-              timeline.to(
-                valuesShine,
-                {
-                  backgroundPosition:
-                    "-100% center",
+  timeline.set(
+    valuesShine,
+    {
+      backgroundPosition: "200% center",
+    },
+    start,
+  );
 
-                  duration: 0.95,
-                  ease: "sine.inOut",
-                },
-                0.01,
-              );
+  timeline.to(
+    valuesShine,
+    {
+      autoAlpha: 0.45,
+      duration: 0.05,
+      ease: "none",
+    },
+    start,
+  );
 
-              timeline.to(
-                valuesShine,
-                {
-                  autoAlpha: 0,
-                  duration: 0.3,
-                  ease: "sine.inOut",
-                },
-                0.72,
-              );
+  timeline.to(
+    valuesShine,
+    {
+      backgroundPosition: "-100% center",
+      duration: 0.14,
+      ease: "none",
+    },
+    start,
+  );
+
+  timeline.to(
+    valuesShine,
+    {
+      autoAlpha: 0,
+      duration: 0.05,
+      ease: "none",
+    },
+    start + 0.12,
+  );
+}
 
               timeline.to(
                 cards,

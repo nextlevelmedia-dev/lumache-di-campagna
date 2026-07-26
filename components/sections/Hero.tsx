@@ -175,7 +175,7 @@ function ElegantCheck() {
     <svg
       viewBox="0 0 48 48"
       fill="none"
-      className="h-8 w-8 shrink-0 overflow-visible text-[var(--green)]"
+      className="h-5 w-5 shrink-0 overflow-visible text-[var(--green)] sm:h-8 sm:w-8"
       aria-hidden="true"
     >
       <path
@@ -504,7 +504,7 @@ export function Hero() {
       <div className="absolute inset-0 opacity-[0.45] [background-image:radial-gradient(circle_at_20%_20%,#ffffff_0,transparent_32%),radial-gradient(circle_at_80%_10%,#eeebe3_0,transparent_34%)]" />
 
       <Container className="relative pt-6 pb-16 sm:pt-8 lg:pt-10 lg:pb-16">
-        <div className="grid items-center gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
+  <div className="grid items-center gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
           {/* Colonna sinistra */}
           <motion.div
             initial={{
@@ -526,7 +526,7 @@ export function Hero() {
             }}
             className="order-2 lg:order-1"
           >
-            <div className="mb-8 flex items-center gap-4">
+            <div className="mb-6 flex items-center gap-3 sm:mb-8 sm:gap-4">
               <span className="h-px w-12 bg-[var(--green)]" />
 
               <p className="eyebrow">
@@ -538,7 +538,7 @@ export function Hero() {
               as="h1"
               scrollTrigger={false}
               delay={0.1}
-              className="heading-display max-w-2xl text-[2.7rem] leading-[1.2] text-[var(--green)] sm:text-[3rem] md:text-[3.5rem] lg:text-[4.2rem] xl:text-[4.2rem]"
+              className="heading-display max-w-2xl text-[2.7rem] leading-[1.18] text-[var(--green)] sm:text-[3rem] md:text-[3.5rem] lg:text-[4.2rem] xl:text-[4.2rem]"
             >
               <span className="italic text-[var(--red)]">
                 Vivi meglio
@@ -551,35 +551,35 @@ export function Hero() {
             </SplitTitle>
 
             <motion.div
-              variants={checksContainer}
-              initial="hidden"
-              animate="show"
-              className="mt-9 flex flex-col gap-4"
-            >
-              {[
-                "Più benessere nella tua quotidianità",
-                "Più gusto e qualità sulla tua tavola",
-                "Più cura e bellezza per la tua pelle",
-              ].map((item) => (
-                <motion.div
-                  key={item}
-                  variants={checkItem}
-                  className="flex items-center gap-4"
-                >
-                  <ElegantCheck />
+  variants={checksContainer}
+  initial="hidden"
+  animate="show"
+  className="mt-7 flex flex-col gap-2.5 sm:mt-9 sm:gap-4"
+>
+  {[
+    "Più benessere nella tua quotidianità",
+    "Più gusto e qualità sulla tua tavola",
+    "Più cura e bellezza per la tua pelle",
+  ].map((item) => (
+    <motion.div
+      key={item}
+      variants={checkItem}
+      className="flex items-center gap-2.5 sm:gap-4"
+    >
+      <ElegantCheck />
 
-                  <span className="font-sans text-[17px] font-medium text-[var(--foreground)]">
-                    {item}
-                  </span>
-                </motion.div>
-              ))}
-            </motion.div>
+      <span className="font-sans text-[13px] font-medium leading-snug text-[var(--foreground)] sm:text-[17px]">
+        {item}
+      </span>
+    </motion.div>
+  ))}
+</motion.div>
 
             <motion.div
               variants={buttonsRow}
               initial="hidden"
               animate="show"
-              className="mt-10 flex flex-col gap-4 sm:flex-row"
+              className="mt-7 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:gap-4"
             >
               <Button
                 href={whatsappLink(
