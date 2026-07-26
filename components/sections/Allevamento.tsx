@@ -520,28 +520,33 @@ export function Allevamento() {
               </div>
 
               <SplitTitle
-                as="h2"
-                scrollTrigger={false}
-                className={[
-                  "heading-display",
-                  "mx-auto whitespace-nowrap",
-                  "leading-none",
-                  "text-[var(--green)]",
+  as="h2"
+  scrollTrigger={false}
+  className={[
+    "heading-display",
+    "mx-auto",
+    "leading-[1.05]",
+    "text-[var(--green)]",
 
-                  /*
-                   * Ripristinate le dimensioni
-                   * grandi anche su mobile.
-                   */
-                  "text-[2.25rem]",
-                  "sm:text-[2.75rem]",
-                  "lg:text-[3.25rem]",
-                ].join(" ")}
-              >
-                Dalla terra alla tavola,{" "}
-                <span className="italic text-[var(--red)]">
-                  passo dopo passo
-                </span>
-              </SplitTitle>
+    // Mobile: può andare su due righe
+    "max-w-[340px]",
+    "text-[2.25rem]",
+
+    // Tablet
+    "sm:max-w-[620px]",
+    "sm:text-[2.75rem]",
+
+    // Desktop: sempre una sola riga
+    "lg:max-w-none",
+    "lg:whitespace-nowrap",
+    "lg:text-[3.25rem]",
+  ].join(" ")}
+>
+  Dalla terra alla tavola,{" "}
+  <span className="italic text-[var(--red)]">
+    passo dopo passo
+  </span>
+</SplitTitle>
             </div>
           </Container>
 
