@@ -535,9 +535,9 @@ export function Allevamento() {
     "lg:text-[3.25rem]",
   ].join(" ")}
 >
-  Dalla terra alla tavola,{" "}
+  Dalla terra, {" "}
   <span className="italic text-[var(--red)]">
-    passo dopo passo
+    alla tavola
   </span>
 </SplitTitle>
             </div>
