@@ -221,20 +221,13 @@ export function Allevamento() {
       });
 
       const getHeaderHeight = () => {
-        if (window.innerWidth < 1024) {
-          return 0;
-        }
+  const header =
+    document.querySelector<HTMLElement>("header");
 
-        const header =
-          document.querySelector<HTMLElement>(
-            "header",
-          );
-
-        return Math.ceil(
-          header?.getBoundingClientRect()
-            .height ?? 0,
-        );
-      };
+  return Math.ceil(
+    header?.getBoundingClientRect().height ?? 0,
+  );
+};
 
       const getPanelHeight = () => {
         const height =
