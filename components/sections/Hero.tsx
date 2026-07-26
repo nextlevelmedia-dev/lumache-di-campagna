@@ -67,22 +67,22 @@ const trustItems = [
   {
     icon: Leaf,
     title: "100% Naturale",
-    text: "Senza OGM e additivi",
+    text: "Senza OGM, additivi o forzature",
   },
   {
     icon: Heart,
     title: "Ricco di benefici",
-    text: "Per te",
+    text: "Per il benessere di ogni giorno",
   },
   {
     icon: MapPin,
     title: "Prodotto italiano",
-    text: "A km 0",
+    text: "Dalla nostra azienda, a km 0",
   },
   {
     icon: Rabbit,
     title: "Rispetto per gli animali",
-    text: "E l'ambiente",
+    text: "Crescita naturale e ambiente protetto",
   },
 ];
 
@@ -166,6 +166,42 @@ const boxFadeRight = {
     transition: {
       duration: 0.6,
       ease: [0.22, 1, 0.36, 1] as const,
+    },
+  },
+};
+
+const mobileBoxesContainer = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.13,
+      delayChildren: 0.12,
+    },
+  },
+};
+
+const mobileBoxReveal = {
+  hidden: (index: number) => ({
+    opacity: 0,
+    y: 70,
+    scale: 0.82,
+    rotateX: 18,
+    rotateY: index % 2 === 0 ? -12 : 12,
+    filter: "blur(12px)",
+  }),
+
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    rotateX: 0,
+    rotateY: 0,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring" as const,
+      stiffness: 115,
+      damping: 16,
+      mass: 0.85,
     },
   },
 };
@@ -504,7 +540,7 @@ export function Hero() {
       <div className="absolute inset-0 opacity-[0.45] [background-image:radial-gradient(circle_at_20%_20%,#ffffff_0,transparent_32%),radial-gradient(circle_at_80%_10%,#eeebe3_0,transparent_34%)]" />
 
       <Container className="relative pt-6 pb-16 sm:pt-8 lg:pt-10 lg:pb-16">
-  <div className="grid items-center gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
+        <div className="grid items-center gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
           {/* Colonna sinistra */}
           <motion.div
             initial={{
@@ -618,7 +654,7 @@ export function Hero() {
             }}
             className="col-span-2 flex flex-col items-center justify-center gap-3 text-center lg:col-span-1 lg:items-start lg:text-left"
           >
-            <div className="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-[var(--green)] text-white shadow-lg shadow-green-950/15">
+            <div className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-[var(--green)] text-white shadow-lg shadow-green-950/15 lg:h-14 lg:w-14">
               <span className="badge-shine absolute inset-y-0 w-5 rotate-12 bg-white/45 blur-sm" />
 
               <Sparkles size={22} />
@@ -635,41 +671,67 @@ export function Hero() {
             </div>
           </motion.div>
 
-          <motion.div
-            variants={boxesContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={{
-              once: true,
-              amount: 0,
-            }}
-            className="col-span-2 grid grid-cols-2 gap-4 lg:col-span-4 lg:grid-cols-4 lg:gap-5"
-          >
-            {trustItems.map((item) => {
-              const Icon = item.icon;
+          <div className="col-span-2 lg:col-span-4">
+            {/* Mobile: ingresso immersivo */}
+            <motion.div
+  variants={mobileBoxesContainer}
+  initial="hidden"
+  whileInView="show"
+  viewport={{
+    once: true,
+    amount: 0.18,
+  }}
+  className="col-span-2 grid grid-cols-2 gap-4 [perspective:1000px] lg:col-span-4 lg:grid-cols-4 lg:gap-5"
+>
+  {trustItems.map((item, itemIndex) => {
+    const Icon = item.icon;
 
-              return (
-                <motion.div
-                  key={item.title}
-                  variants={boxFadeRight}
-                  className="card-primary p-5"
-                >
-                  <Icon
-                    className="mb-4 text-[var(--green)]"
-                    size={24}
-                  />
+    return (
+      <motion.div
+        key={item.title}
+        custom={itemIndex}
+        variants={mobileBoxReveal}
+        className="card-primary p-5 [transform-style:preserve-3d] will-change-transform"
+      >
+        <motion.div
+          initial={{
+            opacity: 0,
+            scale: 0.55,
+            rotate: -16,
+          }}
+          whileInView={{
+            opacity: 1,
+            scale: 1,
+            rotate: 0,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 180,
+            damping: 14,
+            delay: 0.2 + itemIndex * 0.13,
+          }}
+        >
+          <Icon
+            className="mb-4 text-[var(--green)]"
+            size={24}
+          />
+        </motion.div>
 
-                  <p className="font-sans text-sm font-bold uppercase tracking-[0.12em]">
-                    {item.title}
-                  </p>
+        <p className="font-sans text-sm font-bold uppercase tracking-[0.12em]">
+          {item.title}
+        </p>
 
-                  <p className="mt-1 text-sm text-[var(--muted)]">
-                    {item.text}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </motion.div>
+        <p className="mt-1 text-sm text-[var(--muted)]">
+          {item.text}
+        </p>
+      </motion.div>
+    );
+  })}
+</motion.div>
+          </div>
         </div>
       </Container>
     </section>

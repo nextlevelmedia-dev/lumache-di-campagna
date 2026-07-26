@@ -22,7 +22,7 @@ export function ProblemSolution() {
             <span className="h-px w-12 bg-[var(--green)]" />
 
             <p className="eyebrow">
-              Il problema
+              L'ORIGINE CONTA
             </p>
 
             <span className="h-px w-12 bg-[var(--green)]" />
@@ -30,15 +30,15 @@ export function ProblemSolution() {
 
           {/* Titolo */}
           <SplitTitle
-            as="h2"
-            className="heading-display text-[2.25rem] leading-[1.2] text-[var(--green)] sm:text-[2.75rem] lg:text-[3.25rem]"
-          >
-            Stanco di prodotti generici,{" "}
-            <span className="italic text-[var(--red)]">
-              senza origine
-            </span>{" "}
-            e pieni di ingredienti che non conosci?
-          </SplitTitle>
+  as="h2"
+  className="heading-display text-[2.25rem] leading-[1.2] text-[var(--green)] sm:text-[2.75rem] lg:max-w-3xl lg:text-[3.25rem]"
+>
+  La{" "}
+  <span className="italic text-[var(--red)]">
+    qualità
+  </span>{" "}
+  nasce da una filiera che conosci.
+</SplitTitle>
 
           {/* Paragrafo */}
           <Reveal
