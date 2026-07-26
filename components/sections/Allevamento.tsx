@@ -24,7 +24,7 @@ const steps = [
         , nel rispetto dei tempi della lumaca
       </>
     ),
-    text: "Le lumache crescono in azienda agricola seguendo il loro ritmo biologico, senza forzature. Nessun allevamento intensivo, solo il tempo necessario perché la materia prima sia quella giusta.",
+    text: "Le lumache crescono seguendo il loro ritmo naturale, senza forzature né allevamento intensivo. Solo il tempo necessario per ottenere una materia prima di qualità.",
     image: "/images/ciclo-naturale.png",
   },
   {
@@ -38,7 +38,7 @@ const steps = [
         , lavorate in azienda
       </>
     ),
-    text: "Ogni lumaca viene raccolta e selezionata a mano. La lavorazione — pulitura, cottura, confezionamento — avviene tutta internamente, senza passare da terzi.",
+    text: "Ogni lumaca viene raccolta e selezionata a mano. Pulitura, cottura e confezionamento avvengono interamente in azienda.",
     image: "/images/selezione-lumache.png",
   },
   {
