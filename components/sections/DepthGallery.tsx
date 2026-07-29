@@ -129,7 +129,7 @@ export function DepthGallery() {
       className="relative h-[320vh] bg-[var(--background)] sm:h-[360vh] lg:h-[420vh]"
     >
       <div className="sticky top-[97px] flex h-[calc(100svh-97px)] flex-col overflow-hidden lg:top-[103px] lg:h-[calc(100svh-103px)]">
-        <Container className="relative z-20 shrink-0 pt-15 pb-0 sm:pt-10 sm:pb-5 lg:pt-16 lg:pb-10">
+        <Container className="relative z-20 shrink-0 pt-10 pb-0 sm:pt-10 sm:pb-5 lg:pt-16 lg:pb-10">
           <div className="mx-auto max-w-3xl text-center">
             <div className="mb-3 flex items-center justify-center gap-3 sm:mb-4 sm:gap-4 lg:mb-6">
               <span className="h-px w-8 bg-[var(--green)] sm:w-10 lg:w-12" />

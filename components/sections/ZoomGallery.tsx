@@ -35,7 +35,7 @@ const images = [
   { src: "/images/Lumaland.jpg", alt: "Lumache di Campagna 3" },
   { src: "/images/lumache-sfuse-3.png", alt: "Lumache di Campagna 4" },
   { src: "/images/lumaca.jpg", alt: "Lumache di Campagna 5" },
-  { src: "/images/lumacs.png", alt: "Lumache di Campagna 6" },
+  { src: "/images/lumaca.jpg", alt: "Lumache di Campagna 6" },
   { src: "/images/hero/hero-snail.jpg", alt: "Lumache di Campagna 7" },
 ];
 
