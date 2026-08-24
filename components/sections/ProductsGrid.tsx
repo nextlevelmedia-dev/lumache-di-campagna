@@ -101,10 +101,12 @@ function ProductCard({
           className="object-cover"
         />
       </div>
+
       <div className="border-t border-[var(--border)] bg-[#faf9f5] p-4 text-left">
         <p className="font-sans text-sm font-semibold text-[var(--foreground)]">
           {name}
         </p>
+
         <p className="mt-1 font-sans text-sm font-bold text-[var(--green)]">
           {price}
         </p>
@@ -151,6 +153,7 @@ function CheckItem({ text }: { text: string }) {
 }
 
 function SingleProductSplit({
+  id,
   eyebrow,
   title,
   text,
@@ -158,16 +161,22 @@ function SingleProductSplit({
   product,
   reversed,
 }: {
+  id?: string;
   eyebrow: string;
   title: ReactNode;
   text: string;
   checklist: string[];
-  product: { name: string; price: string; image: string };
+  product: {
+    name: string;
+    price: string;
+    image: string;
+  };
   reversed: boolean;
 }) {
   return (
     <div
-      className={`grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16 ${
+      id={id}
+      className={`scroll-mt-32 grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16 ${
         reversed ? "lg:[&>*:first-child]:order-2" : ""
       }`}
     >
@@ -175,7 +184,10 @@ function SingleProductSplit({
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        transition={{
+          duration: 0.7,
+          ease: [0.22, 1, 0.36, 1],
+        }}
       >
         <p className="eyebrow">{eyebrow}</p>
 
@@ -225,6 +237,7 @@ function SingleProductSplit({
 }
 
 function ProductSplit({
+  id,
   eyebrow,
   title,
   text,
@@ -232,16 +245,22 @@ function ProductSplit({
   products,
   reversed,
 }: {
+  id?: string;
   eyebrow: string;
   title: ReactNode;
   text: string;
   checklist: string[];
-  products: { name: string; price: string; image: string }[];
+  products: {
+    name: string;
+    price: string;
+    image: string;
+  }[];
   reversed: boolean;
 }) {
   return (
     <div
-      className={`grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16 ${
+      id={id}
+      className={`scroll-mt-32 grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16 ${
         reversed ? "lg:[&>*:first-child]:order-2" : ""
       }`}
     >
@@ -249,7 +268,10 @@ function ProductSplit({
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        transition={{
+          duration: 0.7,
+          ease: [0.22, 1, 0.36, 1],
+        }}
         className="lg:sticky lg:top-48"
       >
         <p className="eyebrow">{eyebrow}</p>
@@ -283,54 +305,65 @@ function ProductSplit({
       </motion.div>
 
       <div>
-  <div className="grid grid-cols-2 gap-x-3 gap-y-5 sm:gap-x-5">
-    {products.map((product, i) => (
-      <motion.div
-        key={product.name}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ delay: (i % 2) * 0.08, duration: 0.5 }}
-      >
-        <ProductCard
-          name={product.name}
-          price={product.price}
-          image={product.image}
-        />
-      </motion.div>
-    ))}
-  </div>
+        <div className="grid grid-cols-2 gap-x-3 gap-y-5 sm:gap-x-5">
+          {products.map((product, i) => (
+            <motion.div
+              key={product.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{
+                delay: (i % 2) * 0.08,
+                duration: 0.5,
+              }}
+            >
+              <ProductCard
+                name={product.name}
+                price={product.price}
+                image={product.image}
+              />
+            </motion.div>
+          ))}
+        </div>
 
-  <div className="mt-8 flex justify-center lg:hidden">
-    <Button
-      href={whatsappLink(
-        "Ciao, vorrei ricevere informazioni sui prodotti di Lumache di Campagna."
-      )}
-      className="gap-2 shadow-xl shadow-green-950/10"
-    >
-      <MessageCircle size={18} />
-      Richiedi informazioni
-    </Button>
-  </div>
-</div>
+        <div className="mt-8 flex justify-center lg:hidden">
+          <Button
+            href={whatsappLink(
+              "Ciao, vorrei ricevere informazioni sui prodotti di Lumache di Campagna."
+            )}
+            className="gap-2 shadow-xl shadow-green-950/10"
+          >
+            <MessageCircle size={18} />
+            Richiedi informazioni
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
 
 export function ProductsGrid() {
   return (
-    <section id="prodotti" className="relative bg-[#faf9f5] py-20 lg:py-28">
+    <section
+      id="prodotti"
+      className="relative scroll-mt-32 bg-[#faf9f5] py-20 lg:py-28"
+    >
       <Container className="relative flex flex-col gap-24 lg:gap-32">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          transition={{
+            duration: 0.7,
+            ease: [0.22, 1, 0.36, 1],
+          }}
           className="mx-auto max-w-2xl text-center"
         >
           <div className="mb-6 flex items-center justify-center gap-4">
             <span className="h-px w-12 bg-[var(--green)]" />
+
             <p className="eyebrow">I nostri prodotti</p>
+
             <span className="h-px w-12 bg-[var(--green)]" />
           </div>
 
@@ -339,16 +372,21 @@ export function ProductsGrid() {
             className="heading-display text-[2.25rem] leading-[1.2] text-[var(--green)] sm:text-[2.75rem] lg:text-[3.25rem]"
           >
             Più gusto, più cura,{" "}
-            <span className="italic text-[var(--red)]">più naturale</span>
+            <span className="italic text-[var(--red)]">
+              più naturale
+            </span>
           </SplitTitle>
         </motion.div>
 
         <SingleProductSplit
+          id="lumache-sfuse"
           eyebrow="Lumache sfuse"
           title={
             <>
-              <span className="italic text-[var(--red)]">Materia prima</span>,
-              pesata al momento
+              <span className="italic text-[var(--red)]">
+                Materia prima
+              </span>
+              , pesata al momento
             </>
           }
           text="Per chi preferisce partire dalla lumaca viva o cruda e cucinarla secondo la propria ricetta. Vendute sfuse, pesate al momento, sempre fresche."
@@ -362,6 +400,7 @@ export function ProductsGrid() {
         />
 
         <ProductSplit
+          id="lumache-vasetto"
           eyebrow="Lumache in vasetto"
           title={
             <>
@@ -382,6 +421,7 @@ export function ProductsGrid() {
         />
 
         <ProductSplit
+          id="cosmetici-bava"
           eyebrow="Cosmetici alla bava"
           title={
             <>
