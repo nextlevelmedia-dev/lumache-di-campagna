@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Cormorant_Garamond,
-  Lato,
-} from "next/font/google";
+import { Cormorant_Garamond, Lato } from "next/font/google";
 
 import "./globals.css";
 
@@ -21,9 +18,42 @@ const sans = Lato({
 });
 
 export const metadata: Metadata = {
-  title: "Lumache di Campagna",
+  metadataBase: new URL("https://www.lumachedicampagna.it"),
+
+  title: {
+    default: "Lumache di Campagna | Allevamento di Lumache a Cremona",
+    template: "%s | Lumache di Campagna",
+  },
+
   description:
-    "Allevamento italiano di lumache, specialità gastronomiche e cosmetici alla bava di lumaca.",
+    "Allevamento di lumache a Pescarolo ed Uniti, in provincia di Cremona. Scopri lumache sfuse, specialità gastronomiche in vasetto e cosmetici alla bava di lumaca.",
+
+  alternates: {
+    canonical: "/",
+  },
+
+  openGraph: {
+    type: "website",
+    locale: "it_IT",
+    url: "/",
+    siteName: "Lumache di Campagna",
+    title: "Lumache di Campagna | Allevamento di Lumache a Cremona",
+    description:
+      "Allevamento di lumache a Pescarolo ed Uniti, in provincia di Cremona. Scopri lumache sfuse, specialità gastronomiche in vasetto e cosmetici alla bava di lumaca.",
+    images: [
+      {
+        url: "/opengraph-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Prodotti Lumache di Campagna",
+      },
+    ],
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
