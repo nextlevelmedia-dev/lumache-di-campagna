@@ -348,6 +348,110 @@ function ProductCard({
   );
 }
 
+function ProductModalContent({ product }: { product: Product }) {
+  return (
+    <>
+      <p className="eyebrow">Dettagli prodotto</p>
+
+      <h3 className="heading-display mt-4 pr-10 text-[2rem] leading-[1.15] text-[var(--green)] sm:text-[2.5rem]">
+        {product.name}
+      </h3>
+
+      <p className="body-large mt-6">{product.description}</p>
+
+      <div className="mt-8 divide-y divide-[var(--border)] border-y border-[var(--border)]">
+        <div className="py-5">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--green)]">
+            Formato
+          </p>
+
+          <p className="mt-2 font-sans text-[15px] leading-relaxed text-[var(--muted)]">
+            {product.format}
+          </p>
+        </div>
+
+        <div className="py-5">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--green)]">
+            Ingredienti
+          </p>
+
+          <p className="mt-2 font-sans text-[15px] leading-relaxed text-[var(--muted)]">
+            {product.ingredients}
+          </p>
+        </div>
+
+        {product.nutrition && product.nutrition.length > 0 && (
+          <div className="py-5">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--green)]">
+              Valori nutrizionali
+            </p>
+
+            <p className="mt-2 font-sans text-xs text-[var(--muted)]">
+              Per 100 g di prodotto sgocciolato
+            </p>
+
+            <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)]">
+              <table className="w-full border-collapse font-sans text-sm">
+                <tbody>
+                  {product.nutrition.map((row) => (
+                    <tr
+                      key={row.label}
+                      className="border-b border-[var(--border)] last:border-b-0"
+                    >
+                      <th
+                        scope="row"
+                        className="px-4 py-2.5 text-left font-medium text-[var(--foreground)]"
+                      >
+                        {row.label}
+                      </th>
+
+                      <td className="px-4 py-2.5 text-right font-semibold text-[var(--green)]">
+                        {row.value}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        <div className="py-5">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--green)]">
+            Modalità d&apos;uso
+          </p>
+
+          <p className="mt-2 font-sans text-[15px] leading-relaxed text-[var(--muted)]">
+            {product.usage}
+          </p>
+        </div>
+
+        <div className="py-5">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--green)]">
+            Conservazione
+          </p>
+
+          <p className="mt-2 font-sans text-[15px] leading-relaxed text-[var(--muted)]">
+            {product.storage}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-8 pb-2">
+        <Button
+          href={whatsappLink(
+            `Ciao, vorrei ricevere maggiori informazioni su ${product.name}.`
+          )}
+          className="gap-2 shadow-xl shadow-green-950/10"
+        >
+          <MessageCircle size={18} />
+          Richiedi informazioni
+        </Button>
+      </div>
+    </>
+  );
+}
+
 function ProductModal({
   product,
   onClose,
@@ -399,23 +503,44 @@ function ProductModal({
               ease: [0.22, 1, 0.36, 1],
             }}
             onMouseDown={(event) => event.stopPropagation()}
-            className="relative max-h-[90vh] w-full max-w-6xl overflow-y-auto rounded-3xl border border-[var(--border)] bg-[#faf9f5] shadow-2xl lg:overflow-hidden"
+            className="relative h-[90vh] w-full max-w-6xl overflow-hidden rounded-3xl border border-[var(--border)] bg-[#faf9f5] shadow-2xl"
           >
+            {/* La X appartiene al modal, non al contenuto scrollabile */}
             <button
               type="button"
               onClick={onClose}
               aria-label="Chiudi"
-              className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border)] bg-[#faf9f5]/95 text-[var(--foreground)] shadow-sm transition-colors hover:bg-white sm:right-6 sm:top-6"
+              className="absolute right-4 top-4 z-30 flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border)] bg-[#faf9f5]/95 text-[var(--foreground)] shadow-sm transition-colors hover:bg-white sm:right-6 sm:top-6"
             >
               <X size={20} />
             </button>
 
-            <div className="grid lg:h-[90vh] lg:grid-cols-[0.9fr_1.1fr]">
-              {/* Immagine */}
+            {/* MOBILE / TABLET:
+                immagine + contenuto fanno parte dello stesso scroll */}
+            <div className="h-full overflow-y-auto lg:hidden">
+              <div className="relative h-[320px] bg-white sm:h-[420px]">
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  fill
+                  sizes="100vw"
+                  className="object-contain p-8 sm:p-12"
+                />
+              </div>
+
+              <div className="p-6 sm:p-10">
+                <ProductModalContent product={product} />
+              </div>
+            </div>
+
+            {/* DESKTOP:
+                immagine ferma a sinistra,
+                contenuto scrollabile a destra */}
+            <div className="hidden h-full lg:grid lg:grid-cols-[0.9fr_1.1fr]">
               <div
-                className="relative min-h-[320px] bg-white sm:min-h-[420px] lg:sticky lg:top-0 lg:h-[90vh] lg:min-h-0"
+                className="relative h-[90vh] bg-white"
                 onWheel={(event) => {
-                  if (window.innerWidth >= 1024 && contentScrollRef.current) {
+                  if (contentScrollRef.current) {
                     event.preventDefault();
                     contentScrollRef.current.scrollTop += event.deltaY;
                   }
@@ -425,112 +550,16 @@ function ProductModal({
                   src={product.image}
                   alt={product.name}
                   fill
-                  sizes="(max-width: 1024px) 100vw, 45vw"
-                  className="object-contain p-8 sm:p-12"
+                  sizes="45vw"
+                  className="object-contain p-12"
                 />
               </div>
 
-              {/* Contenuto */}
               <div
                 ref={contentScrollRef}
-                className="p-6 sm:p-10 lg:h-[90vh] lg:overflow-y-auto lg:p-12"
+                className="h-[90vh] overflow-y-auto p-12"
               >
-                <p className="eyebrow">Dettagli prodotto</p>
-
-                <h3 className="heading-display mt-4 pr-10 text-[2rem] leading-[1.15] text-[var(--green)] sm:text-[2.5rem]">
-                  {product.name}
-                </h3>
-
-                <p className="body-large mt-6">{product.description}</p>
-
-                <div className="mt-8 divide-y divide-[var(--border)] border-y border-[var(--border)]">
-                  <div className="py-5">
-                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--green)]">
-                      Formato
-                    </p>
-
-                    <p className="mt-2 font-sans text-[15px] leading-relaxed text-[var(--muted)]">
-                      {product.format}
-                    </p>
-                  </div>
-
-                  <div className="py-5">
-                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--green)]">
-                      Ingredienti
-                    </p>
-
-                    <p className="mt-2 font-sans text-[15px] leading-relaxed text-[var(--muted)]">
-                      {product.ingredients}
-                    </p>
-                  </div>
-
-                  {product.nutrition && product.nutrition.length > 0 && (
-                    <div className="py-5">
-                      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--green)]">
-                        Valori nutrizionali
-                      </p>
-
-                      <p className="mt-2 font-sans text-xs text-[var(--muted)]">
-                        Per 100 g di prodotto sgocciolato
-                      </p>
-
-                      <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)]">
-                        <table className="w-full border-collapse font-sans text-sm">
-                          <tbody>
-                            {product.nutrition.map((row) => (
-                              <tr
-                                key={row.label}
-                                className="border-b border-[var(--border)] last:border-b-0"
-                              >
-                                <th
-                                  scope="row"
-                                  className="px-4 py-2.5 text-left font-medium text-[var(--foreground)]"
-                                >
-                                  {row.label}
-                                </th>
-                                <td className="px-4 py-2.5 text-right font-semibold text-[var(--green)]">
-                                  {row.value}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="py-5">
-                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--green)]">
-                      Modalità d'uso
-                    </p>
-
-                    <p className="mt-2 font-sans text-[15px] leading-relaxed text-[var(--muted)]">
-                      {product.usage}
-                    </p>
-                  </div>
-
-                  <div className="py-5">
-                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--green)]">
-                      Conservazione
-                    </p>
-
-                    <p className="mt-2 font-sans text-[15px] leading-relaxed text-[var(--muted)]">
-                      {product.storage}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-8">
-                  <Button
-                    href={whatsappLink(
-                      `Ciao, vorrei ricevere maggiori informazioni su ${product.name}.`
-                    )}
-                    className="gap-2 shadow-xl shadow-green-950/10"
-                  >
-                    <MessageCircle size={18} />
-                    Richiedi informazioni
-                  </Button>
-                </div>
+                <ProductModalContent product={product} />
               </div>
             </div>
           </motion.div>

@@ -538,7 +538,7 @@ function AnimatedValuesPath() {
               endScale: 0.88,
               blurIn: 8,
               blurOut: 7,
-              stagger: 0.22,
+              stagger: 0.30,
               curviness: 1.8,
               fadeIn: 0.3,
               fadeOut: 0.2,
