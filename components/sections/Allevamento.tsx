@@ -102,7 +102,7 @@ function TimelineStep({
       <div
         className={[
           "grid grid-cols-1",
-          "gap-6 pt-[78px]",
+          "gap-4 pt-[72px]",
 
           "sm:gap-7 sm:pt-[84px]",
 
@@ -117,7 +117,7 @@ function TimelineStep({
         <div
           className={[
             "step-image relative",
-            "aspect-[16/8.5]",
+            "aspect-[16/7.2]",
             "w-full overflow-hidden",
             "rounded-[1.4rem]",
             "border border-[var(--border)]",
@@ -140,7 +140,7 @@ function TimelineStep({
           />
         </div>
 
-        <div className="step-text min-w-0 px-1 pb-2 sm:px-2 lg:px-0 lg:pr-4">
+        <div className="step-text min-w-0 px-1 pb-6 sm:px-2 sm:pb-2 lg:px-0 lg:pr-4">
           <p className="eyebrow">
             {step.eyebrow}
           </p>
@@ -148,7 +148,7 @@ function TimelineStep({
           <h3
             className={[
               "heading-display mt-3",
-              "text-[1.65rem] leading-[1.16]",
+              "text-[1.5rem] leading-[1.12]",
               "text-[var(--green)]",
 
               "sm:text-[2rem]",
@@ -162,9 +162,9 @@ function TimelineStep({
 
           <p
             className={[
-              "body-large mt-4",
+              "body-large mt-3",
               "max-w-[60ch]",
-              "text-[14px] leading-[1.65]",
+              "text-[13px] leading-[1.55]",
 
               "sm:text-[15px]",
 
@@ -201,6 +201,9 @@ export function Allevamento() {
     let resizeFrame = 0;
     let previousWidth = window.innerWidth;
 
+    const getIntroHold = () =>
+      window.innerWidth < 640 ? 320 : 180;
+
     const initialise = async () => {
       const [
         { gsap },
@@ -220,23 +223,12 @@ export function Allevamento() {
         ignoreMobileResize: true,
       });
 
-      const getHeaderHeight = () => {
-  const header =
-    document.querySelector<HTMLElement>("header");
-
-  return Math.ceil(
-    header?.getBoundingClientRect().height ?? 0,
-  );
-};
-
       const getPanelHeight = () => {
-        const height =
-          window.visualViewport?.height ??
-          window.innerHeight;
+        if (window.innerWidth < 1024) {
+          return window.innerHeight;
+        }
 
-        return Math.round(
-          height - getHeaderHeight(),
-        );
+        return window.innerHeight;
       };
 
       const getTravelDistance = () => {
@@ -274,18 +266,17 @@ export function Allevamento() {
           getTravelDistance();
 
         section.style.setProperty(
-          "--allevamento-header-height",
-          `${getHeaderHeight()}px`,
-        );
-
-        section.style.setProperty(
           "--allevamento-panel-height",
-          `${panelHeight}px`,
+          window.innerWidth < 1024
+            ? "100dvh"
+            : `${panelHeight}px`,
         );
 
         section.style.setProperty(
           "--allevamento-section-height",
-          `${panelHeight + travelDistance}px`,
+          window.innerWidth < 1024
+            ? `calc(100dvh + ${travelDistance + getIntroHold()}px)`
+            : `${panelHeight + travelDistance + getIntroHold()}px`,
         );
       };
 
@@ -303,28 +294,34 @@ export function Allevamento() {
          * parte esattamente quando entra
          * in funzione lo sticky CSS.
          */
-        const horizontalTween =
-          gsap.to(track, {
-            x: () =>
-              -getTravelDistance(),
+        const horizontalTween = gsap.timeline({
+          scrollTrigger: {
+            id: "allevamento-horizontal",
+            trigger: section,
+            start: "top top",
+            end: () =>
+              `+=${getIntroHold() + getTravelDistance()}`,
+            scrub: 0.35,
+            invalidateOnRefresh: true,
+            fastScrollEnd: false,
+          },
+        });
 
+        /*
+         * Piccola pausa iniziale: il primo punto resta completamente
+         * visibile prima che inizi lo scorrimento orizzontale.
+         */
+        horizontalTween
+          .to({}, {
+            duration: () =>
+              getIntroHold() /
+              Math.max(getTravelDistance(), 1),
+          })
+          .to(track, {
+            x: () => -getTravelDistance(),
             ease: "none",
             force3D: true,
-
-            scrollTrigger: {
-              id: "allevamento-horizontal",
-              trigger: section,
-
-              start: () =>
-                `top top+=${getHeaderHeight()}`,
-
-              end: () =>
-                `+=${getTravelDistance()}`,
-
-              scrub: 0.35,
-              invalidateOnRefresh: true,
-              fastScrollEnd: false,
-            },
+            duration: 1,
           });
 
         /*
@@ -494,13 +491,13 @@ export function Allevamento() {
       >
         <div
           style={{
-            top: "var(--allevamento-header-height, 0px)",
+            top: "0px",
             height:
-              "var(--allevamento-panel-height, 100vh)",
+              "var(--allevamento-panel-height, 100dvh)",
           }}
           className="sticky w-full overflow-hidden bg-[var(--background)]"
         >
-          <Container className="relative z-30 pt-8 sm:pt-9 lg:pt-8">
+          <Container className="relative z-30 pt-[104px] sm:pt-9 lg:pt-8">
             <div className="mx-auto w-full text-center">
               <div className="mb-3 flex items-center justify-center gap-3 sm:mb-4 sm:gap-4">
                 <span className="h-px w-8 bg-[var(--green)] sm:w-12" />
@@ -546,7 +543,7 @@ export function Allevamento() {
           <div
             className={[
   "absolute inset-x-0 bottom-0",
-  "top-[118px]",
+  "top-[190px]",
   "sm:top-[150px]",
   "lg:top-[132px]",
   "xl:top-[140px]",
