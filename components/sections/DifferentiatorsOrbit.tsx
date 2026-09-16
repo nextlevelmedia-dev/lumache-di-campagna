@@ -222,15 +222,14 @@ function AnimatedValuesPath() {
 
     const handleResize = () => {
       const currentWidth = window.innerWidth;
-      const isDesktop = currentWidth >= 1024;
 
       /*
-       * Su desktop ignoriamo i micro-resize.
-       * Su mobile NON ignoriamo i resize verticali: sono proprio quelli
-       * generati dalle toolbar reali di Chrome e Safari.
+       * Su iOS Chrome/Safari la toolbar cambia continuamente l'altezza
+       * della viewport durante lo scroll. Non ricalcoliamo la scena per
+       * questi resize verticali: interveniamo solo quando cambia davvero
+       * la larghezza (es. rotazione/orientamento).
        */
       if (
-        isDesktop &&
         Math.abs(currentWidth - previousWidth) < 20
       ) {
         return;
@@ -251,12 +250,6 @@ function AnimatedValuesPath() {
       passive: true,
     });
 
-    window.visualViewport?.addEventListener(
-      "resize",
-      handleResize,
-      { passive: true },
-    );
-
     window.addEventListener(
       "orientationchange",
       handleResize,
@@ -269,11 +262,6 @@ function AnimatedValuesPath() {
       window.cancelAnimationFrame(resizeFrame);
 
       window.removeEventListener(
-        "resize",
-        handleResize,
-      );
-
-      window.visualViewport?.removeEventListener(
         "resize",
         handleResize,
       );
@@ -333,7 +321,7 @@ function AnimatedValuesPath() {
       );
 
       ScrollTrigger.config({
-        ignoreMobileResize: false,
+        ignoreMobileResize: true,
       });
 
       const refreshAllTriggers = () => {
@@ -636,9 +624,8 @@ function AnimatedValuesPath() {
         style={{
           top: "0px",
           height: "var(--values-panel-height, 100dvh)",
-          minHeight: "100dvh",
         }}
-        className="sticky w-full overflow-hidden bg-[var(--green)] after:pointer-events-none after:absolute after:inset-x-0 after:-bottom-[80px] after:h-[80px] after:bg-[var(--green)] [transform:translateZ(0)] [backface-visibility:hidden]"
+        className="sticky w-full overflow-hidden bg-[var(--green)] [transform:translateZ(0)] [backface-visibility:hidden]"
       >
         {/* Fondo */}
         <div className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:radial-gradient(circle_at_15%_15%,#ffffff_0,transparent_35%),radial-gradient(circle_at_85%_85%,#ffffff_0,transparent_35%)]" />
