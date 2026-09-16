@@ -184,26 +184,18 @@ function AnimatedValuesPath() {
     let previousWidth = window.innerWidth;
     let resizeFrame = 0;
 
-    const getHeaderHeight = () => {
-  const header =
-    document.querySelector<HTMLElement>("header");
-
-  return Math.ceil(
-    header?.getBoundingClientRect().height ?? 0,
-  );
-};
+    const getHeaderHeight
 
     const measureLayout = () => {
       const isDesktop = window.innerWidth >= 1024;
       const headerHeight = getHeaderHeight();
 
-      const viewportHeight = Math.round(
-        window.visualViewport?.height ??
-          window.innerHeight,
-      );
+      const viewportHeight = window.innerHeight;
 
-      const panelHeight = Math.max(
-  viewportHeight - headerHeight,
+const panelHeight = Math.max(
+  isDesktop
+    ? viewportHeight - headerHeight
+    : viewportHeight,
   1,
 );
 
@@ -631,12 +623,10 @@ function AnimatedValuesPath() {
       <div
         ref={panelRef}
         style={{
-          top: "var(--values-header-height, 0px)",
-          height:
-            "var(--values-panel-height, 100vh)",
-          minHeight:
-            "var(--values-panel-height, 100vh)",
-        }}
+  top: "var(--values-header-height, 0px)",
+  height:
+    "var(--values-panel-height, 100dvh)",
+}}
         className="sticky w-full overflow-hidden bg-[var(--green)] [transform:translateZ(0)] [backface-visibility:hidden]"
       >
         {/* Fondo */}
