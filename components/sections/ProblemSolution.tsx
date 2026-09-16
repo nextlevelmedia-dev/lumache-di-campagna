@@ -47,14 +47,7 @@ export function ProblemSolution() {
             delay={0.45}
             className="body-large mx-auto mt-7 max-w-2xl"
           >
-            La maggior parte delle lumache in commercio
-            arriva da filiere lunghe e poco trasparenti:
-            allevamenti intensivi, lavorazioni industriali,
-            ingredienti aggiunti solo per prolungare la
-            conservazione. Noi alleviamo, lavoriamo e
-            confezioniamo tutto direttamente in azienda —
-            dalla terra alla tavola, senza intermediari e
-            senza compromessi.
+            Le nostre lumache nascono e crescono nel nostro allevamento, dove seguiamo ogni fase con attenzione, dalla crescita alla raccolta. È da questa materia prima che prendono vita i nostri prodotti: dalle ricette in vasetto ai cosmetici alla bava di lumaca, pensati per valorizzare ciò che nasce dal nostro allevamento e raccontare il legame con la nostra terra.
           </Reveal>
 
           {/* CTA */}

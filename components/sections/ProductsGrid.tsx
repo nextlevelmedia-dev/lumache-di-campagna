@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, MessageCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -9,20 +9,24 @@ import { Container } from "@/components/ui/Container";
 import { SplitTitle } from "@/components/ui/SplitTitle";
 import { whatsappLink } from "@/lib/whatsapp";
 
+type NutritionRow = {
+  label: string;
+  value: string;
+};
+
 type Product = {
   name: string;
-  price: string;
   image: string;
   description: string;
   ingredients: string;
   format: string;
   storage: string;
   usage: string;
+  nutrition?: NutritionRow[];
 };
 
 const looseSnail: Product = {
   name: "Lumache sfuse al kg",
-  price: "15,00 € / kg",
   image: "/images/products/13.png",
   description:
     "Lumache selezionate e preparate con cura, vendute sfuse e pesate al momento. Ideali per chi desidera cucinarle secondo la propria ricetta tradizionale.",
@@ -38,94 +42,193 @@ const looseSnail: Product = {
 const jarProducts: Product[] = [
   {
     name: "Lumache al naturale",
-    price: "9,90 €",
-    image: "/images/products/1.png",
+    image: "/images/products/lumachealnaturale.webp",
     description:
-      "Una preparazione semplice e delicata che mantiene protagonista il gusto autentico della lumaca. Ideale come base per numerose ricette.",
+      "La versione più essenziale, pensata per chi vuole ritrovare il gusto autentico della lumaca. Una preparazione semplice e versatile, ideale come base per numerose ricette.",
     ingredients:
-      "Lumache, acqua, sale, aromi naturali. Ingredienti indicativi da sostituire con quelli reali dell'etichetta.",
-    format: "Vasetto da 180 g",
+      "Lumache specie Helix Aspersa Maxima, acqua, sale. Potrebbe contenere gusci.",
+    format: "300 g peso netto · 150 g peso sgocciolato",
     storage:
-      "Conservare in luogo fresco e asciutto. Dopo l'apertura conservare in frigorifero e consumare in breve tempo.",
+      "Conservare in luogo fresco a temperatura ambiente a vasetto chiuso. Dopo l'apertura conservare in frigorifero a 0/4° per 2-3 giorni.",
     usage:
-      "Scaldare leggermente oppure utilizzare come base per primi piatti, antipasti e ricette della tradizione.",
+      "Da consumarsi previa cottura. Cuocere per 4 minuti. Ideale come condimento di pasta, risotti, polenta o crostini.",
+    nutrition: [
+      { label: "Energia", value: "282 kJ / 67 kcal" },
+      { label: "Grassi", value: "1,7 g" },
+      { label: "di cui acidi saturi", value: "1,7 g" },
+      { label: "Carboidrati", value: "0 g" },
+      { label: "di cui zuccheri", value: "0 g" },
+      { label: "Fibre", value: "0 g" },
+      { label: "Proteine", value: "12,9 g" },
+      { label: "Sale", value: "1 g" },
+    ],
   },
   {
-    name: "Lumache al pomodoro",
-    price: "10,90 €",
-    image: "/images/products/2.png",
+    name: "Lumache trifolate",
+    image: "/images/products/lumachetrifolate.webp",
     description:
-      "Lumache già preparate in una salsa al pomodoro dal sapore ricco e casalingo, pensate per essere servite in pochi minuti.",
+      "Una ricetta ricca e profumata, dove le lumache incontrano olio extravergine di oliva, aglio, scalogno e prezzemolo. Un gusto deciso ma equilibrato, pronto da portare in tavola in pochi minuti.",
     ingredients:
-      "Lumache, pomodoro, olio, sale, erbe aromatiche e spezie. Ingredienti indicativi da verificare.",
-    format: "Vasetto da 180 g",
+      "Lumache specie Helix Aspersa Maxima (52%), olio extravergine di oliva (40%), aglio, scalogno, prezzemolo, sale, pepe. Potrebbe contenere gusci.",
+    format: "300 g peso netto",
     storage:
-      "Conservare in luogo fresco e asciutto. Dopo l'apertura mantenere in frigorifero.",
+      "Conservare in luogo fresco a temperatura ambiente a vasetto chiuso. Dopo l'apertura conservare in frigorifero a 0/4° per 2-3 giorni.",
     usage:
-      "Versare in padella e scaldare per alcuni minuti. Servire calde accompagnate da pane tostato.",
+      "Da consumarsi previa cottura. Cuocere per 4 minuti. Ideale come condimento di pasta, risotti, polenta o crostini.",
+    nutrition: [
+      { label: "Energia", value: "625 kJ / 155 kcal" },
+      { label: "Grassi", value: "11,5 g" },
+      { label: "di cui acidi saturi", value: "1,4 g" },
+      { label: "Carboidrati", value: "0,4 g" },
+      { label: "di cui zuccheri", value: "0,3 g" },
+      { label: "Fibre", value: "0,5 g" },
+      { label: "Proteine", value: "11,1 g" },
+      { label: "Sale", value: "1,0 g" },
+    ],
   },
   {
-    name: "Lumache alle erbe aromatiche",
-    price: "11,50 €",
-    image: "/images/products/3.png",
+    name: "Ragù di lumache",
+    image: "/images/products/ragudilumache.webp",
     description:
-      "Una ricetta profumata e delicata, arricchita da erbe aromatiche selezionate per accompagnare il sapore delle lumache.",
+      "Un ragù dal carattere rustico e avvolgente, preparato con pomodoro, lumache, olio extravergine di oliva e vino rosso. Pensato per dare un sapore originale e intenso ai piatti della tradizione.",
     ingredients:
-      "Lumache, olio, sale, prezzemolo, rosmarino ed erbe aromatiche. Composizione indicativa.",
-    format: "Vasetto da 180 g",
+      "Polpa di pomodoro (pomodori pelati, succo di 52% pomodoro, correttore di acidità, acido citrico), lumache specie Aspersa Maxima (25%), olio extravergine di oliva (10%), vino rosso (contiene solfiti), carote, cipolle, sedano, sale, aglio, aromi naturali. Potrebbe contenere gusci.",
+    format: "300 g peso netto",
     storage:
-      "Conservare in luogo fresco e asciutto. Una volta aperto conservare in frigorifero.",
+      "Conservare in luogo fresco a temperatura ambiente a vasetto chiuso. Dopo l'apertura conservare in frigorifero a 0/4° per 2-3 giorni.",
     usage:
-      "Scaldare lentamente e servire come antipasto oppure come secondo piatto.",
+      "Da consumarsi previa cottura. Cuocere per 4 minuti. Ideale come condimento di pasta, risotti, polenta o crostini.",
+    nutrition: [
+      { label: "Energia", value: "488 kJ / 118 kcal" },
+      { label: "Grassi", value: "9,7 g" },
+      { label: "di cui acidi saturi", value: "1,9 g" },
+      { label: "Carboidrati", value: "2,2 g" },
+      { label: "di cui zuccheri", value: "1,9 g" },
+      { label: "Fibre", value: "0,2 g" },
+      { label: "Proteine", value: "4,5 g" },
+      { label: "Sale", value: "1,2 g" },
+    ],
   },
   {
-    name: "Lumache in salsa piccante",
-    price: "11,90 €",
-    image: "/images/products/4.png",
+    name: "Lumache alle erbette",
+    image: "/images/products/lumachealleerbette.webp",
     description:
-      "Una versione più decisa, pensata per chi ama sapori intensi e leggermente piccanti senza rinunciare alla delicatezza della lumaca.",
+      "Una preparazione saporita in cui le lumache si uniscono alla delicatezza della bieta dolce, arricchita da porro, speck e burro. Una ricetta dal gusto pieno e avvolgente.",
     ingredients:
-      "Lumache, pomodoro, olio, peperoncino, sale e aromi. Ingredienti indicativi da confermare.",
-    format: "Vasetto da 180 g",
+      "Bieta dolce (46%), lumache specie Aspersa Maxima (30%), olio extra vergine di oliva, burro, porro, speck (3%), sale, pepe. Potrebbe contenere gusci.",
+    format: "300 g peso netto",
     storage:
-      "Conservare in luogo fresco e asciutto. Dopo l'apertura conservare in frigorifero.",
+      "Conservare in luogo fresco a temperatura ambiente a vasetto chiuso. Dopo l'apertura conservare in frigorifero a 0/4° per 2-3 giorni.",
     usage:
-      "Scaldare in padella a fuoco lento e servire calde. Ottime con pane rustico.",
+      "Da consumarsi previa cottura. Cuocere per 4 minuti. Ideale come condimento di pasta, risotti, polenta o crostini.",
+    nutrition: [
+      { label: "Energia", value: "694 kJ / 166 kcal" },
+      { label: "Grassi", value: "12,6 g" },
+      { label: "di cui acidi saturi", value: "6,3 g" },
+      { label: "Carboidrati", value: "3,9 g" },
+      { label: "di cui zuccheri", value: "3,8 g" },
+      { label: "Fibre", value: "0,7 g" },
+      { label: "Proteine", value: "9,3 g" },
+      { label: "Sale", value: "1,8 g" },
+    ],
   },
   {
-    name: "Lumache al vino bianco",
-    price: "12,50 €",
-    image: "/images/products/5.png",
+    name: "Lumache alle verdure",
+    image: "/images/products/lumachealleverdure.webp",
     description:
-      "Una preparazione elegante e profumata in cui il vino bianco accompagna la consistenza e il gusto caratteristico delle lumache.",
+      "Una ricetta colorata e genuina che abbina le lumache a carote, porri, cipolla e sedano. Il vino bianco e gli aromi completano una preparazione dal gusto morbido e armonioso.",
     ingredients:
-      "Lumache, vino bianco, olio, sale ed erbe aromatiche. Ingredienti provvisori da verificare.",
-    format: "Vasetto da 180 g",
+      "Lumache specie Aspersa Maxima (30%), carote (10%), porri (10%), cipolla (10%), sedano, olio di oliva, lardo trito, vino bianco, concentrato di pomodoro, sale, aglio, aromi naturali. Potrebbe contenere gusci.",
+    format: "300 g peso netto",
     storage:
-      "Conservare in luogo fresco e asciutto. Dopo l'apertura conservare in frigorifero.",
+      "Conservare in luogo fresco a temperatura ambiente a vasetto chiuso. Dopo l'apertura conservare in frigorifero a 0/4° per 2-3 giorni.",
     usage:
-      "Scaldare per alcuni minuti e servire come antipasto o secondo piatto.",
+      "Da consumarsi previa cottura. Cuocere per 4 minuti. Ideale come condimento di pasta, risotti, polenta o crostini.",
+    nutrition: [
+      { label: "Energia", value: "685 kJ / 165 kcal" },
+      { label: "Grassi", value: "15,7 g" },
+      { label: "di cui acidi saturi", value: "8,6 g" },
+      { label: "Carboidrati", value: "3,2 g" },
+      { label: "di cui zuccheri", value: "3,0 g" },
+      { label: "Fibre", value: "1,7 g" },
+      { label: "Proteine", value: "4,8 g" },
+      { label: "Sale", value: "1,3 g" },
+    ],
   },
   {
-    name: "Lumache tradizionali contadine",
-    price: "9,50 €",
-    image: "/images/products/6.png",
+    name: "Lumache ai funghi",
+    image: "/images/products/lumacheaifunghi.webp",
     description:
-      "Una ricetta ispirata alla cucina contadina, dai sapori semplici e robusti, pensata per valorizzare una materia prima della tradizione.",
+      "Una ricetta dal gusto intenso e boschivo, in cui le lumache incontrano i funghi e una delicata base di pomodoro, porro, scalogno e aglio.",
     ingredients:
-      "Lumache, verdure, pomodoro, olio, sale e aromi. Ingredienti indicativi da sostituire con quelli definitivi.",
-    format: "Vasetto da 180 g",
+      "Funghi (pholiota mutabilis) (49%), polpa di lumache (30%), olio di oliva (10%), pomodoro in pezzi (pomodoro), porro, scalogno, aglio, sale. Potrebbe contenere gusci.",
+    format: "300 g peso netto",
     storage:
-      "Conservare in luogo fresco e asciutto. Dopo l'apertura mantenere in frigorifero.",
+      "Conservare in luogo fresco a temperatura ambiente a vasetto chiuso. Dopo l'apertura conservare in frigorifero a 0/4° per 2-3 giorni.",
     usage:
-      "Scaldare lentamente e servire accompagnate da polenta, pane o contorni di stagione.",
+      "Da consumarsi previa cottura. Cuocere per 4 minuti. Ideale come condimento di pasta, risotti, polenta o crostini.",
+    nutrition: [
+      { label: "Energia", value: "522 kJ / 125 kcal" },
+      { label: "Grassi", value: "10,6 g" },
+      { label: "di cui acidi saturi", value: "0,5 g" },
+      { label: "Carboidrati", value: "1,5 g" },
+      { label: "di cui zuccheri", value: "0,6 g" },
+      { label: "Fibre", value: "1,6 g" },
+      { label: "Proteine", value: "5,0 g" },
+      { label: "Sale", value: "1,1 g" },
+    ],
+  },
+  {
+    name: "Lumache agli spinaci",
+    image: "/images/products/lumacheaglispinaci.webp",
+    description:
+      "Una preparazione morbida e saporita che unisce le lumache agli spinaci, con burro, porro e Grana Padano. Una ricetta equilibrata dal carattere delicato.",
+    ingredients:
+      "Spinaci (47%), lumache specie Aspersa Maxima (30%), burro, olio di oliva, porro, grana padano, sale, pepe. Potrebbe contenere gusci.",
+    format: "300 g peso netto",
+    storage:
+      "Conservare in luogo fresco a temperatura ambiente a vasetto chiuso. Dopo l'apertura conservare in frigorifero a 0/4° per 2-3 giorni.",
+    usage:
+      "Da consumarsi previa cottura. Cuocere per 4 minuti. Ideale come condimento di pasta, risotti, polenta o crostini.",
+    nutrition: [
+      { label: "Energia", value: "694 kJ / 166 kcal" },
+      { label: "Grassi", value: "12,6 g" },
+      { label: "di cui acidi saturi", value: "6,3 g" },
+      { label: "Carboidrati", value: "3,9 g" },
+      { label: "di cui zuccheri", value: "3,8 g" },
+      { label: "Fibre", value: "0,7 g" },
+      { label: "Proteine", value: "9,3 g" },
+      { label: "Sale", value: "1,3 g" },
+    ],
+  },
+  {
+    name: "Lumache alla arrabbiata",
+    image: "/images/products/lumacheallaarrabbiata.webp",
+    description:
+      "Una ricetta vivace e decisa, con pomodoro e peperoncino ad accompagnare il gusto delle lumache. Pensata per chi ama i sapori più intensi e leggermente piccanti.",
+    ingredients:
+      "Polpa di pomodoro (30%), lumache specie Aspersa Maxima (30%), olio di oliva (10%), cipolla (2%), sedano (2%), carote (2%), vino bianco, sale, aglio, aromi naturali, peperoncino. Potrebbe contenere gusci.",
+    format: "300 g peso netto",
+    storage:
+      "Conservare in luogo fresco a temperatura ambiente a vasetto chiuso. Dopo l'apertura conservare in frigorifero a 0/4° per 2-3 giorni.",
+    usage:
+      "Da consumarsi previa cottura. Cuocere per 4 minuti. Ideale come condimento di pasta, risotti, polenta o crostini.",
+    nutrition: [
+      { label: "Energia", value: "477 kJ / 114 kcal" },
+      { label: "Grassi", value: "8,6 g" },
+      { label: "di cui acidi saturi", value: "0,6 g" },
+      { label: "Carboidrati", value: "3,9 g" },
+      { label: "di cui zuccheri", value: "2,7 g" },
+      { label: "Fibre", value: "0,8 g" },
+      { label: "Proteine", value: "4,8 g" },
+      { label: "Sale", value: "1,1 g" },
+    ],
   },
 ];
 
 const creamProducts: Product[] = [
   {
     name: "Crema viso rigenerante",
-    price: "24,90 €",
     image: "/images/products/7.png",
     description:
       "Trattamento quotidiano studiato per nutrire e idratare la pelle del viso, valorizzando le proprietà cosmetiche della bava di lumaca.",
@@ -139,7 +242,6 @@ const creamProducts: Product[] = [
   },
   {
     name: "Crema mani nutriente",
-    price: "14,90 €",
     image: "/images/products/8.png",
     description:
       "Crema mani dalla texture confortevole, pensata per nutrire la pelle e contrastare la sensazione di secchezza.",
@@ -153,7 +255,6 @@ const creamProducts: Product[] = [
   },
   {
     name: "Siero anti-età",
-    price: "29,90 €",
     image: "/images/products/9.png",
     description:
       "Siero viso concentrato dalla texture leggera, studiato per completare la routine quotidiana di trattamento della pelle.",
@@ -167,7 +268,6 @@ const creamProducts: Product[] = [
   },
   {
     name: "Balsamo labbra",
-    price: "8,90 €",
     image: "/images/products/10.png",
     description:
       "Trattamento pratico per mantenere le labbra morbide e protette durante la giornata.",
@@ -181,7 +281,6 @@ const creamProducts: Product[] = [
   },
   {
     name: "Crema corpo idratante",
-    price: "19,90 €",
     image: "/images/products/11.png",
     description:
       "Crema corpo pensata per lasciare la pelle morbida, nutrita e piacevolmente idratata dopo l'applicazione.",
@@ -195,7 +294,6 @@ const creamProducts: Product[] = [
   },
   {
     name: "Gel doposole lenitivo",
-    price: "16,90 €",
     image: "/images/products/12.png",
     description:
       "Gel fresco e leggero pensato per donare una piacevole sensazione di comfort alla pelle dopo l'esposizione solare.",
@@ -237,10 +335,6 @@ function ProductCard({
           {product.name}
         </p>
 
-        <p className="mt-1 font-sans text-sm font-bold text-[var(--green)]">
-          {product.price}
-        </p>
-
         <div className="mt-3 flex items-center gap-1.5 font-sans text-[13px] font-semibold text-[var(--green)]">
           <span>Scopri di più</span>
 
@@ -261,6 +355,8 @@ function ProductModal({
   product: Product | null;
   onClose: () => void;
 }) {
+  const contentScrollRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!product) return;
 
@@ -303,7 +399,7 @@ function ProductModal({
               ease: [0.22, 1, 0.36, 1],
             }}
             onMouseDown={(event) => event.stopPropagation()}
-            className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-3xl border border-[var(--border)] bg-[#faf9f5] shadow-2xl"
+            className="relative max-h-[90vh] w-full max-w-6xl overflow-y-auto rounded-3xl border border-[var(--border)] bg-[#faf9f5] shadow-2xl lg:overflow-hidden"
           >
             <button
               type="button"
@@ -314,9 +410,17 @@ function ProductModal({
               <X size={20} />
             </button>
 
-            <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="grid lg:h-[90vh] lg:grid-cols-[0.9fr_1.1fr]">
               {/* Immagine */}
-              <div className="relative min-h-[320px] bg-white sm:min-h-[420px] lg:min-h-[650px]">
+              <div
+                className="relative min-h-[320px] bg-white sm:min-h-[420px] lg:sticky lg:top-0 lg:h-[90vh] lg:min-h-0"
+                onWheel={(event) => {
+                  if (window.innerWidth >= 1024 && contentScrollRef.current) {
+                    event.preventDefault();
+                    contentScrollRef.current.scrollTop += event.deltaY;
+                  }
+                }}
+              >
                 <Image
                   src={product.image}
                   alt={product.name}
@@ -327,16 +431,15 @@ function ProductModal({
               </div>
 
               {/* Contenuto */}
-              <div className="p-6 sm:p-10 lg:p-12">
+              <div
+                ref={contentScrollRef}
+                className="p-6 sm:p-10 lg:h-[90vh] lg:overflow-y-auto lg:p-12"
+              >
                 <p className="eyebrow">Dettagli prodotto</p>
 
                 <h3 className="heading-display mt-4 pr-10 text-[2rem] leading-[1.15] text-[var(--green)] sm:text-[2.5rem]">
                   {product.name}
                 </h3>
-
-                <p className="mt-3 font-sans text-lg font-bold text-[var(--red)]">
-                  {product.price}
-                </p>
 
                 <p className="body-large mt-6">{product.description}</p>
 
@@ -361,9 +464,44 @@ function ProductModal({
                     </p>
                   </div>
 
+                  {product.nutrition && product.nutrition.length > 0 && (
+                    <div className="py-5">
+                      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--green)]">
+                        Valori nutrizionali
+                      </p>
+
+                      <p className="mt-2 font-sans text-xs text-[var(--muted)]">
+                        Per 100 g di prodotto sgocciolato
+                      </p>
+
+                      <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)]">
+                        <table className="w-full border-collapse font-sans text-sm">
+                          <tbody>
+                            {product.nutrition.map((row) => (
+                              <tr
+                                key={row.label}
+                                className="border-b border-[var(--border)] last:border-b-0"
+                              >
+                                <th
+                                  scope="row"
+                                  className="px-4 py-2.5 text-left font-medium text-[var(--foreground)]"
+                                >
+                                  {row.label}
+                                </th>
+                                <td className="px-4 py-2.5 text-right font-semibold text-[var(--green)]">
+                                  {row.value}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="py-5">
                     <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--green)]">
-                      Utilizzo
+                      Modalità d'uso
                     </p>
 
                     <p className="mt-2 font-sans text-[15px] leading-relaxed text-[var(--muted)]">
@@ -407,7 +545,7 @@ function ElegantCheck() {
     <svg
       viewBox="0 0 48 48"
       fill="none"
-      className="h-7 w-7 shrink-0 overflow-visible text-[var(--green)]"
+      className="h-5 w-5 shrink-0 overflow-visible text-[var(--green)] sm:h-7 sm:w-7"
       aria-hidden="true"
     >
       <path
@@ -429,7 +567,7 @@ function ElegantCheck() {
 
 function CheckItem({ text }: { text: string }) {
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-2.5 sm:gap-4">
       <ElegantCheck />
 
       <span className="font-sans text-[15px] font-medium text-[var(--foreground)]">

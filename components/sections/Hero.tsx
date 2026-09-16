@@ -33,7 +33,7 @@ import { whatsappLink } from "@/lib/whatsapp";
 
 const slides = [
   {
-    src: "/images/lumache-sfuse-3.png",
+    src: "/images/hero/crescitanaturale.webp",
     alt: "Allevamento naturale",
     topEyebrow: "Allevamento",
     topTitle: "All'aperto",
@@ -42,7 +42,7 @@ const slides = [
       "Crescita naturale, come vuole la terra.",
   },
   {
-    src: "/images/piatto-2.png",
+    src: "/images/hero/prodotti-autentici.webp",
     alt: "Lumache di Campagna",
     topEyebrow: "Qualità",
     topTitle: "Artigianale",
@@ -51,7 +51,7 @@ const slides = [
       "Prodotti autentici, naturali e italiani.",
   },
   {
-    src: "/images/sulla-tavola.png",
+    src: "/images/hero/estratti-puri.webp",
     alt: "Cura della bava",
     topEyebrow: "Cosmesi",
     topTitle: "Bava pura",

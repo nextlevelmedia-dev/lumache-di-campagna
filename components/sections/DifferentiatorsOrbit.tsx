@@ -42,33 +42,28 @@ type Differentiator = {
 const differentiators: Differentiator[] = [
   {
     icon: Route,
-    title: "Filiera diretta",
-    text: "Alleviamo, lavoriamo e confezioniamo tutto internamente. Dalla terra alla tavola, senza intermediari.",
+    title: "Dal nostro allevamento",
+    text: "Le nostre lumache nascono e crescono nel nostro allevamento, dove ne seguiamo con attenzione ogni fase, dalla crescita alla raccolta.",
   },
   {
     icon: Sprout,
     title: "Allevamento italiano",
-    text: "Ciclo di crescita naturale in azienda agricola, nel rispetto dei tempi biologici della lumaca.",
+    text: "Un ciclo di crescita seguito nella nostra azienda agricola, nel rispetto dei tempi biologici della lumaca e del suo ambiente.",
   },
   {
     icon: Hand,
-    title: "Lavorazione artigianale",
-    text: "Nessuna catena industriale: ogni fase, dalla raccolta al confezionamento, è seguita a mano.",
+    title: "Cura e selezione",
+    text: "Dedichiamo attenzione quotidiana alle nostre lumache e selezioniamo con cura la materia prima destinata ai nostri prodotti.",
   },
   {
     icon: ShieldCheck,
-    title: "Tracciabilità completa",
-    text: "Sappiamo sempre da dove viene ogni singolo prodotto, dall'allevamento fino al tuo tavolo.",
-  },
-  {
-    icon: Ban,
-    title: "Zero additivi",
-    text: "Nessun conservante o ingrediente aggiunto solo per prolungare la conservazione.",
+    title: "Origine conosciuta",
+    text: "Conosciamo l'origine delle nostre lumache perché provengono dal nostro allevamento, cuore della nostra azienda agricola.",
   },
   {
     icon: Heart,
     title: "Metodo cruelty-free",
-    text: "La bava di lumaca viene raccolta con tecniche che rispettano il benessere dell'animale.",
+    text: "La bava di lumaca viene raccolta con tecniche pensate per rispettare il benessere dell'animale.",
   },
 ];
 
@@ -543,7 +538,7 @@ function AnimatedValuesPath() {
               endScale: 0.88,
               blurIn: 8,
               blurOut: 7,
-              stagger: 0.32,
+              stagger: 0.22,
               curviness: 1.8,
               fadeIn: 0.3,
               fadeOut: 0.2,

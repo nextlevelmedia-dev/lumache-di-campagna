@@ -8,7 +8,6 @@ import { ZoomGallery } from "@/components/sections/ZoomGallery";
 import { ProductsGrid } from "@/components/sections/ProductsGrid";
 import { Allevamento } from "@/components/sections/Allevamento";
 import { ChiSiamo } from "@/components/sections/ChiSiamo";
-import { DepthGallery } from "@/components/sections/DepthGallery";
 import { FAQ } from "@/components/sections/FAQ";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { Contatti } from "@/components/sections/Contatti";
@@ -26,7 +25,6 @@ export default function Home() {
         <ProductsGrid />
         <Allevamento />
         <ChiSiamo />
-        <DepthGallery />
         <FAQ />
         <FinalCTA />
         <Contatti />

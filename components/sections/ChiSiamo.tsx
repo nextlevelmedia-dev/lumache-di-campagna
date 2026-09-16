@@ -158,26 +158,26 @@ export function ChiSiamo() {
             </motion.h3>
 
             <motion.p
-              variants={textItem}
-              className="mt-6 text-[17px] leading-relaxed text-white/70"
-            >
-              Azienda Agricola Doninelli nasce dalla passione per la terra e
-              per un metodo di lavoro che oggi è sempre più raro: fare tutto
-              internamente, senza intermediari, senza fretta. Alleviamo
-              lumache seguendo i loro tempi naturali e le trasformiamo con le
-              nostre mani, dalla raccolta al vasetto che arriva sulla tua
-              tavola.
-            </motion.p>
+  variants={textItem}
+  className="mt-6 text-[17px] leading-relaxed text-white/70"
+>
+  Azienda Agricola Doninelli nasce dalla passione per la terra e
+  dall&apos;attenzione dedicata ogni giorno al nostro allevamento.
+  Alleviamo le nostre lumache seguendo i loro tempi naturali, curandone
+  la crescita e selezionandole con attenzione fino al momento della
+  raccolta.
+</motion.p>
 
-            <motion.p
-              variants={textItem}
-              className="mt-4 text-[17px] leading-relaxed text-white/70"
-            >
-              Non siamo un&apos;azienda industriale. Siamo una famiglia che ha
-              scelto di fare le cose come si facevano una volta, con la
-              qualità e la trasparenza che meritano chi lavora la terra e chi
-              porta i nostri prodotti in tavola.
-            </motion.p>
+<motion.p
+  variants={textItem}
+  className="mt-4 text-[17px] leading-relaxed text-white/70"
+>
+  Siamo una famiglia che ha scelto di costruire il proprio lavoro
+  attorno alla qualità, alla cura e al rispetto della natura. Dalle
+  lumache sfuse alle specialità in vasetto, fino ai cosmetici alla bava
+  di lumaca, ogni nostra proposta racconta il legame con
+  l&apos;allevamento e con la nostra terra.
+</motion.p>
 
             <motion.div variants={buttonItem} className="mt-8">
               <Button

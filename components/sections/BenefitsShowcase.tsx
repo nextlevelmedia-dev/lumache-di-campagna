@@ -32,16 +32,16 @@ type BenefitBlock = {
 
 const blocks: BenefitBlock[] = [
   {
-    eyebrow: "Lumache vive",
+    eyebrow: "Lumache sfuse",
     title: (
       <>
         <span className="italic text-[var(--red)]">
-          Pronte per la tua cucina
+          Dal nostro allevamento
         </span>
-        , dal vivo alla pentola
+        , alla tua cucina
       </>
     ),
-    text: "Lumache vive selezionate a mano, spurgate secondo il metodo tradizionale e pronte per essere cucinate come preferisci — alla bourguignonne, in umido, alla griglia. Nessuna lavorazione industriale, solo la materia prima come dovrebbe essere.",
+    text: "Le nostre lumache vengono allevate con cura e selezionate prima della vendita. Disponibili sfuse e pesate al momento, sono pensate per chi ama partire dalla materia prima e prepararle secondo la propria ricetta, riscoprendo sapori e gesti della cucina tradizionale.",
     images: [
       "/images/lumache-sfuse-1.png",
       "/images/lumache-sfuse-2.png",
@@ -53,12 +53,12 @@ const blocks: BenefitBlock[] = [
     title: (
       <>
         <span className="italic text-[var(--red)]">
-          Specialità già lavorate
+          Ricette pronte da gustare
         </span>
-        , pronte da gustare
+        , per ogni occasione
       </>
     ),
-    text: "Per chi vuole il gusto autentico senza il tempo della preparazione: lumache già pulite, cotte e condite secondo ricette della tradizione contadina, pronte da scaldare e servire in tavola in pochi minuti.",
+    text: "Dalla semplicità delle lumache al naturale alle ricette più ricche e saporite: i nostri vasetti nascono per valorizzare il gusto delle lumache attraverso abbinamenti diversi. Pratici e versatili, bastano pochi minuti per portarli in tavola e scoprire ogni volta un sapore nuovo.",
     images: [
       "/images/piatto-1.png",
       "/images/piatto-2.png",
@@ -75,7 +75,7 @@ const blocks: BenefitBlock[] = [
         , dalla natura al vasetto
       </>
     ),
-    text: "Bava di lumaca raccolta con metodo cruelty-free e trasformata in creme e trattamenti naturali per il viso e il corpo. Un unico ingrediente attivo, senza passaggi industriali che ne riducano le proprietà.",
+    text: "La bava di lumaca diventa protagonista di una linea cosmetica dedicata alla cura quotidiana della pelle. Creme e trattamenti per viso, mani e corpo pensati per unire il mondo del nostro allevamento a un modo semplice e naturale di prendersi cura di sé.",
     images: [
       "/images/crema-1.png",
       "/images/crema-2.png",

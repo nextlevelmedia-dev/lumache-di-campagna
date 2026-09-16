@@ -37,11 +37,6 @@ const differentiators = [
     text: "Sappiamo sempre da dove viene ogni singolo prodotto, dall'allevamento fino al tuo tavolo.",
   },
   {
-    icon: Ban,
-    title: "Zero additivi",
-    text: "Nessun conservante o ingrediente aggiunto solo per prolungare la conservazione.",
-  },
-  {
     icon: Heart,
     title: "Metodo cruelty-free",
     text: "La bava di lumaca viene raccolta con tecniche che rispettano il benessere dell'animale.",

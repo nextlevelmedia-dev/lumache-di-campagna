@@ -24,35 +24,35 @@ const steps = [
         , nel rispetto dei tempi della lumaca
       </>
     ),
-    text: "Le lumache crescono seguendo il loro ritmo naturale, senza forzature né allevamento intensivo. Solo il tempo necessario per ottenere una materia prima di qualità.",
+    text: "Le lumache crescono seguendo il loro ritmo naturale, senza forzature né allevamento intensivo. Dedichiamo attenzione a ogni fase della crescita, per ottenere una materia prima di qualità.",
     image: "/images/ciclo-naturale.png",
   },
   {
     number: "02",
-    eyebrow: "Raccolta e lavorazione",
+    eyebrow: "Raccolta e selezione",
     title: (
       <>
         <span className="italic text-[var(--red)]">
-          Selezionate a mano
+          Selezionate con cura
         </span>
-        , lavorate in azienda
+        , direttamente dal nostro allevamento
       </>
     ),
-    text: "Ogni lumaca viene raccolta e selezionata a mano. Pulitura, cottura e confezionamento avvengono interamente in azienda.",
+    text: "Al termine del ciclo di crescita, le lumache vengono raccolte e selezionate con attenzione. È da qui che nasce la materia prima destinata alle nostre diverse proposte.",
     image: "/images/selezione-lumache.png",
   },
   {
     number: "03",
-    eyebrow: "Dalla terra alla tavola",
+    eyebrow: "I nostri prodotti",
     title: (
       <>
         <span className="italic text-[var(--red)]">
-          Nessun intermediario
+          Dall'allevamento
         </span>
-        , dal campo al vasetto
+        , alle nostre proposte
       </>
     ),
-    text: "Il prodotto finito esce dalla nostra azienda pronto per arrivare da te — stessa filiera, stessa tracciabilità, dall'allevamento al tuo tavolo.",
+    text: "Le lumache del nostro allevamento sono il punto di partenza delle nostre proposte: dalle lumache sfuse alle specialità in vasetto, fino ai cosmetici alla bava di lumaca.",
     image: "/images/sulla-tavola.png",
   },
 ];

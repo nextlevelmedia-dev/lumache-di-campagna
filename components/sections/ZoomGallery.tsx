@@ -30,13 +30,13 @@ const DESKTOP_HORIZONTAL_PADDING = 64;
 /* ------------------------------------------------------------------ */
 
 const images = [
-  { src: "/images/ciclo-naturale.png", alt: "Lumache di Campagna 1" },
-  { src: "/images/images (25).jpeg", alt: "Lumache di Campagna 2" },
-  { src: "/images/Lumaland.jpg", alt: "Lumache di Campagna 3" },
-  { src: "/images/lumache-sfuse-3.png", alt: "Lumache di Campagna 4" },
-  { src: "/images/lumaca.jpg", alt: "Lumache di Campagna 5" },
-  { src: "/images/lumaca.jpg", alt: "Lumache di Campagna 6" },
-  { src: "/images/hero/hero-snail.jpg", alt: "Lumache di Campagna 7" },
+  { src: "/images/zoomgallery8.webp", alt: "Lumache di Campagna 1" },
+  { src: "/images/zoomgallery2.webp", alt: "Lumache di Campagna 2" },
+  { src: "/images/zoomgallery3.webp", alt: "Lumache di Campagna 3" },
+  { src: "/images/zoomgallery4.webp", alt: "Lumache di Campagna 4" },
+  { src: "/images/zoomgallery9.webp", alt: "Lumache di Campagna 5" },
+  { src: "/images/zoomgallery6.webp", alt: "Lumache di Campagna 6" },
+  { src: "/images/zoomgallery7.webp", alt: "Lumache di Campagna 7" },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -332,9 +332,9 @@ export function ZoomGallery() {
   stagger={0.065}
   className="heading-display max-w-2xl text-[1.85rem] leading-[1.12] text-[var(--green)] sm:text-[2.7rem] lg:text-[3.4rem]"
 >
-  Ogni scatto racconta la nostra{" "}
-  <span className="italic text-[var(--red)]">
-    cura artigianale
+  Entra nel cuore del{" "}
+  <span className="pr-[0.08em] italic text-[var(--red)]">
+    nostro allevamento
   </span>
   .
 </SplitTitle>

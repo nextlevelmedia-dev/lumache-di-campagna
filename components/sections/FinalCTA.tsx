@@ -9,9 +9,9 @@ import { SplitTitle } from "@/components/ui/SplitTitle";
 import { whatsappLink } from "@/lib/whatsapp";
 
 const valueProps = [
-  "Filiera diretta, dalla terra alla tavola",
-  "Zero additivi, zero intermediari",
-  "Rispondiamo su WhatsApp in giornata",
+  "Scopri le disponibilità del momento",
+  "Chiedici informazioni senza impegno",
+  "Parla direttamente con noi su WhatsApp",
 ];
 
 const textContainer = {
@@ -76,7 +76,7 @@ export function FinalCTA() {
             >
               <span className="h-px w-12 bg-white/40" />
               <p className="font-sans text-xs font-bold uppercase tracking-[0.32em] text-white/70">
-                Pronto a provarci?
+                SCOPRI I NOSTRI PRODOTTI
               </p>
             </motion.div>
 
@@ -86,7 +86,7 @@ export function FinalCTA() {
                 scrollTrigger={true}
                 className="heading-display text-[2.25rem] leading-[1.2] text-white sm:text-[2.75rem] lg:text-[3.25rem]"
               >
-                Il gusto autentico non aspetta
+                Porta a casa un pezzo della nostra terra
               </SplitTitle>
             </motion.div>
 
@@ -94,9 +94,7 @@ export function FinalCTA() {
               variants={textItem}
               className="mt-6 max-w-lg text-[17px] leading-relaxed text-white/70"
             >
-              Ogni giorno che passa è un giorno in più con prodotti generici
-              sulla tavola. Scrivici ora: ti aiutiamo a scegliere i prodotti
-              giusti per te, senza impegno.
+              Hai visto chi siamo e cosa facciamo. Ora non resta che scegliere ciò che fa per te. Scrivici: saremo felici di raccontarti di più e aiutarti nella scelta.
             </motion.p>
 
             <motion.div
@@ -104,13 +102,13 @@ export function FinalCTA() {
   className="mt-8 flex flex-col gap-3"
 >
   {valueProps.map((item) => (
-    <div key={item} className="flex items-center gap-3">
-      <svg
-        viewBox="0 0 48 48"
-        fill="none"
-        className="h-7 w-7 shrink-0 overflow-visible text-white"
-        aria-hidden="true"
-      >
+    <div key={item} className="flex items-center gap-2.5 sm:gap-3">
+  <svg
+    viewBox="0 0 48 48"
+    fill="none"
+    className="h-5 w-5 shrink-0 overflow-visible text-white sm:h-7 sm:w-7"
+    aria-hidden="true"
+  >
         <path
           d="
             M 5 25
@@ -147,7 +145,7 @@ export function FinalCTA() {
 
               <div className="mt-4 flex items-center gap-2 text-[13px] text-white/50">
                 <Clock size={14} />
-                <span>Rispondiamo su WhatsApp in poche ore</span>
+                <span>Rispondiamo in poche ore</span>
               </div>
             </motion.div>
           </motion.div>
@@ -160,7 +158,7 @@ export function FinalCTA() {
             className="relative aspect-[4/3] w-full overflow-hidden rounded-[2rem] border border-white/20 bg-white/5 shadow-2xl shadow-black/20"
           >
             <Image
-              src="/images/piatto-1.png"
+              src="/images/final-recap.webp"
               alt="Prodotti Lumache di Campagna pronti da gustare"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
