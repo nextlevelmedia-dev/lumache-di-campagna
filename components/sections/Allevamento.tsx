@@ -25,7 +25,7 @@ const steps = [
       </>
     ),
     text: "Le lumache crescono seguendo il loro ritmo naturale, senza forzature né allevamento intensivo. Dedichiamo attenzione a ogni fase della crescita, per ottenere una materia prima di qualità.",
-    image: "/images/ciclo-naturale.png",
+    image: "/images/zoomgallery7.webp",
   },
   {
     number: "02",
@@ -39,7 +39,7 @@ const steps = [
       </>
     ),
     text: "Al termine del ciclo di crescita, le lumache vengono raccolte e selezionate con attenzione. È da qui che nasce la materia prima destinata alle nostre diverse proposte.",
-    image: "/images/selezione-lumache.png",
+    image: "/images/zoomgallery3.webp",
   },
   {
     number: "03",
@@ -53,7 +53,7 @@ const steps = [
       </>
     ),
     text: "Le lumache del nostro allevamento sono il punto di partenza delle nostre proposte: dalle lumache sfuse alle specialità in vasetto, fino ai cosmetici alla bava di lumaca.",
-    image: "/images/sulla-tavola.png",
+    image: "/images/hero/prodotti-autentici.webp",
   },
 ];
 

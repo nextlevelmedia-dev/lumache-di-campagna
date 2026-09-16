@@ -10,7 +10,6 @@ import { Allevamento } from "@/components/sections/Allevamento";
 import { ChiSiamo } from "@/components/sections/ChiSiamo";
 import { FAQ } from "@/components/sections/FAQ";
 import { FinalCTA } from "@/components/sections/FinalCTA";
-import { Contatti } from "@/components/sections/Contatti";
 
 export default function Home() {
   return (
@@ -27,7 +26,6 @@ export default function Home() {
         <ChiSiamo />
         <FAQ />
         <FinalCTA />
-        <Contatti />
       </main>
       <Footer />
     </>

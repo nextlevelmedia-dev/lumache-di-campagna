@@ -43,9 +43,9 @@ const blocks: BenefitBlock[] = [
     ),
     text: "Le nostre lumache vengono allevate con cura e selezionate prima della vendita. Disponibili sfuse e pesate al momento, sono pensate per chi ama partire dalla materia prima e prepararle secondo la propria ricetta, riscoprendo sapori e gesti della cucina tradizionale.",
     images: [
-      "/images/lumache-sfuse-1.png",
-      "/images/lumache-sfuse-2.png",
-      "/images/lumache-sfuse-3.png",
+      "/images/benefit1.webp",
+      "/images/benefit1a.webp",
+      "/images/benefit1b.webp",
     ],
   },
   {
@@ -60,9 +60,9 @@ const blocks: BenefitBlock[] = [
     ),
     text: "Dalla semplicità delle lumache al naturale alle ricette più ricche e saporite: i nostri vasetti nascono per valorizzare il gusto delle lumache attraverso abbinamenti diversi. Pratici e versatili, bastano pochi minuti per portarli in tavola e scoprire ogni volta un sapore nuovo.",
     images: [
-      "/images/piatto-1.png",
-      "/images/piatto-2.png",
-      "/images/piatto-3.png",
+      "/images/benefit2b.webp",
+      "/images/benefit2.webp",
+      "/images/benefit2c.webp",
     ],
   },
   {

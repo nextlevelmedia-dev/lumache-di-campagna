@@ -25,8 +25,6 @@ export function Footer() {
             <div className="mt-5 space-y-1 text-[13px] leading-relaxed text-[var(--muted)]">
               <p>Doninelli Stefano</p>
               <p>P. IVA 01829410198</p>
-              <p>C.F. DNNSFN95P28D150N</p>
-              <p>Codice univoco 5W4A8J1</p>
             </div>
           </div>
 
@@ -121,10 +119,10 @@ export function Footer() {
           </div>
 
           {/* Contatti */}
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--foreground)]">
-              Contatti
-            </p>
+<div id="contatti" className="scroll-mt-32">
+  <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--foreground)]">
+    Contatti
+  </p>
 
             <ul className="mt-5 flex flex-col gap-4">
               <li className="flex items-start gap-3">
