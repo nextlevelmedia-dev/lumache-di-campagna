@@ -185,19 +185,13 @@ function AnimatedValuesPath() {
     let resizeFrame = 0;
 
     const getHeaderHeight = () => {
-      const isDesktop = window.innerWidth >= 1024;
+  const header =
+    document.querySelector<HTMLElement>("header");
 
-      if (!isDesktop) {
-        return 0;
-      }
-
-      const header =
-        document.querySelector<HTMLElement>("header");
-
-      return Math.ceil(
-        header?.getBoundingClientRect().height ?? 0,
-      );
-    };
+  return Math.ceil(
+    header?.getBoundingClientRect().height ?? 0,
+  );
+};
 
     const measureLayout = () => {
       const isDesktop = window.innerWidth >= 1024;
@@ -209,11 +203,9 @@ function AnimatedValuesPath() {
       );
 
       const panelHeight = Math.max(
-        isDesktop
-          ? viewportHeight - headerHeight
-          : viewportHeight,
-        560,
-      );
+  viewportHeight - headerHeight,
+  1,
+);
 
       const scrollLength = isDesktop
         ? DESKTOP_SCROLL_LENGTH
