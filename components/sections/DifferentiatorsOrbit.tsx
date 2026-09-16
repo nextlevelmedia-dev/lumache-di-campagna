@@ -187,20 +187,32 @@ function AnimatedValuesPath() {
     const measureLayout = () => {
       const isDesktop = window.innerWidth >= 1024;
       const viewportHeight = window.innerHeight;
-      const panelHeight = viewportHeight;
 
       const scrollLength = isDesktop
         ? DESKTOP_SCROLL_LENGTH
         : MOBILE_SCROLL_LENGTH;
 
+      /*
+       * Desktop: altezza misurata in px.
+       * Mobile: il pannello usa 100dvh direttamente nel CSS, così segue
+       * davvero la viewport quando Chrome/Safari mostrano o nascondono
+       * le barre del browser.
+       */
       section.style.setProperty(
         "--values-panel-height",
-        `${panelHeight}px`,
+        isDesktop ? `${viewportHeight}px` : "100dvh",
       );
 
+      /*
+       * La sezione deve comunque avere una lunghezza numerica di scroll.
+       * 100dvh viene usato anche qui, evitando di congelare innerHeight
+       * come altezza visiva del pannello mobile.
+       */
       section.style.setProperty(
         "--values-section-height",
-        `${panelHeight + scrollLength}px`,
+        isDesktop
+          ? `${viewportHeight + scrollLength}px`
+          : `calc(100dvh + ${scrollLength}px)`,
       );
 
       window.dispatchEvent(
@@ -210,12 +222,15 @@ function AnimatedValuesPath() {
 
     const handleResize = () => {
       const currentWidth = window.innerWidth;
+      const isDesktop = currentWidth >= 1024;
 
       /*
-       * Evita continui ricalcoli causati dalla toolbar
-       * dei browser mobile.
+       * Su desktop ignoriamo i micro-resize.
+       * Su mobile NON ignoriamo i resize verticali: sono proprio quelli
+       * generati dalle toolbar reali di Chrome e Safari.
        */
       if (
+        isDesktop &&
         Math.abs(currentWidth - previousWidth) < 20
       ) {
         return;
@@ -236,6 +251,12 @@ function AnimatedValuesPath() {
       passive: true,
     });
 
+    window.visualViewport?.addEventListener(
+      "resize",
+      handleResize,
+      { passive: true },
+    );
+
     window.addEventListener(
       "orientationchange",
       handleResize,
@@ -248,6 +269,11 @@ function AnimatedValuesPath() {
       window.cancelAnimationFrame(resizeFrame);
 
       window.removeEventListener(
+        "resize",
+        handleResize,
+      );
+
+      window.visualViewport?.removeEventListener(
         "resize",
         handleResize,
       );
@@ -307,7 +333,7 @@ function AnimatedValuesPath() {
       );
 
       ScrollTrigger.config({
-        ignoreMobileResize: true,
+        ignoreMobileResize: false,
       });
 
       const refreshAllTriggers = () => {
@@ -610,6 +636,7 @@ function AnimatedValuesPath() {
         style={{
           top: "0px",
           height: "var(--values-panel-height, 100dvh)",
+          minHeight: "100dvh",
         }}
         className="sticky w-full overflow-hidden bg-[var(--green)] [transform:translateZ(0)] [backface-visibility:hidden]"
       >
