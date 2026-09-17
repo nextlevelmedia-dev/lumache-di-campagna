@@ -83,40 +83,44 @@ function MobileStep({
   isLast: boolean;
 }) {
   return (
-    <article className="mobile-timeline-step relative grid grid-cols-[48px_minmax(0,1fr)] gap-4 sm:grid-cols-[56px_minmax(0,1fr)] sm:gap-6">
-      <div className="relative flex justify-center">
+    <article className="mobile-timeline-step relative grid w-full min-w-0 grid-cols-[44px_minmax(0,1fr)] gap-3 sm:grid-cols-[56px_minmax(0,1fr)] sm:gap-6">
+      <div className="relative flex min-w-0 justify-center">
         {!isLast && (
           <span className="mobile-timeline-line absolute bottom-[-32px] top-11 w-px origin-top bg-[var(--border)]" />
         )}
 
-        <div className="mobile-timeline-number relative z-10 flex h-11 w-11 items-center justify-center rounded-full border-4 border-[var(--background)] bg-[var(--green)] font-serif text-sm text-white shadow-md shadow-green-950/10 sm:h-12 sm:w-12 sm:text-base">
+        <div className="mobile-timeline-number relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-4 border-[var(--background)] bg-[var(--green)] font-serif text-sm text-white shadow-md shadow-green-950/10 sm:h-12 sm:w-12 sm:text-base">
           {step.number}
         </div>
       </div>
 
-      <div className={`mobile-timeline-content ${isLast ? "" : "pb-10 sm:pb-12"}`}>
-        <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[1.4rem] border border-[var(--border)] bg-[var(--soft-gray)] shadow-lg shadow-black/5 sm:rounded-[1.75rem]">
+      <div
+        className={`mobile-timeline-content min-w-0 ${
+          isLast ? "" : "pb-10 sm:pb-12"
+        }`}
+      >
+        <div className="relative aspect-[16/9] w-full min-w-0 overflow-hidden rounded-[1.4rem] border border-[var(--border)] bg-[var(--soft-gray)] shadow-lg shadow-black/5 sm:rounded-[1.75rem]">
           <Image
             src={step.image}
             alt={step.eyebrow}
             fill
             priority={step.number === "01"}
-            sizes="(max-width: 1023px) calc(100vw - 96px)"
+            sizes="(max-width: 1023px) calc(100vw - 88px)"
             className="object-cover"
           />
         </div>
 
-        <div className="pt-5">
+        <div className="min-w-0 pt-5">
           <p className="eyebrow">{step.eyebrow}</p>
 
-          <h3 className="heading-display mt-3 text-[1.55rem] leading-[1.12] text-[var(--green)] sm:text-[2rem]">
+          <h3 className="heading-display mt-3 break-words text-[1.55rem] leading-[1.12] text-[var(--green)] sm:text-[2rem]">
             <span className="italic text-[var(--red)]">
               {step.accent}
             </span>
             {step.title}
           </h3>
 
-          <p className="body-large mt-3 max-w-[60ch] text-[13px] leading-[1.6] sm:text-[15px]">
+          <p className="body-large mt-3 max-w-[60ch] break-words text-[13px] leading-[1.6] sm:text-[15px]">
             {step.text}
           </p>
         </div>
@@ -131,11 +135,11 @@ function SectionHeading({
   desktop?: boolean;
 }) {
   return (
-    <div className="mx-auto w-full text-center">
+    <div className="mx-auto w-full min-w-0 text-center">
       <div className="mb-3 flex items-center justify-center gap-3 sm:mb-4 sm:gap-4">
-        <span className="h-px w-8 bg-[var(--green)] sm:w-12" />
+        <span className="h-px w-8 shrink-0 bg-[var(--green)] sm:w-12" />
         <p className="eyebrow whitespace-nowrap">Come lavoriamo</p>
-        <span className="h-px w-8 bg-[var(--green)] sm:w-12" />
+        <span className="h-px w-8 shrink-0 bg-[var(--green)] sm:w-12" />
       </div>
 
       <h2
@@ -188,8 +192,10 @@ export function Allevamento() {
         Math.max(window.innerHeight - HEADER_HEIGHT, 0);
 
       const getTravelDistance = () => {
-        const firstStep = track.firstElementChild as HTMLElement | null;
-        const finalStep = track.lastElementChild as HTMLElement | null;
+        const firstStep =
+          track.firstElementChild as HTMLElement | null;
+        const finalStep =
+          track.lastElementChild as HTMLElement | null;
 
         if (!firstStep || !finalStep) return 0;
 
@@ -226,7 +232,10 @@ export function Allevamento() {
         if (desktopLineRef.current) {
           gsap.fromTo(
             desktopLineRef.current,
-            { scaleX: 0, transformOrigin: "left center" },
+            {
+              scaleX: 0,
+              transformOrigin: "left center",
+            },
             {
               scaleX: 1,
               duration: 0.9,
@@ -253,11 +262,11 @@ export function Allevamento() {
         });
 
         horizontalTween.to(track, {
-            x: () => -getTravelDistance(),
-            ease: "none",
-            force3D: true,
-            duration: 1,
-          });
+          x: () => -getTravelDistance(),
+          ease: "none",
+          force3D: true,
+          duration: 1,
+        });
 
         timelineSteps.forEach((step, index) => {
           const image = step.querySelector(".step-image");
@@ -286,7 +295,8 @@ export function Allevamento() {
                       trigger: step,
                       containerAnimation: horizontalTween,
                       start: "left 88%",
-                      toggleActions: "play none none reverse",
+                      toggleActions:
+                        "play none none reverse",
                     },
             },
           );
@@ -313,7 +323,8 @@ export function Allevamento() {
                       trigger: step,
                       containerAnimation: horizontalTween,
                       start: "left 88%",
-                      toggleActions: "play none none reverse",
+                      toggleActions:
+                        "play none none reverse",
                     },
             },
           );
@@ -330,7 +341,9 @@ export function Allevamento() {
       const handleResize = () => {
         const currentWidth = window.innerWidth;
 
-        if (Math.abs(currentWidth - previousWidth) < 16) {
+        if (
+          Math.abs(currentWidth - previousWidth) < 16
+        ) {
           return;
         }
 
@@ -355,7 +368,10 @@ export function Allevamento() {
 
       const cleanup = () => {
         window.cancelAnimationFrame(resizeFrame);
-        window.removeEventListener("resize", handleResize);
+        window.removeEventListener(
+          "resize",
+          handleResize,
+        );
         window.removeEventListener(
           "orientationchange",
           handleResize,
@@ -366,9 +382,11 @@ export function Allevamento() {
         cleanup();
       }
 
-      (section as HTMLElement & {
-        __allevamentoCleanup?: () => void;
-      }).__allevamentoCleanup = cleanup;
+      (
+        section as HTMLElement & {
+          __allevamentoCleanup?: () => void;
+        }
+      ).__allevamentoCleanup = cleanup;
     };
 
     void initialise();
@@ -389,21 +407,25 @@ export function Allevamento() {
 
   useLayoutEffect(() => {
     const section = mobileSectionRef.current;
+
     if (!section) return;
 
     let cancelled = false;
     let context: gsap.Context | null = null;
 
     const initialiseMobile = async () => {
-      const [{ gsap }, { ScrollTrigger }] = await Promise.all([
-        import("gsap"),
-        import("gsap/ScrollTrigger"),
-      ]);
+      const [{ gsap }, { ScrollTrigger }] =
+        await Promise.all([
+          import("gsap"),
+          import("gsap/ScrollTrigger"),
+        ]);
 
       if (cancelled) return;
 
       gsap.registerPlugin(ScrollTrigger);
-      ScrollTrigger.config({ ignoreMobileResize: true });
+      ScrollTrigger.config({
+        ignoreMobileResize: true,
+      });
 
       context = gsap.context(() => {
         const mobileSteps =
@@ -416,9 +438,11 @@ export function Allevamento() {
           const number = step.querySelector(
             ".mobile-timeline-number",
           );
+
           const content = step.querySelector(
             ".mobile-timeline-content",
           );
+
           const line = step.querySelector(
             ".mobile-timeline-line",
           );
@@ -451,12 +475,10 @@ export function Allevamento() {
               content,
               {
                 autoAlpha: 0,
-                x: 24,
-                y: 10,
+                y: 18,
               },
               {
                 autoAlpha: 1,
-                x: 0,
                 y: 0,
                 duration: 0.68,
                 ease: "power3.out",
@@ -499,29 +521,30 @@ export function Allevamento() {
 
   return (
     <>
-      {/* MOBILE / TABLET: normale flusso verticale, nessun pin e nessun movimento orizzontale */}
+      {/* MOBILE / TABLET */}
       <section
         id="allevamento-mobile"
         ref={mobileSectionRef}
-        className="relative bg-[var(--background)] py-16 lg:hidden sm:py-20"
+        className="relative w-full max-w-full bg-[var(--background)] py-16 sm:py-20 lg:hidden"
       >
         <Container>
           <SectionHeading />
 
-          <div className="mt-12 sm:mt-16">
+          <div className="mt-12 w-full min-w-0 sm:mt-16">
             {steps.map((step, index) => (
               <MobileStep
                 key={step.number}
                 step={step}
-                isLast={index === steps.length - 1}
+                isLast={
+                  index === steps.length - 1
+                }
               />
             ))}
           </div>
-
         </Container>
       </section>
 
-      {/* DESKTOP: sticky sotto l'header da 96px + scroll orizzontale */}
+      {/* DESKTOP */}
       <section
         id="allevamento"
         ref={desktopSectionRef}
@@ -561,10 +584,8 @@ export function Allevamento() {
               ))}
             </div>
           </div>
-
         </div>
       </section>
-
     </>
   );
 }
