@@ -574,12 +574,16 @@ export function Hero() {
               as="h1"
               scrollTrigger={false}
               delay={0.1}
-              className="heading-display max-w-2xl text-[2.7rem] leading-[1.18] text-[var(--green)] sm:text-[3rem] md:text-[3.5rem] lg:text-[4.2rem] xl:text-[4.2rem]"
+              className="heading-display max-w-2xl text-[2.35rem] leading-[1.15] text-[var(--green)] sm:text-[2.65rem] md:text-[3rem] lg:text-[3.2rem] xl:text-[3.4rem]"
             >
               <span className="italic text-[var(--red)]">
                 Vivi meglio
               </span>{" "}
-              ogni giorno con i{" "}
+              ogni giorno, con una{" "}
+              <span className="italic text-[var(--red)]">
+                pelle più giovane
+              </span>{" "}
+              e tutto il gusto e i{" "}
               <span className="italic text-[var(--red)]">
                 benefici naturali
               </span>{" "}

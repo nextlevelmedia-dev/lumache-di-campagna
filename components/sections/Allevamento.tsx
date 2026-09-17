@@ -1,178 +1,72 @@
 "use client";
 
-import {
-  useLayoutEffect,
-  useRef,
-} from "react";
+import { useLayoutEffect, useRef } from "react";
 import Image from "next/image";
-import { MessageCircle } from "lucide-react";
-
-import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { SplitTitle } from "@/components/ui/SplitTitle";
-import { whatsappLink } from "@/lib/whatsapp";
+
+const HEADER_HEIGHT = 96;
 
 const steps = [
   {
     number: "01",
     eyebrow: "Allevamento",
-    title: (
-      <>
-        <span className="italic text-[var(--red)]">
-          Ciclo naturale
-        </span>
-        , nel rispetto dei tempi della lumaca
-      </>
-    ),
+    accent: "Ciclo naturale",
+    title: ", nel rispetto dei tempi della lumaca",
     text: "Le lumache crescono seguendo il loro ritmo naturale, senza forzature né allevamento intensivo. Dedichiamo attenzione a ogni fase della crescita, per ottenere una materia prima di qualità.",
     image: "/images/zoomgallery7.webp",
   },
   {
     number: "02",
     eyebrow: "Raccolta e selezione",
-    title: (
-      <>
-        <span className="italic text-[var(--red)]">
-          Selezionate con cura
-        </span>
-        , direttamente dal nostro allevamento
-      </>
-    ),
+    accent: "Selezionate con cura",
+    title: ", direttamente dal nostro allevamento",
     text: "Al termine del ciclo di crescita, le lumache vengono raccolte e selezionate con attenzione. È da qui che nasce la materia prima destinata alle nostre diverse proposte.",
     image: "/images/zoomgallery3.webp",
   },
   {
     number: "03",
     eyebrow: "I nostri prodotti",
-    title: (
-      <>
-        <span className="italic text-[var(--red)]">
-          Dall'allevamento
-        </span>
-        , alle nostre proposte
-      </>
-    ),
+    accent: "Dall'allevamento",
+    title: ", alle nostre proposte",
     text: "Le lumache del nostro allevamento sono il punto di partenza delle nostre proposte: dalle lumache sfuse alle specialità in vasetto, fino ai cosmetici alla bava di lumaca.",
     image: "/images/hero/prodotti-autentici.webp",
   },
 ];
 
-type TimelineStepProps = {
-  step: (typeof steps)[number];
-};
-
-function TimelineStep({
+function DesktopStep({
   step,
-}: TimelineStepProps) {
+}: {
+  step: (typeof steps)[number];
+}) {
   return (
-    <article
-      className={[
-        "timeline-step relative shrink-0",
-
-        "w-[calc(100vw-32px)]",
-        "max-w-[430px]",
-
-        "sm:w-[min(78vw,680px)]",
-        "sm:max-w-none",
-
-        "lg:w-[min(78vw,1080px)]",
-      ].join(" ")}
-    >
-      <div
-        className={[
-          "step-number",
-          "absolute left-1/2 top-2 z-30",
-          "flex h-11 w-11 -translate-x-1/2",
-          "items-center justify-center",
-          "rounded-full",
-          "border-4 border-[var(--background)]",
-          "bg-[var(--green)]",
-          "font-serif text-[15px] text-white",
-          "shadow-lg shadow-green-950/15",
-
-          "sm:h-12 sm:w-12 sm:text-base",
-
-          "lg:top-1 lg:h-14 lg:w-14",
-          "lg:text-lg",
-        ].join(" ")}
-      >
+    <article className="timeline-step relative w-[min(76vw,1080px)] shrink-0">
+      <div className="step-number absolute left-1/2 top-1 z-30 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full border-4 border-[var(--background)] bg-[var(--green)] font-serif text-lg text-white shadow-lg shadow-green-950/15">
         {step.number}
       </div>
 
-      <div
-        className={[
-          "grid grid-cols-1",
-          "gap-4 pt-[72px]",
-
-          "sm:gap-7 sm:pt-[84px]",
-
-          "lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)]",
-          "lg:items-center",
-          "lg:gap-12",
-          "lg:pt-[86px]",
-
-          "xl:gap-16",
-        ].join(" ")}
-      >
-        <div
-          className={[
-            "step-image relative",
-            "aspect-[16/8.5]",
-            "w-full overflow-hidden",
-            "rounded-[1.4rem]",
-            "border border-[var(--border)]",
-            "bg-[var(--soft-gray)]",
-            "shadow-lg shadow-black/5",
-
-            "sm:rounded-[1.75rem]",
-
-            "lg:aspect-[16/9.4]",
-            "lg:rounded-[2rem]",
-          ].join(" ")}
-        >
+      <div className="grid grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] items-center gap-12 pt-[86px] xl:gap-16">
+        <div className="step-image relative aspect-[16/10] w-full overflow-hidden rounded-[2rem] border border-[var(--border)] bg-[var(--soft-gray)] shadow-lg shadow-black/5">
           <Image
             src={step.image}
             alt={step.eyebrow}
             fill
             priority={step.number === "01"}
-            sizes="(max-width: 639px) calc(100vw - 32px), (max-width: 1023px) 78vw, 45vw"
+            sizes="45vw"
             className="object-cover"
           />
         </div>
 
-        <div className="step-text min-w-0 px-1 pb-6 sm:px-2 sm:pb-2 lg:px-0 lg:pr-4">
-          <p className="eyebrow">
-            {step.eyebrow}
-          </p>
+        <div className="step-text min-w-0 pr-4">
+          <p className="eyebrow">{step.eyebrow}</p>
 
-          <h3
-            className={[
-              "heading-display mt-3",
-              "text-[1.5rem] leading-[1.12]",
-              "text-[var(--green)]",
-
-              "sm:text-[2rem]",
-
-              "lg:mt-4",
-              "lg:text-[clamp(1.9rem,2.25vw,2.45rem)]",
-            ].join(" ")}
-          >
+          <h3 className="heading-display mt-4 text-[clamp(1.9rem,2.25vw,2.45rem)] leading-[1.12] text-[var(--green)]">
+            <span className="italic text-[var(--red)]">
+              {step.accent}
+            </span>
             {step.title}
           </h3>
 
-          <p
-            className={[
-              "body-large mt-3",
-              "max-w-[60ch]",
-              "text-[13px] leading-[1.55]",
-
-              "sm:text-[15px]",
-
-              "lg:mt-5",
-              "lg:text-[clamp(14px,1.05vw,17px)]",
-              "lg:leading-[1.7]",
-            ].join(" ")}
-          >
+          <p className="body-large mt-5 max-w-[60ch] text-[clamp(14px,1.05vw,17px)] leading-[1.7]">
             {step.text}
           </p>
         </div>
@@ -181,102 +75,142 @@ function TimelineStep({
   );
 }
 
-export function Allevamento() {
-  const sectionRef =
-    useRef<HTMLElement>(null);
+function MobileStep({
+  step,
+  isLast,
+}: {
+  step: (typeof steps)[number];
+  isLast: boolean;
+}) {
+  return (
+    <article className="mobile-timeline-step relative grid grid-cols-[48px_minmax(0,1fr)] gap-4 sm:grid-cols-[56px_minmax(0,1fr)] sm:gap-6">
+      <div className="relative flex justify-center">
+        {!isLast && (
+          <span className="mobile-timeline-line absolute bottom-[-32px] top-11 w-px origin-top bg-[var(--border)]" />
+        )}
 
-  const trackRef =
-    useRef<HTMLDivElement>(null);
+        <div className="mobile-timeline-number relative z-10 flex h-11 w-11 items-center justify-center rounded-full border-4 border-[var(--background)] bg-[var(--green)] font-serif text-sm text-white shadow-md shadow-green-950/10 sm:h-12 sm:w-12 sm:text-base">
+          {step.number}
+        </div>
+      </div>
+
+      <div className={`mobile-timeline-content ${isLast ? "" : "pb-10 sm:pb-12"}`}>
+        <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[1.4rem] border border-[var(--border)] bg-[var(--soft-gray)] shadow-lg shadow-black/5 sm:rounded-[1.75rem]">
+          <Image
+            src={step.image}
+            alt={step.eyebrow}
+            fill
+            priority={step.number === "01"}
+            sizes="(max-width: 1023px) calc(100vw - 96px)"
+            className="object-cover"
+          />
+        </div>
+
+        <div className="pt-5">
+          <p className="eyebrow">{step.eyebrow}</p>
+
+          <h3 className="heading-display mt-3 text-[1.55rem] leading-[1.12] text-[var(--green)] sm:text-[2rem]">
+            <span className="italic text-[var(--red)]">
+              {step.accent}
+            </span>
+            {step.title}
+          </h3>
+
+          <p className="body-large mt-3 max-w-[60ch] text-[13px] leading-[1.6] sm:text-[15px]">
+            {step.text}
+          </p>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function SectionHeading({
+  desktop = false,
+}: {
+  desktop?: boolean;
+}) {
+  return (
+    <div className="mx-auto w-full text-center">
+      <div className="mb-3 flex items-center justify-center gap-3 sm:mb-4 sm:gap-4">
+        <span className="h-px w-8 bg-[var(--green)] sm:w-12" />
+        <p className="eyebrow whitespace-nowrap">Come lavoriamo</p>
+        <span className="h-px w-8 bg-[var(--green)] sm:w-12" />
+      </div>
+
+      <h2
+        className={[
+          "heading-display mx-auto leading-[1.05] text-[var(--green)]",
+          "max-w-[340px] text-[2.25rem] sm:max-w-[620px] sm:text-[2.75rem]",
+          desktop
+            ? "lg:max-w-none lg:whitespace-nowrap lg:text-[3.25rem]"
+            : "",
+        ].join(" ")}
+      >
+        Dalla terra,{" "}
+        <span className="italic text-[var(--red)]">
+          alla tavola
+        </span>
+      </h2>
+    </div>
+  );
+}
+
+export function Allevamento() {
+  const desktopSectionRef = useRef<HTMLElement>(null);
+  const desktopTrackRef = useRef<HTMLDivElement>(null);
+  const desktopLineRef = useRef<HTMLDivElement>(null);
+  const mobileSectionRef = useRef<HTMLElement>(null);
 
   useLayoutEffect(() => {
-    const section = sectionRef.current;
-    const track = trackRef.current;
+    const section = desktopSectionRef.current;
+    const track = desktopTrackRef.current;
 
-    if (!section || !track) {
-      return;
-    }
+    if (!section || !track) return;
 
     let cancelled = false;
     let context: gsap.Context | null = null;
     let resizeFrame = 0;
     let previousWidth = window.innerWidth;
 
-    const getIntroHold = () =>
-      window.innerWidth < 640 ? 320 : 180;
-
     const initialise = async () => {
-      const [
-        { gsap },
-        { ScrollTrigger },
-      ] = await Promise.all([
+      const [{ gsap }, { ScrollTrigger }] = await Promise.all([
         import("gsap"),
         import("gsap/ScrollTrigger"),
       ]);
 
-      if (cancelled) {
-        return;
-      }
+      if (cancelled) return;
 
       gsap.registerPlugin(ScrollTrigger);
+      ScrollTrigger.config({ ignoreMobileResize: true });
 
-      ScrollTrigger.config({
-        ignoreMobileResize: true,
-      });
-
-      const getPanelHeight = () => {
-        if (window.innerWidth < 1024) {
-          return window.innerHeight;
-        }
-
-        return window.innerHeight;
-      };
+      const getPanelHeight = () =>
+        Math.max(window.innerHeight - HEADER_HEIGHT, 0);
 
       const getTravelDistance = () => {
-        const finalStep =
-          track.lastElementChild as
-            | HTMLElement
-            | null;
+        const firstStep = track.firstElementChild as HTMLElement | null;
+        const finalStep = track.lastElementChild as HTMLElement | null;
 
-        if (!finalStep) {
-          return 0;
-        }
+        if (!firstStep || !finalStep) return 0;
 
-        /*
-         * Porta l'ultimo step nella stessa
-         * posizione iniziale del primo.
-         *
-         * Non usa il viewportRef:
-         * su mobile evitava misure diverse
-         * durante la comparsa della toolbar.
-         */
         return Math.max(
           0,
-          finalStep.offsetLeft -
-            track.firstElementChild
-              ?.getBoundingClientRect().left! +
-            track.getBoundingClientRect().left,
+          finalStep.offsetLeft - firstStep.offsetLeft,
         );
       };
 
       const updateMeasurements = () => {
-        const panelHeight =
-          getPanelHeight();
-
-        const travelDistance =
-          getTravelDistance();
+        const panelHeight = getPanelHeight();
+        const travelDistance = getTravelDistance();
 
         section.style.setProperty(
           "--allevamento-panel-height",
-          window.innerWidth < 1024
-            ? "100dvh"
-            : `${panelHeight}px`,
+          `${panelHeight}px`,
         );
 
         section.style.setProperty(
           "--allevamento-section-height",
-          window.innerWidth < 1024
-            ? `calc(100dvh + ${travelDistance + getIntroHold()}px)`
-            : `${panelHeight + travelDistance + getIntroHold()}px`,
+          `${panelHeight + travelDistance}px`,
         );
       };
 
@@ -289,119 +223,101 @@ export function Allevamento() {
             track,
           );
 
-        /*
-         * Movimento principale:
-         * parte esattamente quando entra
-         * in funzione lo sticky CSS.
-         */
+        if (desktopLineRef.current) {
+          gsap.fromTo(
+            desktopLineRef.current,
+            { scaleX: 0, transformOrigin: "left center" },
+            {
+              scaleX: 1,
+              duration: 0.9,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: section,
+                start: `top top+=${HEADER_HEIGHT + 40}`,
+                once: true,
+              },
+            },
+          );
+        }
+
         const horizontalTween = gsap.timeline({
           scrollTrigger: {
             id: "allevamento-horizontal",
             trigger: section,
-            start: "top top",
-            end: () =>
-              `+=${getIntroHold() + getTravelDistance()}`,
+            start: `top top+=${HEADER_HEIGHT}`,
+            end: () => `+=${getTravelDistance()}`,
             scrub: 0.35,
             invalidateOnRefresh: true,
             fastScrollEnd: false,
           },
         });
 
-        /*
-         * Piccola pausa iniziale: il primo punto resta completamente
-         * visibile prima che inizi lo scorrimento orizzontale.
-         */
-        horizontalTween
-          .to({}, {
-            duration: () =>
-              getIntroHold() /
-              Math.max(getTravelDistance(), 1),
-          })
-          .to(track, {
+        horizontalTween.to(track, {
             x: () => -getTravelDistance(),
             ease: "none",
             force3D: true,
             duration: 1,
           });
 
-        /*
-         * Ingresso leggero GSAP.
-         *
-         * Ogni step appare quando entra
-         * nella parte destra dello schermo.
-         * Niente blur: su mobile era il
-         * principale responsabile del lag.
-         */
-        timelineSteps.forEach(
-          (step, index) => {
-            const image =
-              step.querySelector(
-                ".step-image",
-              );
+        timelineSteps.forEach((step, index) => {
+          const image = step.querySelector(".step-image");
+          const text = step.querySelector(".step-text");
+          const number = step.querySelector(".step-number");
 
-            const text =
-              step.querySelector(
-                ".step-text",
-              );
+          gsap.fromTo(
+            [image, text],
+            {
+              autoAlpha: 0,
+              y: 26,
+            },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.75,
+              ease: "power3.out",
+              scrollTrigger:
+                index === 0
+                  ? {
+                      trigger: section,
+                      start: `top top+=${HEADER_HEIGHT + 20}`,
+                      once: true,
+                    }
+                  : {
+                      trigger: step,
+                      containerAnimation: horizontalTween,
+                      start: "left 88%",
+                      toggleActions: "play none none reverse",
+                    },
+            },
+          );
 
-            const number =
-              step.querySelector(
-                ".step-number",
-              );
-
-            gsap.fromTo(
-              [image, text],
-              {
-                autoAlpha:
-                  index === 0 ? 1 : 0,
-                y:
-                  index === 0 ? 0 : 18,
-              },
-              {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.45,
-                ease: "power2.out",
-
-                scrollTrigger: {
-                  trigger: step,
-                  containerAnimation:
-                    horizontalTween,
-
-                  start: "left 88%",
-                  toggleActions:
-                    "play none none reverse",
-                },
-              },
-            );
-
-            gsap.fromTo(
-              number,
-              {
-                autoAlpha:
-                  index === 0 ? 1 : 0,
-                scale:
-                  index === 0 ? 1 : 0.75,
-              },
-              {
-                autoAlpha: 1,
-                scale: 1,
-                duration: 0.35,
-                ease: "back.out(1.5)",
-
-                scrollTrigger: {
-                  trigger: step,
-                  containerAnimation:
-                    horizontalTween,
-
-                  start: "left 88%",
-                  toggleActions:
-                    "play none none reverse",
-                },
-              },
-            );
-          },
-        );
+          gsap.fromTo(
+            number,
+            {
+              autoAlpha: 0,
+              scale: 0.72,
+            },
+            {
+              autoAlpha: 1,
+              scale: 1,
+              duration: 0.6,
+              ease: "back.out(1.5)",
+              scrollTrigger:
+                index === 0
+                  ? {
+                      trigger: section,
+                      start: `top top+=${HEADER_HEIGHT + 20}`,
+                      once: true,
+                    }
+                  : {
+                      trigger: step,
+                      containerAnimation: horizontalTween,
+                      start: "left 88%",
+                      toggleActions: "play none none reverse",
+                    },
+            },
+          );
+        });
       }, section);
 
       await document.fonts.ready;
@@ -410,202 +326,245 @@ export function Allevamento() {
         updateMeasurements();
         ScrollTrigger.refresh(true);
       }
+
+      const handleResize = () => {
+        const currentWidth = window.innerWidth;
+
+        if (Math.abs(currentWidth - previousWidth) < 16) {
+          return;
+        }
+
+        previousWidth = currentWidth;
+        window.cancelAnimationFrame(resizeFrame);
+
+        resizeFrame = window.requestAnimationFrame(() => {
+          updateMeasurements();
+          ScrollTrigger.refresh(true);
+        });
+      };
+
+      window.addEventListener("resize", handleResize, {
+        passive: true,
+      });
+
+      window.addEventListener(
+        "orientationchange",
+        handleResize,
+        { passive: true },
+      );
+
+      const cleanup = () => {
+        window.cancelAnimationFrame(resizeFrame);
+        window.removeEventListener("resize", handleResize);
+        window.removeEventListener(
+          "orientationchange",
+          handleResize,
+        );
+      };
+
+      if (cancelled) {
+        cleanup();
+      }
+
+      (section as HTMLElement & {
+        __allevamentoCleanup?: () => void;
+      }).__allevamentoCleanup = cleanup;
     };
 
     void initialise();
 
-    const handleResize = () => {
-      const currentWidth =
-        window.innerWidth;
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(resizeFrame);
 
-      if (
-        Math.abs(
-          currentWidth -
-            previousWidth,
-        ) < 16
-      ) {
-        return;
+      (
+        section as HTMLElement & {
+          __allevamentoCleanup?: () => void;
+        }
+      ).__allevamentoCleanup?.();
+
+      context?.revert();
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    const section = mobileSectionRef.current;
+    if (!section) return;
+
+    let cancelled = false;
+    let context: gsap.Context | null = null;
+
+    const initialiseMobile = async () => {
+      const [{ gsap }, { ScrollTrigger }] = await Promise.all([
+        import("gsap"),
+        import("gsap/ScrollTrigger"),
+      ]);
+
+      if (cancelled) return;
+
+      gsap.registerPlugin(ScrollTrigger);
+      ScrollTrigger.config({ ignoreMobileResize: true });
+
+      context = gsap.context(() => {
+        const mobileSteps =
+          gsap.utils.toArray<HTMLElement>(
+            ".mobile-timeline-step",
+            section,
+          );
+
+        mobileSteps.forEach((step) => {
+          const number = step.querySelector(
+            ".mobile-timeline-number",
+          );
+          const content = step.querySelector(
+            ".mobile-timeline-content",
+          );
+          const line = step.querySelector(
+            ".mobile-timeline-line",
+          );
+
+          const timeline = gsap.timeline({
+            scrollTrigger: {
+              trigger: step,
+              start: "top 82%",
+              once: true,
+            },
+          });
+
+          timeline
+            .fromTo(
+              number,
+              {
+                autoAlpha: 0,
+                scale: 0.55,
+                y: 12,
+              },
+              {
+                autoAlpha: 1,
+                scale: 1,
+                y: 0,
+                duration: 0.55,
+                ease: "back.out(1.7)",
+              },
+            )
+            .fromTo(
+              content,
+              {
+                autoAlpha: 0,
+                x: 24,
+                y: 10,
+              },
+              {
+                autoAlpha: 1,
+                x: 0,
+                y: 0,
+                duration: 0.68,
+                ease: "power3.out",
+              },
+              "-=0.22",
+            );
+
+          if (line) {
+            timeline.fromTo(
+              line,
+              {
+                scaleY: 0,
+                transformOrigin: "top center",
+              },
+              {
+                scaleY: 1,
+                duration: 0.78,
+                ease: "power2.out",
+              },
+              "-=0.3",
+            );
+          }
+        });
+      }, section);
+
+      await document.fonts.ready;
+
+      if (!cancelled) {
+        ScrollTrigger.refresh(true);
       }
-
-      previousWidth = currentWidth;
-
-      window.cancelAnimationFrame(
-        resizeFrame,
-      );
-
-      resizeFrame =
-        window.requestAnimationFrame(
-          () => {
-            ScrollTrigger.refresh(true);
-          },
-        );
     };
 
-    window.addEventListener(
-      "resize",
-      handleResize,
-      {
-        passive: true,
-      },
-    );
-
-    window.addEventListener(
-      "orientationchange",
-      handleResize,
-      {
-        passive: true,
-      },
-    );
+    void initialiseMobile();
 
     return () => {
       cancelled = true;
-
-      window.cancelAnimationFrame(
-        resizeFrame,
-      );
-
-      window.removeEventListener(
-        "resize",
-        handleResize,
-      );
-
-      window.removeEventListener(
-        "orientationchange",
-        handleResize,
-      );
-
       context?.revert();
     };
   }, []);
 
   return (
     <>
+      {/* MOBILE / TABLET: normale flusso verticale, nessun pin e nessun movimento orizzontale */}
+      <section
+        id="allevamento-mobile"
+        ref={mobileSectionRef}
+        className="relative bg-[var(--background)] py-16 lg:hidden sm:py-20"
+      >
+        <Container>
+          <SectionHeading />
+
+          <div className="mt-12 sm:mt-16">
+            {steps.map((step, index) => (
+              <MobileStep
+                key={step.number}
+                step={step}
+                isLast={index === steps.length - 1}
+              />
+            ))}
+          </div>
+
+        </Container>
+      </section>
+
+      {/* DESKTOP: sticky sotto l'header da 96px + scroll orizzontale */}
       <section
         id="allevamento"
-        ref={sectionRef}
+        ref={desktopSectionRef}
         style={{
           height:
-            "var(--allevamento-section-height, calc(100vh + 2400px))",
+            "var(--allevamento-section-height, calc(100vh - 96px + 2400px))",
         }}
-        className="relative bg-[var(--background)]"
+        className="relative hidden bg-[var(--background)] lg:block"
       >
         <div
           style={{
-            top: "0px",
+            top: `${HEADER_HEIGHT}px`,
             height:
-              "var(--allevamento-panel-height, 100dvh)",
+              "var(--allevamento-panel-height, calc(100dvh - 96px))",
           }}
           className="sticky w-full overflow-hidden bg-[var(--background)]"
         >
-          <Container className="relative z-30 pt-[104px] sm:pt-9 lg:pt-8">
-            <div className="mx-auto w-full text-center">
-              <div className="mb-3 flex items-center justify-center gap-3 sm:mb-4 sm:gap-4">
-                <span className="h-px w-8 bg-[var(--green)] sm:w-12" />
-
-                <p className="eyebrow whitespace-nowrap">
-                  Come lavoriamo
-                </p>
-
-                <span className="h-px w-8 bg-[var(--green)] sm:w-12" />
-              </div>
-
-              <SplitTitle
-  as="h2"
-  scrollTrigger={false}
-  className={[
-    "heading-display",
-    "mx-auto",
-    "leading-[1.05]",
-    "text-[var(--green)]",
-
-    // Mobile: può andare su due righe
-    "max-w-[340px]",
-    "text-[2.25rem]",
-
-    // Tablet
-    "sm:max-w-[620px]",
-    "sm:text-[2.75rem]",
-
-    // Desktop: sempre una sola riga
-    "lg:max-w-none",
-    "lg:whitespace-nowrap",
-    "lg:text-[3.25rem]",
-  ].join(" ")}
->
-  Dalla terra, {" "}
-  <span className="italic text-[var(--red)]">
-    alla tavola
-  </span>
-</SplitTitle>
-            </div>
+          <Container className="relative z-30 pt-7 xl:pt-8">
+            <SectionHeading desktop />
           </Container>
 
-          <div
-            className={[
-  "absolute inset-x-0 bottom-0",
-  "top-[190px]",
-  "sm:top-[150px]",
-  "lg:top-[132px]",
-  "xl:top-[140px]",
-].join(" ")}
-          >
+          <div className="absolute inset-x-0 bottom-[92px] top-[118px] xl:top-[126px]">
             <div
-              className={[
-                "pointer-events-none",
-                "absolute inset-x-0 top-[30px]",
-                "z-0 h-px",
-                "bg-[var(--border)]",
-
-                "sm:top-[32px]",
-                "lg:top-[31px]",
-              ].join(" ")}
+              ref={desktopLineRef}
+              className="pointer-events-none absolute inset-x-0 top-[31px] z-0 h-px bg-[var(--border)]"
             />
 
             <div
-              ref={trackRef}
-              className={[
-                "relative z-10",
-                "flex h-full w-max",
-                "items-start",
-
-                "gap-10",
-                "sm:gap-16",
-                "lg:gap-20",
-                "xl:gap-24",
-
-                "pl-4 pr-4",
-                "sm:pl-[8vw] sm:pr-[8vw]",
-                "lg:pl-[11vw] lg:pr-[11vw]",
-
-                "will-change-transform",
-              ].join(" ")}
+              ref={desktopTrackRef}
+              className="relative z-10 flex h-full w-max items-start gap-20 pl-[11vw] pr-[11vw] will-change-transform xl:gap-24"
             >
               {steps.map((step) => (
-                <TimelineStep
+                <DesktopStep
                   key={step.number}
                   step={step}
                 />
               ))}
             </div>
           </div>
+
         </div>
       </section>
 
-      <section className="relative bg-[var(--background)] pb-20 pt-14 lg:pb-28 lg:pt-20">
-        <Container>
-          <div className="flex justify-center">
-            <Button
-              href={whatsappLink(
-                "Ciao, vorrei sapere di più sul metodo di allevamento di Lumache di Campagna.",
-              )}
-              className="gap-2 shadow-xl shadow-green-950/10"
-            >
-              <MessageCircle size={18} />
-              Richiedi informazioni
-            </Button>
-          </div>
-        </Container>
-      </section>
     </>
   );
 }

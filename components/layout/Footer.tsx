@@ -132,10 +132,10 @@ export function Footer() {
                 />
 
                 <a
-                  href="mailto:info@lumachedicampagna.it"
+                  href="mailto:lumachedicampagna@hotmail.com"
                   className="text-[15px] text-[var(--muted)] transition-colors hover:text-[var(--green)]"
                 >
-                  info@lumachedicampagna.it
+                  lumachedicampagna@hotmail.com
                 </a>
               </li>
 
