@@ -622,9 +622,9 @@ function AnimatedValuesPath() {
       <div
         ref={panelRef}
         style={{
-          top: "0px",
-          height: "var(--values-panel-height, 100dvh)",
-        }}
+  top: "96px",
+  height: "calc(var(--values-panel-height, 100dvh) - 96px)",
+}}
         className="sticky w-full overflow-hidden bg-[var(--green)] [transform:translateZ(0)] [backface-visibility:hidden]"
       >
         {/* Fondo */}

@@ -117,7 +117,7 @@ function TimelineStep({
         <div
           className={[
             "step-image relative",
-            "aspect-[16/8.5]"
+            "aspect-[16/8.5]",
             "w-full overflow-hidden",
             "rounded-[1.4rem]",
             "border border-[var(--border)]",
