@@ -86,6 +86,10 @@ const trustItems = [
   },
 ];
 
+/* ------------------------------------------------------------------ */
+/*  ANIMAZIONI                                                         */
+/* ------------------------------------------------------------------ */
+
 const checksContainer = {
   hidden: {},
   show: {
@@ -145,31 +149,6 @@ const badgeShine = {
   },
 };
 
-const boxesContainer = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.25,
-    },
-  },
-};
-
-const boxFadeRight = {
-  hidden: {
-    opacity: 0,
-    x: 24,
-  },
-  show: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  },
-};
-
 const mobileBoxesContainer = {
   hidden: {},
   show: {
@@ -205,6 +184,10 @@ const mobileBoxReveal = {
     },
   },
 };
+
+/* ------------------------------------------------------------------ */
+/*  CHECK                                                              */
+/* ------------------------------------------------------------------ */
 
 function ElegantCheck() {
   return (
@@ -398,24 +381,24 @@ function HeroSlider() {
           <motion.div
             key={index}
             initial={{
-  scale: 1.22,
-  x: "5%",
-}}
-animate={
-  reduce
-    ? {
-        scale: 1,
-        x: "0%",
-      }
-    : {
-        scale: 1.08,
-        x: "0%",
-      }
-}
-transition={{
-  duration: 1.6,
-  ease: [0.16, 1, 0.3, 1],
-}}
+              scale: 1.22,
+              x: "5%",
+            }}
+            animate={
+              reduce
+                ? {
+                    scale: 1,
+                    x: "0%",
+                  }
+                : {
+                    scale: 1.08,
+                    x: "0%",
+                  }
+            }
+            transition={{
+              duration: 1.6,
+              ease: [0.16, 1, 0.3, 1],
+            }}
             className="pointer-events-none absolute inset-0"
           >
             {/* Ken Burns */}
@@ -544,7 +527,7 @@ export function Hero() {
           {/* Colonna sinistra */}
           <motion.div
             initial={{
-              opacity: 0,
+              opacity: 1,
               y: 28,
             }}
             animate={{
@@ -591,29 +574,29 @@ export function Hero() {
             </SplitTitle>
 
             <motion.div
-  variants={checksContainer}
-  initial="hidden"
-  animate="show"
-  className="mt-7 flex flex-col gap-2.5 sm:mt-9 sm:gap-4"
->
-  {[
-    "Più benessere nella tua quotidianità",
-    "Più gusto e qualità sulla tua tavola",
-    "Più cura e bellezza per la tua pelle",
-  ].map((item) => (
-    <motion.div
-      key={item}
-      variants={checkItem}
-      className="flex items-center gap-2.5 sm:gap-4"
-    >
-      <ElegantCheck />
+              variants={checksContainer}
+              initial="hidden"
+              animate="show"
+              className="mt-7 flex flex-col gap-2.5 sm:mt-9 sm:gap-4"
+            >
+              {[
+                "Più benessere nella tua quotidianità",
+                "Più gusto e qualità sulla tua tavola",
+                "Più cura e bellezza per la tua pelle",
+              ].map((item) => (
+                <motion.div
+                  key={item}
+                  variants={checkItem}
+                  className="flex items-center gap-2.5 sm:gap-4"
+                >
+                  <ElegantCheck />
 
-      <span className="font-sans text-[13px] font-medium leading-snug text-[var(--foreground)] sm:text-[17px]">
-        {item}
-      </span>
-    </motion.div>
-  ))}
-</motion.div>
+                  <span className="font-sans text-[13px] font-medium leading-snug text-[var(--foreground)] sm:text-[17px]">
+                    {item}
+                  </span>
+                </motion.div>
+              ))}
+            </motion.div>
 
             <motion.div
               variants={buttonsRow}
@@ -676,65 +659,68 @@ export function Hero() {
           </motion.div>
 
           <div className="col-span-2 lg:col-span-4">
-            {/* Mobile: ingresso immersivo */}
             <motion.div
-  variants={mobileBoxesContainer}
-  initial="hidden"
-  whileInView="show"
-  viewport={{
-    once: true,
-    amount: 0.18,
-  }}
-  className="col-span-2 grid grid-cols-2 gap-4 [perspective:1000px] lg:col-span-4 lg:grid-cols-4 lg:gap-5"
->
-  {trustItems.map((item, itemIndex) => {
-    const Icon = item.icon;
+              variants={mobileBoxesContainer}
+              initial="hidden"
+              whileInView="show"
+              viewport={{
+                once: true,
+                amount: 0.18,
+              }}
+              className="col-span-2 grid grid-cols-2 gap-4 [perspective:1000px] lg:col-span-4 lg:grid-cols-4 lg:gap-5"
+            >
+              {trustItems.map(
+                (item, itemIndex) => {
+                  const Icon = item.icon;
 
-    return (
-      <motion.div
-        key={item.title}
-        custom={itemIndex}
-        variants={mobileBoxReveal}
-        className="card-primary p-5 [transform-style:preserve-3d] will-change-transform"
-      >
-        <motion.div
-          initial={{
-            opacity: 0,
-            scale: 0.55,
-            rotate: -16,
-          }}
-          whileInView={{
-            opacity: 1,
-            scale: 1,
-            rotate: 0,
-          }}
-          viewport={{
-            once: true,
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 180,
-            damping: 14,
-            delay: 0.2 + itemIndex * 0.13,
-          }}
-        >
-          <Icon
-            className="mb-4 text-[var(--green)]"
-            size={24}
-          />
-        </motion.div>
+                  return (
+                    <motion.div
+                      key={item.title}
+                      custom={itemIndex}
+                      variants={mobileBoxReveal}
+                      className="card-primary p-5 [transform-style:preserve-3d] will-change-transform"
+                    >
+                      <motion.div
+                        initial={{
+                          opacity: 0,
+                          scale: 0.55,
+                          rotate: -16,
+                        }}
+                        whileInView={{
+                          opacity: 1,
+                          scale: 1,
+                          rotate: 0,
+                        }}
+                        viewport={{
+                          once: true,
+                        }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 180,
+                          damping: 14,
+                          delay:
+                            0.2 +
+                            itemIndex * 0.13,
+                        }}
+                      >
+                        <Icon
+                          className="mb-4 text-[var(--green)]"
+                          size={24}
+                        />
+                      </motion.div>
 
-        <p className="font-sans text-sm font-bold uppercase tracking-[0.12em]">
-          {item.title}
-        </p>
+                      <p className="font-sans text-sm font-bold uppercase tracking-[0.12em]">
+                        {item.title}
+                      </p>
 
-        <p className="mt-1 text-sm text-[var(--muted)]">
-          {item.text}
-        </p>
-      </motion.div>
-    );
-  })}
-</motion.div>
+                      <p className="mt-1 text-sm text-[var(--muted)]">
+                        {item.text}
+                      </p>
+                    </motion.div>
+                  );
+                },
+              )}
+            </motion.div>
           </div>
         </div>
       </Container>

@@ -27,8 +27,7 @@ export function SplitTitle({
   delay = 0,
   repeat = false,
 }: SplitTitleProps) {
-  const ref =
-    useRef<HTMLHeadingElement>(null);
+  const ref = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     const element = ref.current;
@@ -53,66 +52,121 @@ export function SplitTitle({
     let refreshFrameTwo = 0;
 
     const setupAnimation = async () => {
-      const [
-        { gsap },
-        { SplitText },
-        scrollTriggerModule,
-      ] = await Promise.all([
-        import("gsap"),
-        import("gsap/SplitText"),
-        scrollTrigger
-          ? import("gsap/ScrollTrigger")
-          : Promise.resolve(null),
-      ]);
+      const [{ gsap }, { SplitText }] =
+        await Promise.all([
+          import("gsap"),
+          import("gsap/SplitText"),
+        ]);
 
-      if (
-        cancelled ||
-        !ref.current
-      ) {
+      if (cancelled || !ref.current) {
         return;
       }
 
-      if (
-        scrollTrigger &&
-        scrollTriggerModule
-      ) {
-        gsap.registerPlugin(
-          SplitText,
-          scrollTriggerModule.ScrollTrigger,
-        );
-      } else {
-        gsap.registerPlugin(
-          SplitText,
-        );
+      gsap.registerPlugin(SplitText);
+
+      /*
+       * HERO / TITOLI SENZA SCROLLTRIGGER
+       *
+       * Manteniamo lo stesso reveal:
+       * - salita dal basso
+       * - blur
+       * - rotazione 3D
+       * - stagger
+       *
+       * Ma non carichiamo ScrollTrigger e non facciamo
+       * refresh/layout work che per la Hero non serve.
+       */
+      if (!scrollTrigger) {
+        context = gsap.context(() => {
+          const split = new SplitText(element, {
+            type: "lines,words",
+            linesClass: "split-title-line",
+            wordsClass: "split-title-word",
+          });
+
+          splitInstance = split;
+
+          const words =
+            (split.words ?? []) as HTMLElement[];
+
+          const lines =
+            (split.lines ?? []) as HTMLElement[];
+
+          gsap.set(lines, {
+            overflow: "hidden",
+            paddingBottom: "0.08em",
+            marginBottom: "-0.08em",
+          });
+
+          gsap.set(element, {
+            perspective: 1000,
+            transformStyle: "preserve-3d",
+          });
+
+          gsap.fromTo(
+            words,
+            {
+              opacity: 0,
+              yPercent: 115,
+              rotateX: -22,
+              rotateZ: 1.5,
+              scale: 0.96,
+              filter: "blur(9px)",
+            },
+            {
+              opacity: 1,
+              yPercent: 0,
+              rotateX: 0,
+              rotateZ: 0,
+              scale: 1,
+              filter: "blur(0px)",
+              duration,
+              stagger: {
+                each: stagger,
+                from: "start",
+              },
+              delay,
+              ease: "power4.out",
+              clearProps:
+                "willChange,transformOrigin",
+            },
+          );
+        }, element);
+
+        return;
       }
 
+      /*
+       * TITOLI DEL RESTO DELLA PAGINA
+       */
+
+      const { ScrollTrigger } =
+        await import("gsap/ScrollTrigger");
+
+      if (cancelled || !ref.current) {
+        return;
+      }
+
+      gsap.registerPlugin(
+        SplitText,
+        ScrollTrigger,
+      );
+
       context = gsap.context(() => {
-        const split = new SplitText(
-          element,
-          {
-            type: "lines,words",
-            linesClass:
-              "split-title-line",
-            wordsClass:
-              "split-title-word",
-          },
-        );
+        const split = new SplitText(element, {
+          type: "lines,words",
+          linesClass: "split-title-line",
+          wordsClass: "split-title-word",
+        });
 
         splitInstance = split;
 
         const words =
-          (split.words ??
-            []) as HTMLElement[];
+          (split.words ?? []) as HTMLElement[];
 
         const lines =
-          (split.lines ??
-            []) as HTMLElement[];
+          (split.lines ?? []) as HTMLElement[];
 
-        /*
-         * Ogni riga diventa una maschera:
-         * le parole entrano dal basso senza uscire
-         * visivamente dal blocco del titolo.
-         */
         gsap.set(lines, {
           overflow: "hidden",
           paddingBottom: "0.08em",
@@ -121,8 +175,7 @@ export function SplitTitle({
 
         gsap.set(element, {
           perspective: 1000,
-          transformStyle:
-            "preserve-3d",
+          transformStyle: "preserve-3d",
         });
 
         gsap.set(words, {
@@ -137,137 +190,87 @@ export function SplitTitle({
             "transform, opacity, filter",
         });
 
-        const animation = gsap.to(
-          words,
-          {
-            opacity: 1,
-            yPercent: 0,
-            rotateX: 0,
-            rotateZ: 0,
-            scale: 1,
-            filter: "blur(0px)",
-            duration,
+        const animation = gsap.to(words, {
+          opacity: 1,
+          yPercent: 0,
+          rotateX: 0,
+          rotateZ: 0,
+          scale: 1,
+          filter: "blur(0px)",
+          duration,
 
-            stagger: {
-              each: stagger,
-              from: "start",
-            },
-
-            delay,
-            ease: "power4.out",
-
-            clearProps:
-              "willChange,transformOrigin",
-
-            paused: scrollTrigger,
+          stagger: {
+            each: stagger,
+            from: "start",
           },
-        );
 
-        if (
-          scrollTrigger &&
-          scrollTriggerModule
-        ) {
-          scrollTriggerModule.ScrollTrigger.create(
-            {
-              trigger: element,
+          delay,
+          ease: "power4.out",
 
-              start: "top 88%",
-              end: "bottom 10%",
+          clearProps:
+            "willChange,transformOrigin",
 
-              once: !repeat,
+          paused: true,
+        });
 
-              /*
-               * Fondamentale quando sopra ci sono
-               * sezioni sticky o pin GSAP.
-               */
-              invalidateOnRefresh: true,
+        ScrollTrigger.create({
+          trigger: element,
 
-              onEnter: () => {
-                animation.restart(true);
-              },
+          start: "top 88%",
+          end: "bottom 10%",
 
-              /*
-               * Durante la risalita il titolo resta
-               * visibile.
-               */
-              onEnterBack: () => {
-                animation
-                  .progress(1)
-                  .pause();
-              },
+          once: !repeat,
+          invalidateOnRefresh: true,
 
-              /*
-               * Se repeat è attivo, viene preparato
-               * soltanto quando il titolo torna
-               * completamente sotto la viewport.
-               */
-              onLeaveBack: () => {
-                if (!repeat) {
-                  return;
-                }
+          onEnter: () => {
+            animation.restart(true);
+          },
 
-                animation.pause(0);
+          onEnterBack: () => {
+            animation
+              .progress(1)
+              .pause();
+          },
 
-                gsap.set(words, {
-                  opacity: 0,
-                  yPercent: 115,
-                  rotateX: -22,
-                  rotateZ: 1.5,
-                  scale: 0.96,
-                  filter: "blur(9px)",
-                });
-              },
-            },
-          );
+          onLeaveBack: () => {
+            if (!repeat) {
+              return;
+            }
 
-          /*
-           * Il doppio requestAnimationFrame aspetta:
-           * 1. il rendering React;
-           * 2. la creazione degli eventuali pin-spacer;
-           * 3. il ricalcolo del layout.
-           *
-           * Serve soprattutto per i titoli che si trovano
-           * dopo una sezione sticky.
-           */
-          refreshFrameOne =
-            window.requestAnimationFrame(
-              () => {
-                refreshFrameTwo =
-                  window.requestAnimationFrame(
-                    () => {
-                      if (cancelled) {
-                        return;
-                      }
+            animation.pause(0);
 
-                      scrollTriggerModule
-                        .ScrollTrigger
-                        .refresh(true);
-                    },
-                  );
-              },
-            );
+            gsap.set(words, {
+              opacity: 0,
+              yPercent: 115,
+              rotateX: -22,
+              rotateZ: 1.5,
+              scale: 0.96,
+              filter: "blur(9px)",
+            });
+          },
+        });
 
-          /*
-           * Ricalcola anche dopo il caricamento dei font,
-           * perché SplitText dipende dalla misura reale
-           * delle righe e delle parole.
-           */
-          void document.fonts.ready.then(
-            () => {
-              if (cancelled) {
-                return;
-              }
+        refreshFrameOne =
+          window.requestAnimationFrame(() => {
+            refreshFrameTwo =
+              window.requestAnimationFrame(
+                () => {
+                  if (cancelled) {
+                    return;
+                  }
 
-              scrollTriggerModule
-                .ScrollTrigger
-                .refresh(true);
-            },
-          );
+                  ScrollTrigger.refresh(true);
+                },
+              );
+          });
 
-          return;
-        }
+        void document.fonts.ready.then(() => {
+          if (cancelled) {
+            return;
+          }
 
-        animation.play();
+          ScrollTrigger.refresh(true);
+        });
       }, element);
     };
 
