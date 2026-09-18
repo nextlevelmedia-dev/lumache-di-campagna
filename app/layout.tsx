@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Cormorant_Garamond, Lato } from "next/font/google";
 
 import "./globals.css";
@@ -73,11 +72,6 @@ export default function RootLayout({
     <html lang="it">
       <body className={`${serif.variable} ${sans.variable} antialiased`}>
         {children}
-
-        <Script
-          src="https://embeds.iubenda.com/widgets/90db8134-9f06-4b81-b794-b500580f8262.js"
-          strategy="afterInteractive"
-        />
       </body>
     </html>
   );
