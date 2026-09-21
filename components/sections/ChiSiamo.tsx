@@ -9,9 +9,9 @@ import { SplitTitle } from "@/components/ui/SplitTitle";
 import { whatsappLink } from "@/lib/whatsapp";
 
 const storyImages = [
-  "/images/team.png",
-  "/images/team-1.png",
-  "/images/team-3.png",
+  "/images/chi-sono.webp",
+  "/images/chi-sono2.webp",
+  "/images/chi-sono3.webp",
 ];
 
 const textContainer = {
