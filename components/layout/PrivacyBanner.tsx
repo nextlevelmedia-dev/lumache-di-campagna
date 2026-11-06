@@ -11,7 +11,7 @@ export function PrivacyBanner() {
   useEffect(() => {
     let dismissed = false;
     try {
-      dismissed = window.localStorage.getItem(STORAGE_KEY) === "1";
+      dismissed = window.localStorage.getItem(STORAGE_KEY) !== null;
     } catch {
       // storage non disponibile: mostriamo comunque il banner
     }
@@ -22,9 +22,9 @@ export function PrivacyBanner() {
     return () => window.clearTimeout(timer);
   }, []);
 
-  function dismiss() {
+  function dismiss(choice: "all" | "necessary") {
     try {
-      window.localStorage.setItem(STORAGE_KEY, "1");
+      window.localStorage.setItem(STORAGE_KEY, choice);
     } catch {
       // ignora
     }
@@ -64,13 +64,20 @@ export function PrivacyBanner() {
           .
         </p>
 
-        <div className="mt-5 flex justify-end">
+        <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
           <button
             type="button"
-            onClick={dismiss}
+            onClick={() => dismiss("necessary")}
+            className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-2.5 text-sm font-semibold tracking-wide text-white transition-all duration-300 hover:border-white/60 hover:bg-white/10"
+          >
+            Solo necessari
+          </button>
+          <button
+            type="button"
+            onClick={() => dismiss("all")}
             className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-2.5 text-sm font-semibold tracking-wide text-[var(--green)] transition-all duration-300 hover:bg-[var(--background)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
           >
-            Ho capito
+            Accetta
           </button>
         </div>
       </div>
