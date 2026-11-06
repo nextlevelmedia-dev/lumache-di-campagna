@@ -155,3 +155,26 @@ body {
 .badge-shine {
   animation: badge-shine 1.1s ease-in-out 0.35s infinite;
 }
+/* PRIVACY BANNER */
+
+@keyframes privacy-banner-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.privacy-banner {
+  animation: privacy-banner-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .privacy-banner {
+    animation: none;
+  }
+}

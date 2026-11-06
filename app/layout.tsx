@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Lato } from "next/font/google";
 
+import { PrivacyBanner } from "@/components/layout/PrivacyBanner";
+
 import "./globals.css";
 
 const serif = Cormorant_Garamond({
@@ -72,6 +74,7 @@ export default function RootLayout({
     <html lang="it">
       <body className={`${serif.variable} ${sans.variable} antialiased`}>
         {children}
+        <PrivacyBanner />
       </body>
     </html>
   );
